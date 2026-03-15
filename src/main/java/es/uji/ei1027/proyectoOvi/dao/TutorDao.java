@@ -1,6 +1,10 @@
 package es.uji.ei1027.proyectoOvi.dao;
 
 import es.uji.ei1027.proyectoOvi.models.Tutor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;

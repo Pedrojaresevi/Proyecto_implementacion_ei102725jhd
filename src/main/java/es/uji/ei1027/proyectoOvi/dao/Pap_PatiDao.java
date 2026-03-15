@@ -49,7 +49,7 @@ public class Pap_PatiDao {
 
     public List<Pap_Pati> getAllPap_Pati() {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Pap_Pati",
+            return jdbcTemplate.query("SELECT * FROM Pap_Pati",
                     new Pap_PatiRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;

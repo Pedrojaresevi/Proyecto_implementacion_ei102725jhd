@@ -51,7 +51,7 @@ public class ContractDao {
 
     public List<Contract> getContracts() {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Contract",
+            return jdbcTemplate.query("SELECT * FROM Contract",
                     new ContractRowMapper());
         } catch (EmptyResultDataAccessException e)  {
             return null;

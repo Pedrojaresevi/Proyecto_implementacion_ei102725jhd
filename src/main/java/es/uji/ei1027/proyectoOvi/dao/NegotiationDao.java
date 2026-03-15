@@ -52,7 +52,7 @@ public class NegotiationDao {
 
     public List<Negotiation> getNegotiationByPap_Pati(String pap_patiId) {
         try {
-            return jdbcTemplate.queryForObject("SELECT FROM Negotiation WHERE pap_patiId=?",
+            return jdbcTemplate.query("SELECT FROM Negotiation WHERE pap_patiId=?",
                     new NegotiationRowMapper(), pap_patiId);
         } catch (EmptyResultDataAccessException e)  {
             return null;
@@ -61,7 +61,7 @@ public class NegotiationDao {
 
     public List<Negotiation> getNegotiations() {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Negotiation",
+            return jdbcTemplate.query("SELECT * FROM Negotiation",
                     new NegotiationRowMapper());
         } catch (EmptyResultDataAccessException e)  {
             return null;

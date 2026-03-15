@@ -52,7 +52,7 @@ public class AssignmentRequestDao {
 
     public List<AssignmentRequest> getAssignmentRequests() {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Contract",
+            return jdbcTemplate.query("SELECT * FROM Contract",
                     new AssignmentRequestRowMapper());
         } catch (EmptyResultDataAccessException e)  {
             return null;

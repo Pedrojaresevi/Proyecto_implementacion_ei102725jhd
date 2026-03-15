@@ -52,7 +52,7 @@ public class OviUserDao {
 
     public List<OviUser> getOviUsers() {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM OviUser",
+            return jdbcTemplate.query("SELECT * FROM OviUser",
                     new OviUserRowMapper());
         } catch (EmptyResultDataAccessException e)  {
             return null;

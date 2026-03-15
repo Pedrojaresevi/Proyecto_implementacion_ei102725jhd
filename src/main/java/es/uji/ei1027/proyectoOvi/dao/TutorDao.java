@@ -48,7 +48,7 @@ public class TutorDao {
 
     public List<Tutor> getTutors() {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Tutor",
+            return jdbcTemplate.query("SELECT * FROM Tutor",
                     new TutorRowMapper());
         } catch (EmptyResultDataAccessException e)  {
             return null;

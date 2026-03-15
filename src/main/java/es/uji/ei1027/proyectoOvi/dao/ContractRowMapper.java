@@ -2,7 +2,7 @@ package es.uji.ei1027.proyectoOvi.dao;
 
 import es.uji.ei1027.proyectoOvi.models.Contract;
 
-import javax.swing.tree.RowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

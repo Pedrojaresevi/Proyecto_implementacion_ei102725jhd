@@ -3,7 +3,7 @@ package es.uji.ei1027.proyectoOvi.models;
 import java.util.Date;
 
 public class OviUser {
-    private String dni;
+    private String id;
     private String name;
     private String address;
     private String email;
@@ -14,12 +14,12 @@ public class OviUser {
     private String userAndPassword;
     private String tutorId;
 
-    public String getDni() {
-        return dni;
+    public String getId() {
+        return id;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -97,7 +97,7 @@ public class OviUser {
     @Override
     public String toString() {
         return "OviUser{" +
-                "dni='" + dni + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +

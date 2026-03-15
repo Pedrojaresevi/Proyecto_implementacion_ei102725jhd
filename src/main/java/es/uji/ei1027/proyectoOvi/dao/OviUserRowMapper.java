@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public final class OviUserRowMapper implements RowMapper<OviUser> {
     public OviUser mapRow(ResultSet rs, int rowNum) throws SQLException {
         OviUser oviUser = new OviUser();
-        oviUser.setDni(rs.getString("dni"));
+        oviUser.setId(rs.getString("id"));
         oviUser.setName(rs.getString("name"));
         oviUser.setAddress(rs.getString("address"));
         oviUser.setEmail(rs.getString("email"));

@@ -20,31 +20,31 @@ public class OviUserDao {
 
     public void addOviUser(OviUser oviUser) {
         jdbcTemplate.update("INSERT INTO OviUser VALUES (?,?,?,?,?,?,?,?,?,?)",
-                oviUser.getDni(), oviUser.getName(), oviUser.getAddress(), oviUser.getEmail(), oviUser.getEntityThatIsInvolved(),
+                oviUser.getId(), oviUser.getName(), oviUser.getAddress(), oviUser.getEmail(), oviUser.getEntityThatIsInvolved(),
                 oviUser.getTypeOfFunctionalDiversity(), oviUser.getDateOfAcceptance(), oviUser.getStatus(),
                 oviUser.getUserAndPassword(), oviUser.getTutorId());
     }
 
     public void deleteOviUser(OviUser oviUser) {
-        jdbcTemplate.update("DELETE FROM OviUser WHERE dni=?",
-                oviUser.getDni());
+        jdbcTemplate.update("DELETE FROM OviUser WHERE id=?",
+                oviUser.getId());
     }
-    public void deleteOviUser(String dni) {
-        jdbcTemplate.update("DELETE FROM OviUser WHERE dni=?",
-                dni);
+    public void deleteOviUser(String id) {
+        jdbcTemplate.update("DELETE FROM OviUser WHERE id=?",
+                id);
     }
 
     public void updateOviUser(OviUser oviUser) {
-        jdbcTemplate.update("UPDATE OviUser SET name=?, address=?, email=?, entityThatIsEnvolved=?, TypeOfFunctionalDiversity=?, dateOfAcceptance=?, status=?, userAndPassword=?, tutorId=? WHERE dni=?",
+        jdbcTemplate.update("UPDATE OviUser SET name=?, address=?, email=?, entityThatIsEnvolved=?, TypeOfFunctionalDiversity=?, dateOfAcceptance=?, status=?, userAndPassword=?, tutorId=? WHERE id=?",
                 oviUser.getName(), oviUser.getAddress(), oviUser.getEmail(), oviUser.getEntityThatIsInvolved(),
                 oviUser.getTypeOfFunctionalDiversity(), oviUser.getDateOfAcceptance(), oviUser.getStatus(),
-                oviUser.getUserAndPassword(), oviUser.getTutorId(), oviUser.getDni());
+                oviUser.getUserAndPassword(), oviUser.getTutorId(), oviUser.getId());
     }
 
-    public OviUser getOviUser(String dni) {
+    public OviUser getOviUser(String id) {
         try {
-            return jdbcTemplate.queryForObject("SELECT FROM OviUser WHERE dni=?",
-                    new OviUserRowMapper(), dni);
+            return jdbcTemplate.queryForObject("SELECT FROM OviUser WHERE id=?",
+                    new OviUserRowMapper(), id);
         } catch (EmptyResultDataAccessException e)  {
             return null;
         }

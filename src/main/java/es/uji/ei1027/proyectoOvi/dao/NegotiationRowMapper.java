@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public final class NegotiationRowMapper implements RowMapper<Negotiation> {
     public Negotiation mapRow(ResultSet rs, int rowNum) throws SQLException {
         Negotiation negotiation = new Negotiation();
-        negotiation.setPap_patiId(rs.getString("pap_patiId"));
+        negotiation.setPap_patiId(rs.getString("pappatiId"));
         negotiation.setRequestId(rs.getLong("requestId"));
         negotiation.setStatus(rs.getString("status"));
         negotiation.setRecordOfComunications(rs.getString("recordOfComunications"));

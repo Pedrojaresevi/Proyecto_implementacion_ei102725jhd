@@ -12,7 +12,12 @@ public class ProyectoOVIConfiguration {
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource() {
-        return DataSourceBuilder.create().build();
+        return DataSourceBuilder.create()
+                .driverClassName("org.postgresql.Driver")
+                .url("jdbc:postgresql://db-aules.uji.es:5432/ei102725jhd")
+                .username("ei102725jhd")
+                .password("ei102725jhd")
+                .build();
     }
 
 }

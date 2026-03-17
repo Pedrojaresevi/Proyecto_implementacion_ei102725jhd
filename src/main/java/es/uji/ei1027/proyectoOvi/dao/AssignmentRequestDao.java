@@ -43,7 +43,7 @@ public class AssignmentRequestDao {
 
     public AssignmentRequest getAssignmentRequest(long requestId) {
         try {
-            return jdbcTemplate.queryForObject("SELECT FROM AssignmentRequest WHERE requestId=?",
+            return jdbcTemplate.queryForObject("SELECT * FROM AssignmentRequest WHERE requestId=?",
                     new AssignmentRequestRowMapper(), requestId);
         } catch (EmptyResultDataAccessException e)  {
             return null;
@@ -52,7 +52,7 @@ public class AssignmentRequestDao {
 
     public List<AssignmentRequest> getAssignmentRequests() {
         try {
-            return jdbcTemplate.query("SELECT * FROM Contract",
+            return jdbcTemplate.query("SELECT * FROM AssignmentRequest",
                     new AssignmentRequestRowMapper());
         } catch (EmptyResultDataAccessException e)  {
             return null;

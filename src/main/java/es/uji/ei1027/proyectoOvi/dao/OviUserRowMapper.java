@@ -18,7 +18,7 @@ public final class OviUserRowMapper implements RowMapper<OviUser> {
         oviUser.setDateOfAcceptance(rs.getDate("dateOfAcceptance"));
         oviUser.setStatus(rs.getString("status"));
         oviUser.setUserAndPassword(rs.getString("userAndPassword"));
-        oviUser.setTutorId(rs.getString("tutorId"));
+        oviUser.setTutorId(rs.getString("id_tutor"));
         return oviUser;
     }
 }

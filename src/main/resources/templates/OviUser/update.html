@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestionar OviUser</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="container mt-4">
+    <h1>Modificar OviUser</h1>
+
+    <form class="form-horizontal" action="#" th:action="@{/oviUser/update}" th:object="${oviUser}" method="post">
+
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="form-group row mb-3">
+            <label class="control-label col-sm-2" for="name">Nombre:</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="name" th:field="*{name}" />
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label class="control-label col-sm-2" for="address">Dirección:</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="address" th:field="*{address}" />
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label class="control-label col-sm-2" for="email">Email:</label>
+            <div class="col-sm-4">
+                <input type="email" class="form-control" id="email" th:field="*{email}" />
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label class="control-label col-sm-2" for="entityThatIsInvolved">Entidad implicada:</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="entityThatIsInvolved" th:field="*{entityThatIsInvolved}" />
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label class="control-label col-sm-2" for="typeOfFunctionalDiversity">Tipo de div. funcional:</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="typeOfFunctionalDiversity" th:field="*{typeOfFunctionalDiversity}" />
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label class="control-label col-sm-2" for="dateOfAcceptance">Fecha de aceptación:</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" id="dateOfAcceptance" th:field="*{dateOfAcceptance}" />
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label class="control-label col-sm-2" for="userAndPassword">Usuario/Contraseña:</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="userAndPassword" th:field="*{userAndPassword}" />
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label class="control-label col-sm-2" for="status">Estado:</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="status" th:field="*{status}" />
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label class="control-label col-sm-2" for="tutorId">ID Tutor:</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="tutorId" th:field="*{tutorId}" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-offset-2 col-sm-4">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+</body>
+</html>

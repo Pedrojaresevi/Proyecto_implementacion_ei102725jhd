@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+    <meta charset="UTF-8" />
+    <title>Crear nuevo OviUser</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+</head>
+<body>
+<main class="container">
+    <h1>Nuevo OviUser</h1>
+    <form class="form-horizontal" th:action="@{/oviUser/add}" th:object="${oviUser}" method="post">
+
+        <div class="form-group row">
+            <label for="id" class="control-label col-sm-2">Id: </label>
+            <input id="id" type="text" th:field="*{id}" class="form-control col-sm-4">
+        </div>
+
+        <div class="form-group row">
+            <label for="name" class="control-label col-sm-2">Nombre:</label>
+            <input id="name" type="text" th:field="*{name}" class="form-control col-sm-4">
+        </div>
+
+        <div class="form-group row">
+            <label for="address" class="control-label col-sm-2">Dirección:</label>
+            <input id="address" type="text" th:field="*{address}" class="form-control col-sm-4">
+        </div>
+
+        <div class="form-group row">
+            <label for="email" class="control-label col-sm-2">Email:</label>
+            <input id="email" type="text" th:field="*{email}" class="form-control col-sm-4">
+        </div>
+
+        <div class="form-group row">
+            <label for="entityThatIsInvolved" class="control-label col-sm-2">Entidad en la que está involucrado:</label>
+            <input id="entityThatIsInvolved" type="text" th:field="*{entityThatIsInvolved}" class="form-control col-sm-4">
+        </div>
+
+        <div class="form-group row">
+            <label for="typeOfFunctionalDiversity" class="control-label col-sm-2">Tipo de diversidad funcional:</label>
+            <input id="typeOfFunctionalDiversity" type="text" th:field="*{typeOfFunctionalDiversity}" class="form-control col-sm-4">
+        </div>
+
+        <div class="form-group row">
+            <label for="dateOfAcceptance" class="control-label col-sm-2">Fecha de aceptación:</label>
+            <input id="dateOfAcceptance" type="date" th:field="*{dateOfAcceptance}" class="form-control col-sm-4">
+        </div>
+
+        <div class="form-group row">
+            <label for="userAndPassword" class="control-label col-sm-2">Usuario y contraseña:</label>
+            <input id="userAndPassword" type="text" th:field="*{userAndPassword}" class="form-control col-sm-4">
+        </div>
+
+        <div class="form-group row">
+            <label for="status" class="control-label col-sm-2">Estatus:</label>
+            <input id="status" type="text" th:field="*{status}" class="form-control col-sm-4">
+        </div>
+
+        <div class="form-group row">
+            <label for="tutorId" class="control-label col-sm-2">Id tutor:</label>
+            <input id="tutorId" type="text" th:field="*{tutorId}" class="form-control col-sm-4">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Añadir usuario</button>
+    </form>
+</main>
+</body>
+</html>

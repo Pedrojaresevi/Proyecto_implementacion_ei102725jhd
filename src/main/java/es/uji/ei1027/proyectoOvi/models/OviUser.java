@@ -1,5 +1,7 @@
 package es.uji.ei1027.proyectoOvi.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class OviUser {
@@ -9,6 +11,7 @@ public class OviUser {
     private String email;
     private String entityThatIsInvolved;
     private String typeOfFunctionalDiversity;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfAcceptance;
     private String status;
     private String userAndPassword;

@@ -76,6 +76,8 @@ public class TutorController {
         if (bindingResult.hasErrors()) {
             return "tutor/update";
         }
+        tutorDao.updateTutor(tutor);
+
         return "redirect:list";
     }
     //

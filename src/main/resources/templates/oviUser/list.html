@@ -4,6 +4,8 @@
     <title>Gestionar OVI users</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/proyecte.css"
+          th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
 <h1>Lista de OVI Users</h1>
@@ -37,15 +39,15 @@
         <td th:text="${oviUser.userAndPassword}"></td>
         <td th:text="${oviUser.tutorId}"></td>
 
-        <td><a th:href="@{/oviUser/update/{id}(id=${oviUser.id})}">Edita</a>
+        <td><a th:href="@{/oviUser/update/{id}(id=${oviUser.id})}" class="btn btn-warning">Edita</a>
         </td>
-        <td><a th:href="@{/oviUser/delete/{id}(id=${oviUser.id})}">Esborra</a>
+        <td><a th:href="@{/oviUser/delete/{id}(id=${oviUser.id})}" class="btn btn-danger">Esborra</a>
         </td>
     </tr>
     </tbody>
 </table>
-<a href="add">Añadir OVI user</a>
+<a href="add" class="btn btn-primary">Añadir OVI user</a>
 <br><br>
-<a href="/">Volver</a>
+<a href="/" class="btn btn-secondary">Volver</a>
 </body>
 </html>

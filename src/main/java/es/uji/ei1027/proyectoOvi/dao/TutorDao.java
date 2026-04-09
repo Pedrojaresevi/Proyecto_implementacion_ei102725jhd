@@ -39,7 +39,7 @@ public class TutorDao {
 
     public Tutor getTutor(String id) {
         try {
-            return jdbcTemplate.queryForObject("SELECT FROM Tutor WHERE id=?",
+            return jdbcTemplate.queryForObject("SELECT * FROM Tutor WHERE id=?",
                     new TutorRowMapper(), id);
         } catch (EmptyResultDataAccessException e)  {
             return null;

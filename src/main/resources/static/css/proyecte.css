@@ -24,3 +24,7 @@ h2 {
     color: red;
     background-color:yellow;
 }
+/* Poner las etiquetas en negrita */
+label {
+    font-weight: bold;
+}

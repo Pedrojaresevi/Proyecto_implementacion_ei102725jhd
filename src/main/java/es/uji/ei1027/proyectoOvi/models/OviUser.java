@@ -112,4 +112,7 @@ public class OviUser {
                 ", tutorId='" + tutorId + '\'' +
                 '}';
     }
+    public int compareTo(OviUser altre) {
+        return this.getId().compareTo(altre.getId());
+    }
 }

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Controller
 @RequestMapping("/oviUser")
 public class OviUserController {
@@ -33,31 +36,61 @@ public class OviUserController {
         return "oviUser/add";
     }
 
-    @RequestMapping(value="/add", method= RequestMethod.POST)
+//    @RequestMapping(value="/add", method= RequestMethod.POST)
+//    public String processAddSubmit(@ModelAttribute("oviUser") OviUser oviUser,
+//                                   BindingResult bindingResult) {
+//        if (bindingResult.hasErrors())
+//            return "oviUser/add";
+//        oviUserDao.addOviUser(oviUser);
+//        return "redirect:list";
+//    }
+
+    @RequestMapping(value="/add", method=RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("oviUser") OviUser oviUser,
                                    BindingResult bindingResult) {
+        OviUserValidator oviUserValidator = new OviUserValidator();
+        oviUserValidator.validate(oviUser, bindingResult);
         if (bindingResult.hasErrors())
             return "oviUser/add";
         oviUserDao.addOviUser(oviUser);
         return "redirect:list";
     }
 
+//    @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
+//    public String editOviUser(Model model, @PathVariable String id) {
+//        model.addAttribute("oviUser", oviUserDao.getOviUser(id));
+//
+//        return "oviUser/update";
+//    }
     @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
     public String editOviUser(Model model, @PathVariable String id) {
         model.addAttribute("oviUser", oviUserDao.getOviUser(id));
-
+        List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
+        model.addAttribute("genderList", statusList);
         return "oviUser/update";
     }
 
-    @RequestMapping(value="/update", method = RequestMethod.POST)
-    public String processUpdateSubmit(
-            @ModelAttribute("oviUser") OviUser oviUser,
-            BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
+//    @RequestMapping(value="/update", method = RequestMethod.POST)
+//    public String processUpdateSubmit(
+//            @ModelAttribute("oviUser") OviUser oviUser,
+//            BindingResult bindingResult) {
+//        if (bindingResult.hasErrors())
+//            return "oviUser/update";
+//
+//        oviUserDao.updateOviUser(oviUser);
+//
+//        return "redirect:list";
+//    }
+    @RequestMapping(value="/update", method=RequestMethod.POST)
+    public String processUpdateSubmit(@ModelAttribute("oviUser") OviUser oviUser,
+                                      BindingResult bindingResult, Model model) {
+        OviUserValidator oviUserValidator = new OviUserValidator();
+        oviUserValidator.validate(oviUser, bindingResult);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("statusList", Arrays.asList("accepted", "refused", "in progress"));
             return "oviUser/update";
-
+        }
         oviUserDao.updateOviUser(oviUser);
-
         return "redirect:list";
     }
 

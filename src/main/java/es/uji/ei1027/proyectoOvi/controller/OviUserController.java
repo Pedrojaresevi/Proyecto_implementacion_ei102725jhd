@@ -3,6 +3,8 @@ package es.uji.ei1027.proyectoOvi.controller;
 import es.uji.ei1027.proyectoOvi.dao.OviUserDao;
 import es.uji.ei1027.proyectoOvi.models.OviUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,9 +52,27 @@ public class OviUserController {
                                    BindingResult bindingResult) {
         OviUserValidator oviUserValidator = new OviUserValidator();
         oviUserValidator.validate(oviUser, bindingResult);
-        if (bindingResult.hasErrors())
+
+        if (bindingResult.hasErrors()) {
             return "oviUser/add";
-        oviUserDao.addOviUser(oviUser);
+        }
+
+        if (oviUser.getTutorId() != null && oviUser.getTutorId().trim().isEmpty()) {
+            oviUser.setTutorId(null);
+        }
+
+        try {
+            oviUserDao.addOviUser(oviUser);
+        } catch (DuplicateKeyException e) {
+            bindingResult.rejectValue("id", "duplicat",
+                    "Ya existe un usuario con este DNI");
+            return "oviUser/add";
+        } catch (DataIntegrityViolationException e) {
+            bindingResult.rejectValue("tutorId", "no_existe",
+                    "El tutor introducido no existe en el sistema");
+            return "oviUser/add";
+        }
+
         return "redirect:list";
     }
 
@@ -86,11 +106,23 @@ public class OviUserController {
                                       BindingResult bindingResult, Model model) {
         OviUserValidator oviUserValidator = new OviUserValidator();
         oviUserValidator.validate(oviUser, bindingResult);
+
         if (bindingResult.hasErrors()) {
-            model.addAttribute("statusList", Arrays.asList("accepted", "refused", "in progress"));
             return "oviUser/update";
         }
-        oviUserDao.updateOviUser(oviUser);
+
+        if (oviUser.getTutorId() != null && oviUser.getTutorId().trim().isEmpty()) {
+            oviUser.setTutorId(null);
+        }
+
+        try {
+            oviUserDao.updateOviUser(oviUser);
+        } catch (DataIntegrityViolationException e) {
+            bindingResult.rejectValue("tutorId", "noExiste",
+                    "El ID de tutor introducido no existe en el sistema");
+            return "oviUser/update";
+        }
+
         return "redirect:list";
     }
 

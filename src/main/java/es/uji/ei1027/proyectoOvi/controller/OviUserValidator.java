@@ -17,7 +17,7 @@ public class OviUserValidator implements Validator {
     public void validate(Object obj, Errors errors) {
         OviUser oviUser = (OviUser) obj;
         if (oviUser.getId().trim().equals(""))
-            errors.rejectValue("dni", "obligatori",
+            errors.rejectValue("id", "obligatori",
                     "Cal introduir un valor");
         //
         List<String> valors = Arrays.asList("accepted", "refused", "in progress");

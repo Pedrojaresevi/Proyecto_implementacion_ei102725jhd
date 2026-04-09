@@ -1,98 +1,83 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
 <head>
-    <title>Gestionar OviUser</title>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+    <title>Modificar OviUser</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
-<div class="container mt-4">
+<main class="container">
     <h1>Modificar OviUser</h1>
+    <form class="form-horizontal" th:action="@{/oviUser/update}" th:object="${oviUser}" method="post">
 
-    <form class="form-horizontal" action="#" th:action="@{/oviUser/update}" th:object="${oviUser}" method="post">
-
-        <input type="hidden" th:field="*{id}" />
-
-        <div class="form-group row mb-3">
-            <label class="control-label col-sm-2" for="name">Nombre:</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="name" th:field="*{name}" maxlength="50" />
-                <div th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"  class="error"></div>
-            </div>
-        </div>
-
-        <div class="form-group row mb-3">
-            <label class="control-label col-sm-2" for="address">Dirección:</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="address" th:field="*{address}"  maxlength="200"/>
-                <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}"  class="error"></div>
-            </div>
-        </div>
-
-        <div class="form-group row mb-3">
-            <label class="control-label col-sm-2" for="email">Email:</label>
-            <div class="col-sm-4">
-                <input type="email" class="form-control" id="email" th:field="*{email}" maxlength="150"/>
-                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"  class="error"></div>
-
-            </div>
-        </div>
-
-        <div class="form-group row mb-3">
-            <label class="control-label col-sm-2" for="entityThatIsInvolved">Entidad implicada:</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="entityThatIsInvolved" th:field="*{entityThatIsInvolved}" maxlength="150"/>
-                <div th:if="${#fields.hasErrors('entityThatIsInvolved')}" th:errors="*{entityThatIsInvolved}"  class="error"></div>
-
-            </div>
-        </div>
-
-        <div class="form-group row mb-3">
-            <label class="control-label col-sm-2" for="typeOfFunctionalDiversity">Tipo de div. funcional:</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="typeOfFunctionalDiversity" th:field="*{typeOfFunctionalDiversity}" maxlength="150"/>
-                <div th:if="${#fields.hasErrors('typeOfFunctionalDiversity')}" th:errors="*{typeOfFunctionalDiversity}"  class="error"></div>
-            </div>
-        </div>
-
-        <div class="form-group row mb-3">
-            <label class="control-label col-sm-2" for="dateOfAcceptance">Fecha de aceptación:</label>
-            <div class="col-sm-4">
-                <input type="date" class="form-control" id="dateOfAcceptance" th:field="*{dateOfAcceptance}" />
-                <div th:if="${#fields.hasErrors('dateOfAcceptance')}" th:errors="*{dateOfAcceptance}"  class="error"></div>
-            </div>
-        </div>
-
-        <div class="form-group row mb-3">
-            <label class="control-label col-sm-2" for="userAndPassword">Usuario/Contraseña:</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="userAndPassword" th:field="*{userAndPassword}" maxlength="150"/>
-                <div th:if="${#fields.hasErrors('userAndPassword')}" th:errors="*{userAndPassword}"  class="error"></div>
-            </div>
-        </div>
-
-        <select id="status" class="form-select" th:field="*{status}">
-            <option th:each="statusvalue : ${statusList}"
-                    th:value="${statusvalue}"
-                    th:text="${statusvalue}"></option>
-        </select>
-        <div th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="error"></div>
-
-        <div class="form-group row mb-3">
-            <label class="control-label col-sm-2" for="tutorId">ID Tutor:</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="tutorId" th:field="*{tutorId}" maxlength="20"/>
-                <div th:if="${#fields.hasErrors('tutorId')}" th:errors="*{tutorId}"  class="error"></div>
-            </div>
+        <div class="form-group row">
+            <label for="id" class="control-label col-sm-2">Id: </label>
+            <input id="id" type="text" th:field="*{id}" class="form-control col-sm-4" readonly="readonly">
+            <div th:if="${#fields.hasErrors('id')}" th:errors="*{id}"  class="error"></div>
         </div>
 
         <div class="form-group row">
-            <div class="col-sm-offset-2 col-sm-4">
-                <button type="submit" class="btn btn-primary">Guardar cambios</button>
-            </div>
+            <label for="name" class="control-label col-sm-2">Nombre:</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}" maxlength="50" />
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"  class="error"></div>
         </div>
 
+        <div class="form-group row">
+            <label for="address" class="control-label col-sm-2">Dirección:</label>
+            <input type="text" class="form-control" id="address" th:field="*{address}"  maxlength="200"/>
+            <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}"  class="error"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="email" class="control-label col-sm-2">Email:</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}" maxlength="150"/>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"  class="error"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="entityThatIsInvolved" class="control-label col-sm-2">Entidad en la que está involucrado:</label>
+            <input type="text" class="form-control" id="entityThatIsInvolved" th:field="*{entityThatIsInvolved}" maxlength="150"/>
+            <div th:if="${#fields.hasErrors('entityThatIsInvolved')}" th:errors="*{entityThatIsInvolved}"  class="error"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="typeOfFunctionalDiversity" class="control-label col-sm-2">Tipo de diversidad funcional:</label>
+            <input type="text" class="form-control" id="typeOfFunctionalDiversity" th:field="*{typeOfFunctionalDiversity}" maxlength="150"/>
+            <div th:if="${#fields.hasErrors('typeOfFunctionalDiversity')}" th:errors="*{typeOfFunctionalDiversity}"  class="error"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="dateOfAcceptance" class="control-label col-sm-2">Fecha de aceptación:</label>
+            <input type="date" class="form-control" id="dateOfAcceptance" th:field="*{dateOfAcceptance}" />
+            <div th:if="${#fields.hasErrors('dateOfAcceptance')}" th:errors="*{dateOfAcceptance}"  class="error"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="userAndPassword" class="control-label col-sm-2">Usuario y contraseña:</label>
+            <input type="text" class="form-control" id="userAndPassword" th:field="*{userAndPassword}" maxlength="150"/>
+            <div th:if="${#fields.hasErrors('userAndPassword')}" th:errors="*{userAndPassword}"  class="error"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="status" class="control-label col-sm-2">Estatus:</label>
+            <select class="form-select" id="status" th:field="*{status}">
+                <option value="">Selecciona un estatus</option>
+                <option value="in progress">En progreso (in progress)</option>
+                <option value="accepted">Aceptado (accepted)</option>
+                <option value="refused">Rechazado (refused)</option>
+            </select>
+            <div th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="error"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="tutorId" class="control-label col-sm-2">Id tutor:</label>
+            <input type="text" class="form-control" id="tutorId" th:field="*{tutorId}" maxlength="150"/>
+            <div th:if="${#fields.hasErrors('tutorId')}" th:errors="*{tutorId}"  class="error"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
     </form>
-</div>
+</main>
 </body>
 </html>

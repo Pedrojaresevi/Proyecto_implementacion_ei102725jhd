@@ -33,7 +33,7 @@ public class OviUserController {
     }
 
     @RequestMapping(value="/add")
-    public String addNadador(Model model) {
+    public String addOviUser(Model model) {
         model.addAttribute("oviUser", new OviUser());
         return "oviUser/add";
     }
@@ -86,7 +86,7 @@ public class OviUserController {
     public String editOviUser(Model model, @PathVariable String id) {
         model.addAttribute("oviUser", oviUserDao.getOviUser(id));
         List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
-        model.addAttribute("genderList", statusList);
+        model.addAttribute("statusList", statusList);
         return "oviUser/update";
     }
 

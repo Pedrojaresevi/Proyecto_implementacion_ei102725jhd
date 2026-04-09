@@ -47,4 +47,7 @@ public class Tutor {
                 ", status='" + status + '\'' +
                 '}';
     }
+    public int compareTo(Tutor altre) {
+        return this.getId().compareTo(altre.getId());
+    }
 }

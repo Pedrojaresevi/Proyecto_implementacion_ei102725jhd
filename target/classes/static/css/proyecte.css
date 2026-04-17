@@ -1,0 +1,30 @@
+/* Estil aplicat al cos de la pàgina */
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: white;
+}
+/* Capçalera de nivell 1 */
+h1 {
+    font-size: 2rem;
+    color: #0d9488;
+    font-weight: 700;
+}
+/* Capçalera de nivell 2 */
+h2 {
+    font-size: large;
+    color: blue;
+}
+/* Classe CSS error */
+.error {
+    color: #dc3545;
+    font-size:90%
+}
+/* Classe CSS per atributs erronis */
+.needcorrection {
+    color: red;
+    background-color:yellow;
+}
+/* Poner las etiquetas en negrita */
+label {
+    font-weight: bold;
+}

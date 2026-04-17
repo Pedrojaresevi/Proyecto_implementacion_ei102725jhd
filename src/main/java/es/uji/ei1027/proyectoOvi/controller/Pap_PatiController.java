@@ -35,7 +35,7 @@ public class Pap_PatiController {
     @RequestMapping(value="/add")
     public String addPapPati(Model model) {
         model.addAttribute("pap_pati", new Pap_Pati());
-        return "pap_Pati/add";
+        return "pap_pati/add";
     }
 
     @RequestMapping(value="/add", method= RequestMethod.POST)
@@ -45,7 +45,7 @@ public class Pap_PatiController {
         pap_patiValidator.validate(papPati, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "pap_Pati/add";
+            return "pap_pati/add";
         }
 
         try {
@@ -53,7 +53,7 @@ public class Pap_PatiController {
         } catch (DuplicateKeyException e) {
             bindingResult.rejectValue("dni", "duplicat",
                     "Ya existe un Pap/Pati con este DNI");
-            return "pap_Pati/add";
+            return "pap_pati/add";
         }
 
         return "redirect:list";
@@ -64,7 +64,7 @@ public class Pap_PatiController {
         model.addAttribute("pap_pati", pap_patiDao.getPap_Pati(id));
         List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
         model.addAttribute("statusList", statusList);
-        return "pap_Pati/update";
+        return "pap_pati/update";
     }
 
     @RequestMapping(value="/update", method=RequestMethod.POST)
@@ -74,7 +74,7 @@ public class Pap_PatiController {
         pap_patiValidator.validate(papPati, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "pap_Pati/update";
+            return "pap_pati/update";
         }
         pap_patiDao.updatePap_Pati(papPati);
 

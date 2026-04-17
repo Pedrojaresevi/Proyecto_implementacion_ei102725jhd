@@ -28,8 +28,9 @@ public class Pap_PatiDao {
     public void deletePap_Pati(String dni) {
         jdbcTemplate.update("DELETE FROM Pap_Pati WHERE dni = ?", dni);
     }
+
     public void deletePap_Pati(Pap_Pati pap_pati) {
-        jdbcTemplate.update("DELETE FROM Nadador WHERE dni = ?", pap_pati.getDni());
+        jdbcTemplate.update("DELETE FROM Pap_Pati WHERE dni = ?", pap_pati.getDni());
     }
 
     public void updatePap_Pati(Pap_Pati pap_pati) {
@@ -40,8 +41,7 @@ public class Pap_PatiDao {
 
     public Pap_Pati getPap_Pati(String dni) {
         try {
-            return jdbcTemplate.queryForObject("SELECT FROM Pap_Pati WHERE dni=?",
-                    new Pap_PatiRowMapper(), dni);
+            return jdbcTemplate.queryForObject("SELECT * FROM Pap_Pati WHERE dni=?", new Pap_PatiRowMapper(), dni);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }

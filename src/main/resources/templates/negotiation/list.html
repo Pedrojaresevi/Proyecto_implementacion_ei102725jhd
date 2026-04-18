@@ -12,29 +12,27 @@
 <table>
     <thead>
     <tr>
-        <th>Request Id</th>
-        <th>PAP/PATI Id</th>
-        <th>Status</th>
-        <th>Record of Comunications</th>
-        <th>Start Date</th>
-        <th>End Date</th>
+        <th>Id de la Negociación</th>
+        <th>Estatus</th>
+        <th>Registro de Comunicaciones</th>
+        <th>Fecha de Inicio</th>
+        <th>Fecha Fin</th>
         <td></td> <!-- no usar <th> quan no hi ha capçalera -->
         <td></td>
     </tr>
     </thead>
     <tbody>
     <tr th:each="negotiation: ${negotiations}">
-        <td th:text="${negotiation.requestId}"></td>
-        <td th:text="${negotiation.pap_patiId}"></td>
+        <td th:text="${negotiation.negotiation_Id}"></td>
         <td th:text="${negotiation.status}"></td>
         <td th:text="${negotiation.recordOfComunications}"></td>
         <td th:text="${negotiation.startDate}"></td>
         <td th:text="${negotiation.endDate}"></td>
 
 
-        <td><a th:href="@{/negotiation/update/{requestId}/{pap_patiId}(requestId=${negotiation.requestId}, pap_patiId=${negotiation.pap_patiId})}" class="btn btn-warning">Edita</a>
+        <td><a th:href="@{/negotiation/update/{negotiation_Id}/(negotiation_Id=${negotiation.negotiation_Id})}" class="btn btn-warning">Edita</a>
         </td>
-        <td><a th:href="@{/negotiation/delete/{requestId}/{pap_patiId}(requestId=${negotiation.requestId}, pap_patiId=${negotiation.pap_patiId})}" class="btn btn-danger">Esborra</a>
+        <td><a th:href="@{/negotiation/delete/{negotiation_Id}/(negotiation_Id=${negotiation.negotiation_Id})}" class="btn btn-danger">Borrar</a>
         </td>
     </tr>
     </tbody>

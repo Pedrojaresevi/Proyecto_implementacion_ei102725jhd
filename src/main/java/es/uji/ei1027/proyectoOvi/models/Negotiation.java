@@ -3,28 +3,19 @@ package es.uji.ei1027.proyectoOvi.models;
 import java.util.Date;
 
 public class Negotiation {
+    private String negotiation_Id;
     private String status;
     private String recordOfComunications;
     private Date startDate;
     private Date endDate;
-    private String pap_patiId;
-    private long requestId;
 
 
-    public long getRequestId() {
-        return requestId;
+    public String getNegotiation_Id() {
+        return negotiation_Id;
     }
 
-    public void setRequestId(long requestId) {
-        this.requestId = requestId;
-    }
-
-    public String getPap_patiId() {
-        return pap_patiId;
-    }
-
-    public void setPap_patiId(String pap_patiId) {
-        this.pap_patiId = pap_patiId;
+    public void setNegotiation_Id(String negotiation_Id) {
+        this.negotiation_Id = negotiation_Id;
     }
 
     public String getStatus() {
@@ -62,8 +53,7 @@ public class Negotiation {
     @Override
     public String toString() {
         return "Negotiation{" +
-                "requestId='" + requestId + '\'' +
-                ", pap_patiId='" + pap_patiId + '\'' +
+                "negotiation_Id='" + negotiation_Id + '\'' +
                 ", status='" + status + '\'' +
                 ", recordOfComunications='" + recordOfComunications + '\'' +
                 ", startDate=" + startDate +

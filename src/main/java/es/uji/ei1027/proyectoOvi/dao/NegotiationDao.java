@@ -20,40 +20,32 @@ public class NegotiationDao {
     }
 
     public void addNegotiation(Negotiation negotiation) {
-        jdbcTemplate.update("INSERT INTO Negotiation VALUES (?,?,?,?,?,?)",
-                negotiation.getStatus(), negotiation.getRecordOfComunications(), negotiation.getStartDate(),
-                negotiation.getEndDate(), negotiation.getPap_patiId(), negotiation.getRequestId());
+        jdbcTemplate.update("INSERT INTO Negotiation VALUES (?,?,?,?,?)",
+                negotiation.getNegotiation_Id(), negotiation.getStatus(),
+                negotiation.getRecordOfComunications(), negotiation.getStartDate(),
+                negotiation.getEndDate());
     }
 
     public void deleteNegotiation(Negotiation negotiation) {
-        jdbcTemplate.update("DELETE FROM Negotiation WHERE pap_patiId=? AND requestId=?",
-                negotiation.getPap_patiId(), negotiation.getRequestId());
+        jdbcTemplate.update("DELETE FROM Negotiation WHERE negotiation_Id=?",
+                negotiation.getNegotiation_Id());
     }
 
-    public void deleteNegotiation(long requestId, String pap_patiId) {
-        jdbcTemplate.update("DELETE FROM Negotiation WHERE pap_patiId=? AND requestId=?",
-                pap_patiId, requestId);
+    public void deleteNegotiation(String negotiation_Id) {
+        jdbcTemplate.update("DELETE FROM Negotiation WHERE negotiation_Id=?",
+                negotiation_Id);
     }
 
     public void updateNegotiation(Negotiation negotiation) {
-        jdbcTemplate.update("UPDATE Negotiation SET status=?, recordOfComunications=?, startDate=?, endDate=? WHERE pap_patiId=? AND requestId=?",
+        jdbcTemplate.update("UPDATE Negotiation SET status=?, recordOfComunications=?, startDate=?, endDate=? WHERE negotiation_Id=?",
                 negotiation.getStatus(), negotiation.getRecordOfComunications(), negotiation.getStartDate(),
-                negotiation.getEndDate(), negotiation.getPap_patiId(), negotiation.getRequestId());
+                negotiation.getEndDate(), negotiation.getNegotiation_Id());
     }
 
-    public Negotiation getNegotiation(long requestId, String pap_patiId) {
+    public Negotiation getNegotiation(String negotiation_Id) {
         try {
-            return jdbcTemplate.queryForObject("SELECT FROM Negotiation WHERE pap_patiId=? AND requestId=?",
-                    new NegotiationRowMapper(), pap_patiId, requestId);
-        } catch (EmptyResultDataAccessException e)  {
-            return null;
-        }
-    }
-
-    public List<Negotiation> getNegotiationByPap_Pati(String pap_patiId) {
-        try {
-            return jdbcTemplate.query("SELECT FROM Negotiation WHERE pap_patiId=?",
-                    new NegotiationRowMapper(), pap_patiId);
+            return jdbcTemplate.queryForObject("SELECT * FROM Negotiation WHERE negotiation_Id=?",
+                    new NegotiationRowMapper(), negotiation_Id);
         } catch (EmptyResultDataAccessException e)  {
             return null;
         }

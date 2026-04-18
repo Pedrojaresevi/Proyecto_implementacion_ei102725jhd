@@ -153,14 +153,6 @@ public class Pap_Pati {
         this.skills = skills;
     }
 
-    public String getList_id() {
-        return list_id;
-    }
-
-    public void setList_id(String list_id) {
-        this.list_id = list_id;
-    }
-
     @Override
     public String toString() {
         return "Pap_Pati{" +
@@ -180,7 +172,6 @@ public class Pap_Pati {
                 ", endDate=" + endDate +
                 ", geographicMobility='" + geographicMobility + '\'' +
                 ", skills='" + skills + '\'' +
-                ", list_id='" + list_id + '\'' +
                 '}';
     }
 }

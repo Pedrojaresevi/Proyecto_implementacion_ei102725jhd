@@ -21,6 +21,10 @@ public final class Pap_PatiRowMapper implements RowMapper<Pap_Pati> {
         pap_pati.setCurriculumVitae(rs.getString("curriculumVitae"));
         pap_pati.setStatus(rs.getString("status"));
         pap_pati.setUserAndPassword(rs.getString("userAndPassword"));
+        pap_pati.setStartDate(rs.getDate("startDate"));
+        pap_pati.setEndDate(rs.getDate("endDate"));
+        pap_pati.setGeographicMobility(rs.getString("geographicMobility"));
+        pap_pati.setSkills(rs.getString("skills"));
         return pap_pati;
     }
 }

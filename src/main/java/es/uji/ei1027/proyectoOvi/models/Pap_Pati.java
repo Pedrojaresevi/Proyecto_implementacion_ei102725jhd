@@ -18,6 +18,12 @@ public class Pap_Pati {
     private String curriculumVitae;
     private String status;
     private String userAndPassword;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date endDate;
+    private String geographicMobility;
+    private String skills;
 
     public String getName() {
         return name;
@@ -115,6 +121,46 @@ public class Pap_Pati {
         this.userAndPassword = userAndPassword;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getGeographicMobility() {
+        return geographicMobility;
+    }
+
+    public void setGeographicMobility(String geographicMobility) {
+        this.geographicMobility = geographicMobility;
+    }
+
+    public String getSkills() {
+        return skills;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public String getList_id() {
+        return list_id;
+    }
+
+    public void setList_id(String list_id) {
+        this.list_id = list_id;
+    }
+
     @Override
     public String toString() {
         return "Pap_Pati{" +
@@ -130,6 +176,11 @@ public class Pap_Pati {
                 ", curriculumVitae='" + curriculumVitae + '\'' +
                 ", status='" + status + '\'' +
                 ", userAndPassword='" + userAndPassword + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", geographicMobility='" + geographicMobility + '\'' +
+                ", skills='" + skills + '\'' +
+                ", list_id='" + list_id + '\'' +
                 '}';
     }
 }

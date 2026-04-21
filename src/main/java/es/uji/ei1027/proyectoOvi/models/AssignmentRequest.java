@@ -3,13 +3,15 @@ package es.uji.ei1027.proyectoOvi.models;
 import java.util.Date;
 
 public class AssignmentRequest {
+    private String request_Id;
     private Date requestDate;
     private String typeOfService;
-    private String requiredAvailability;
+    private Date requiredStartAvailability;
+    private Date requiredEndAvailability;
     private String serviceLocation;
-    private String specificPreferences;
-    private String listOfProposedCandidates;
-    private long requestId;
+    private String requiredTraining;
+    private String requiredExperience;
+    private String requiredSkills;
     private String pap_patiId;
     private String oviUserId;
 
@@ -29,44 +31,12 @@ public class AssignmentRequest {
         this.typeOfService = typeOfService;
     }
 
-    public String getRequiredAvailability() {
-        return requiredAvailability;
-    }
-
-    public void setRequiredAvailability(String requiredAvailability) {
-        this.requiredAvailability = requiredAvailability;
-    }
-
     public String getServiceLocation() {
         return serviceLocation;
     }
 
     public void setServiceLocation(String serviceLocation) {
         this.serviceLocation = serviceLocation;
-    }
-
-    public String getSpecificPreferences() {
-        return specificPreferences;
-    }
-
-    public void setSpecificPreferences(String specificPreferences) {
-        this.specificPreferences = specificPreferences;
-    }
-
-    public String getListOfProposedCandidates() {
-        return listOfProposedCandidates;
-    }
-
-    public void setListOfProposedCandidates(String listOfProposedCandidates) {
-        this.listOfProposedCandidates = listOfProposedCandidates;
-    }
-
-    public long getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(long requestId) {
-        this.requestId = requestId;
     }
 
     public String getPap_patiId() {
@@ -85,16 +55,66 @@ public class AssignmentRequest {
         this.oviUserId = oviUserId;
     }
 
+    public String getRequest_Id() {
+        return request_Id;
+    }
+
+    public void setRequest_Id(String request_Id) {
+        this.request_Id = request_Id;
+    }
+
+    public Date getRequiredStartAvailability() {
+        return requiredStartAvailability;
+    }
+
+    public void setRequiredStartAvailability(Date requiredStartAvailability) {
+        this.requiredStartAvailability = requiredStartAvailability;
+    }
+
+    public Date getRequiredEndAvailability() {
+        return requiredEndAvailability;
+    }
+
+    public void setRequiredEndAvailability(Date requiredEndAvailability) {
+        this.requiredEndAvailability = requiredEndAvailability;
+    }
+
+    public String getRequiredTraining() {
+        return requiredTraining;
+    }
+
+    public void setRequiredTraining(String requiredTraining) {
+        this.requiredTraining = requiredTraining;
+    }
+
+    public String getRequiredExperience() {
+        return requiredExperience;
+    }
+
+    public void setRequiredExperience(String requiredExperience) {
+        this.requiredExperience = requiredExperience;
+    }
+
+    public String getRequiredSkills() {
+        return requiredSkills;
+    }
+
+    public void setRequiredSkills(String requiredSkills) {
+        this.requiredSkills = requiredSkills;
+    }
+
     @Override
     public String toString() {
         return "AssignmentRequest{" +
-                "requestDate=" + requestDate +
+                "request_Id='" + request_Id + '\'' +
+                ", requestDate=" + requestDate +
                 ", typeOfService='" + typeOfService + '\'' +
-                ", requiredAvailability='" + requiredAvailability + '\'' +
+                ", requiredStartAvailability=" + requiredStartAvailability +
+                ", requiredEndAvailability=" + requiredEndAvailability +
                 ", serviceLocation='" + serviceLocation + '\'' +
-                ", specificPreferences='" + specificPreferences + '\'' +
-                ", listOfProposedCandidates='" + listOfProposedCandidates + '\'' +
-                ", requestId=" + requestId +
+                ", requiredTraining='" + requiredTraining + '\'' +
+                ", requiredExperience='" + requiredExperience + '\'' +
+                ", requiredSkills='" + requiredSkills + '\'' +
                 ", pap_patiId='" + pap_patiId + '\'' +
                 ", oviUserId='" + oviUserId + '\'' +
                 '}';

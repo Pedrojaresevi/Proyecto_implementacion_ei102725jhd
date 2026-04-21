@@ -11,10 +11,13 @@ public final class AssignmentRequestRowMapper implements RowMapper<AssignmentReq
         AssignmentRequest assignmentRequest = new AssignmentRequest();
         assignmentRequest.setRequestDate(rs.getDate("requestDate"));
         assignmentRequest.setTypeOfService(rs.getString("typeOfService"));
-        assignmentRequest.setRequiredAvailability(rs.getString("requestAvailability"));        assignmentRequest.setServiceLocation(rs.getString("serviceLocation"));
-        assignmentRequest.setSpecificPreferences(rs.getString("specificPreferences"));
-        assignmentRequest.setListOfProposedCandidates(rs.getString("listOfProposedCandidates"));
-        assignmentRequest.setRequestId(rs.getLong("requestId"));
+        assignmentRequest.setRequiredStartAvailability(rs.getDate("requiredStartAvailability"));
+        assignmentRequest.setRequiredEndAvailability(rs.getDate("requiredEndAvailability"));
+        assignmentRequest.setServiceLocation(rs.getString("serviceLocation"));
+        assignmentRequest.setRequiredTraining(rs.getString("requiredTraining"));
+        assignmentRequest.setRequiredExperience(rs.getString("requiredExperience"));
+        assignmentRequest.setRequiredSkills(rs.getString("requiredSkills"));
+        assignmentRequest.setRequest_Id(rs.getString("request_Id"));
         assignmentRequest.setPap_patiId(rs.getString("pappatiId"));
         assignmentRequest.setOviUserId(rs.getString("oviUserId"));
         return assignmentRequest;

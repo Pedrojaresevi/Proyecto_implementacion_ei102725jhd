@@ -19,31 +19,33 @@ public class AssignmentRequestDao {
     }
 
     public void addAssignmentRequest(AssignmentRequest assignmentRequest) {
-        jdbcTemplate.update("INSERT INTO AssignmentRequest VALUES (?,?,?,?,?,?,?,?,?)",
-                assignmentRequest.getRequestDate(), assignmentRequest.getTypeOfService(), assignmentRequest.getRequiredAvailability(),
-                assignmentRequest.getServiceLocation(), assignmentRequest.getSpecificPreferences(), assignmentRequest.getListOfProposedCandidates(),
-                assignmentRequest.getRequestId(), assignmentRequest.getPap_patiId(), assignmentRequest.getOviUserId());
+        jdbcTemplate.update("INSERT INTO AssignmentRequest VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                assignmentRequest.getRequest_Id(), assignmentRequest.getRequestDate(), assignmentRequest.getTypeOfService(),
+                assignmentRequest.getRequiredStartAvailability(), assignmentRequest.getRequiredEndAvailability(), assignmentRequest.getServiceLocation(),
+                assignmentRequest.getRequiredTraining(), assignmentRequest.getRequiredExperience(), assignmentRequest.getRequiredSkills(),
+                assignmentRequest.getPap_patiId(), assignmentRequest.getOviUserId());
     }
 
     public void deleteAssignmentRequest(AssignmentRequest assignmentRequest) {
-        jdbcTemplate.update("DELETE FROM AssignmentRequest WHERE requestId=?",
-                assignmentRequest.getRequestId());
+        jdbcTemplate.update("DELETE FROM AssignmentRequest WHERE request_Id=?",
+                assignmentRequest.getRequest_Id());
     }
-    public void deleteAssignmentRequest(long requestId) {
-        jdbcTemplate.update("DELETE FROM AssignmentRequest WHERE requestId=?",
+    public void deleteAssignmentRequest(String requestId) {
+        jdbcTemplate.update("DELETE FROM AssignmentRequest WHERE request_Id=?",
                 requestId);
     }
 
     public void updateAssignmentRequest(AssignmentRequest assignmentRequest) {
-        jdbcTemplate.update("UPDATE AssignmentRequest SET requestDate=?, typeOfService=?, requiredAvailability=?, serviceLocation=?, specificPreferences=?, listOfProposedCandidates=?, pap_patiId=?, oviUserId=? WHERE requestId=?",
-                assignmentRequest.getRequestDate(), assignmentRequest.getTypeOfService(), assignmentRequest.getRequiredAvailability(),
-                assignmentRequest.getServiceLocation(), assignmentRequest.getSpecificPreferences(), assignmentRequest.getListOfProposedCandidates(),
-                assignmentRequest.getPap_patiId(), assignmentRequest.getOviUserId(), assignmentRequest.getRequestId());
+        jdbcTemplate.update("UPDATE AssignmentRequest SET requestDate=?, typeOfService=?, requiredStartAvailability=?, requiredEndAvailability=?, serviceLocation=?, requiredTraining=?, requiredExperience=?, requiredSkills=?, pap_patiId=?, oviUserId=? WHERE request_Id=?",
+                assignmentRequest.getRequestDate(), assignmentRequest.getTypeOfService(),
+                assignmentRequest.getRequiredStartAvailability(), assignmentRequest.getRequiredEndAvailability(), assignmentRequest.getServiceLocation(),
+                assignmentRequest.getRequiredTraining(), assignmentRequest.getRequiredExperience(), assignmentRequest.getRequiredSkills(),
+                assignmentRequest.getPap_patiId(), assignmentRequest.getOviUserId(), assignmentRequest.getRequest_Id());
     }
 
-    public AssignmentRequest getAssignmentRequest(long requestId) {
+    public AssignmentRequest getAssignmentRequest(String requestId) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM AssignmentRequest WHERE requestId=?",
+            return jdbcTemplate.queryForObject("SELECT * FROM AssignmentRequest WHERE request_Id=?",
                     new AssignmentRequestRowMapper(), requestId);
         } catch (EmptyResultDataAccessException e)  {
             return null;

@@ -30,9 +30,9 @@
         <td th:text="${negotiation.endDate}"></td>
 
 
-        <td><a th:href="@{/negotiation/update/{negotiation_Id}/(negotiation_Id=${negotiation.negotiation_Id})}" class="btn btn-warning">Edita</a>
+        <td><a th:href="@{/negotiation/update/{id}(id=${negotiation.negotiation_Id})}" class="btn btn-warning">Edita</a>
         </td>
-        <td><a th:href="@{/negotiation/delete/{negotiation_Id}/(negotiation_Id=${negotiation.negotiation_Id})}" class="btn btn-danger">Borrar</a>
+        <td><a th:href="@{/negotiation/delete/{id}(id=${negotiation.negotiation_Id})}" class="btn btn-danger">Borrar</a>
         </td>
     </tr>
     </tbody>

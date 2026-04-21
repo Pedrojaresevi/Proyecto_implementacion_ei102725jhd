@@ -11,9 +11,10 @@ public final class NegotiationRowMapper implements RowMapper<Negotiation> {
         Negotiation negotiation = new Negotiation();
         negotiation.setNegotiation_Id(rs.getString("negotiation_Id"));
         negotiation.setStatus(rs.getString("status"));
-        negotiation.setRecordOfComunications(rs.getString("recordOfComunications"));
+        negotiation.setRecordOfComunications(rs.getString("recordofcommunications"));
         negotiation.setStartDate(rs.getDate("startDate"));
         negotiation.setEndDate(rs.getDate("endDate"));
+        negotiation.setListId(rs.getString("list_id"));
         return negotiation;
     }
 }

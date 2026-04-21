@@ -20,10 +20,11 @@ public class NegotiationDao {
     }
 
     public void addNegotiation(Negotiation negotiation) {
-        jdbcTemplate.update("INSERT INTO Negotiation VALUES (?,?,?,?,?)",
+        jdbcTemplate.update("INSERT INTO Negotiation VALUES (?,?,?,?,?,?)",
                 negotiation.getNegotiation_Id(), negotiation.getStatus(),
                 negotiation.getRecordOfComunications(), negotiation.getStartDate(),
-                negotiation.getEndDate());
+                negotiation.getEndDate(),
+                negotiation.getListId());
     }
 
     public void deleteNegotiation(Negotiation negotiation) {
@@ -37,9 +38,14 @@ public class NegotiationDao {
     }
 
     public void updateNegotiation(Negotiation negotiation) {
-        jdbcTemplate.update("UPDATE Negotiation SET status=?, recordOfComunications=?, startDate=?, endDate=? WHERE negotiation_Id=?",
-                negotiation.getStatus(), negotiation.getRecordOfComunications(), negotiation.getStartDate(),
-                negotiation.getEndDate(), negotiation.getNegotiation_Id());
+        jdbcTemplate.update("UPDATE Negotiation SET status=?, recordofcommunications=?, startDate=?, endDate=?, list_id=? WHERE negotiation_Id=?",
+                negotiation.getStatus(),
+                negotiation.getRecordOfComunications(),
+                negotiation.getStartDate(),
+                negotiation.getEndDate(),
+                negotiation.getListId(),
+                negotiation.getNegotiation_Id()
+        );
     }
 
     public Negotiation getNegotiation(String negotiation_Id) {

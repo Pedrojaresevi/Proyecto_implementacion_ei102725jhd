@@ -59,7 +59,7 @@ public class NegotiationController {
     }
 
     @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
-    public String editNegotiation(Model model, @PathVariable String id) {
+    public String editNegotiation(Model model, @PathVariable("id") String id) {
         model.addAttribute("negotiation", negotiationDao.getNegotiation(id));
         List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
         model.addAttribute("statusList", statusList);
@@ -81,7 +81,7 @@ public class NegotiationController {
     }
 
     @RequestMapping(value="/delete/{id}")
-    public String processDelete(@PathVariable String id) {
+    public String processDelete(@PathVariable("id") String id) {
         negotiationDao.deleteNegotiation(id);
         return "redirect:../list";
     }

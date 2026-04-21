@@ -1,14 +1,18 @@
 package es.uji.ei1027.proyectoOvi.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Negotiation {
     private String negotiation_Id;
     private String status;
-    private String recordOfComunications;
+    private String recordofcommunications;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
-
+    private String list_id;
 
     public String getNegotiation_Id() {
         return negotiation_Id;
@@ -27,11 +31,11 @@ public class Negotiation {
     }
 
     public String getRecordOfComunications() {
-        return recordOfComunications;
+        return recordofcommunications;
     }
 
     public void setRecordOfComunications(String recordOfComunications) {
-        this.recordOfComunications = recordOfComunications;
+        this.recordofcommunications = recordOfComunications;
     }
 
     public Date getStartDate() {
@@ -50,12 +54,20 @@ public class Negotiation {
         this.endDate = endDate;
     }
 
+    public String getListId() {
+        return list_id;
+    }
+
+    public void setListId(String listId) {
+        this.list_id = listId;
+    }
+
     @Override
     public String toString() {
         return "Negotiation{" +
                 "negotiation_Id='" + negotiation_Id + '\'' +
                 ", status='" + status + '\'' +
-                ", recordOfComunications='" + recordOfComunications + '\'' +
+                ", recordOfComunications='" + recordofcommunications + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 '}';

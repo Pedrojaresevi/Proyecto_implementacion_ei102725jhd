@@ -20,27 +20,27 @@ public class TutorDao {
 
     public void addTutor(Tutor tutor) {
         jdbcTemplate.update("INSERT INTO Tutor VALUES (?,?,?,?)",
-                tutor.getId(), tutor.getName(), tutor.getEmail(), tutor.getStatus());
+                tutor.getDni(), tutor.getName(), tutor.getEmail(), tutor.getStatus());
     }
 
     public void deleteTutor(Tutor tutor) {
-        jdbcTemplate.update("DELETE FROM Tutor WHERE id=?",
-                tutor.getId());
+        jdbcTemplate.update("DELETE FROM Tutor WHERE dni=?",
+                tutor.getDni());
     }
-    public void deleteTutor(String id) {
-        jdbcTemplate.update("DELETE FROM Tutor WHERE id=?",
-                id);
+    public void deleteTutor(String dni) {
+        jdbcTemplate.update("DELETE FROM Tutor WHERE dni=?",
+                dni);
     }
 
     public void updateTutor(Tutor tutor) {
-        jdbcTemplate.update("UPDATE Tutor SET name=?, email=?, status=? WHERE id=?",
-                tutor.getName(), tutor.getEmail(), tutor.getStatus(), tutor.getId());
+        jdbcTemplate.update("UPDATE Tutor SET name=?, email=?, status=? WHERE dni=?",
+                tutor.getName(), tutor.getEmail(), tutor.getStatus(), tutor.getDni());
     }
 
-    public Tutor getTutor(String id) {
+    public Tutor getTutor(String dni) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Tutor WHERE id=?",
-                    new TutorRowMapper(), id);
+            return jdbcTemplate.queryForObject("SELECT * FROM Tutor WHERE dni=?",
+                    new TutorRowMapper(), dni);
         } catch (EmptyResultDataAccessException e)  {
             return null;
         }

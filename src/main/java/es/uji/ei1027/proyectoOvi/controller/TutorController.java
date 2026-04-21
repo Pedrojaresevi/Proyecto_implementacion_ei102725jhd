@@ -51,7 +51,7 @@ public class TutorController {
         try {
             tutorDao.addTutor(tutor);
         } catch (DuplicateKeyException e) {
-            bindingResult.rejectValue("id", "duplicat",
+            bindingResult.rejectValue("dni", "duplicat",
                     "Ya existe un tutor con este DNI");
             return "tutor/add";
         }
@@ -59,9 +59,9 @@ public class TutorController {
         return "redirect:list";
     }
     //
-    @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
-    public String editTutor(Model model, @PathVariable String id) {
-        model.addAttribute("tutor", tutorDao.getTutor(id));
+    @RequestMapping(value="/update/{dni}", method = RequestMethod.GET)
+    public String editTutor(Model model, @PathVariable String dni) {
+        model.addAttribute("tutor", tutorDao.getTutor(dni));
         List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
         model.addAttribute("statusList", statusList);
         return "tutor/update";
@@ -81,9 +81,9 @@ public class TutorController {
         return "redirect:list";
     }
     //
-    @RequestMapping(value="/delete/{id}")
-    public String processDelete(@PathVariable String id) {
-        tutorDao.deleteTutor(id);
+    @RequestMapping(value="/delete/{dni}")
+    public String processDelete(@PathVariable String dni) {
+        tutorDao.deleteTutor(dni);
         return "redirect:../list";
     }
 }

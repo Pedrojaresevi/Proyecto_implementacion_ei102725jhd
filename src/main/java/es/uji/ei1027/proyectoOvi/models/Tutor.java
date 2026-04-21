@@ -1,17 +1,17 @@
 package es.uji.ei1027.proyectoOvi.models;
 
 public class Tutor {
-    private String id;
+    private String dni;
     private String name;
     private String email;
     private String status;
 
-    public String getId() {
-        return id;
+    public String getDni() {
+        return dni;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDni(String id) {
+        this.dni = id;
     }
 
     public String getName() {
@@ -41,13 +41,13 @@ public class Tutor {
     @Override
     public String toString() {
         return "Tutor{" +
-                "id='" + id + '\'' +
+                "id='" + dni + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", status='" + status + '\'' +
                 '}';
     }
     public int compareTo(Tutor altre) {
-        return this.getId().compareTo(altre.getId());
+        return this.getDni().compareTo(altre.getDni());
     }
 }

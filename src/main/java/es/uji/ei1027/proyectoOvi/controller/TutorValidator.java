@@ -17,7 +17,7 @@ public class TutorValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         Tutor tutor = (Tutor) obj;
-        if (tutor.getId().trim().equals(""))
+        if (tutor.getDni().trim().equals(""))
             errors.rejectValue("id", "obligatori",
                     "Cal introduir un valor");
         //

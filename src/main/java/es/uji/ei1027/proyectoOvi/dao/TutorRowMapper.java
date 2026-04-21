@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public final class TutorRowMapper implements RowMapper<Tutor> {
     public Tutor mapRow(ResultSet rs, int rowNum) throws SQLException {
         Tutor tutor = new Tutor();
-        tutor.setId(rs.getString("id"));
+        tutor.setDni(rs.getString("dni"));
         tutor.setName(rs.getString("name"));
         tutor.setEmail(rs.getString("email"));
         tutor.setStatus(rs.getString("status"));

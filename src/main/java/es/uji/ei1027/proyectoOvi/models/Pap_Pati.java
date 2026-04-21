@@ -11,7 +11,7 @@ public class Pap_Pati {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
     private String address;
-    private long phone;
+    private String phone;
     private String email;
     private String specificTraining;
     private String typeOfExperience;
@@ -65,11 +65,11 @@ public class Pap_Pati {
         this.address = address;
     }
 
-    public long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(long phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

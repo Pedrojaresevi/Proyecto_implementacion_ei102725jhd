@@ -10,7 +10,7 @@
 <body>
 <main class="container">
     <h1>Modificar PAP/PATI</h1>
-    <form class="form-horizontal" th:action="@{/pap_Pati/update}" th:object="${pap_pati}" method="post">
+    <form class="form-horizontal" th:action="@{/pap_pati/update}" th:object="${pap_pati}" method="post">
 
         <div class="form-group row">
             <label for="dni" class="control-label col-sm-2">Dni: </label>
@@ -45,7 +45,7 @@
 
         <div class="mb-3 col-md-4">
             <label for="phone" class="form-label">Teléfono:</label>
-            <input id="phone" type="number" th:field="*{phone}" class="form-control" />
+            <input id="phone" type="text" th:field="*{phone}" class="form-control" />
             <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"  class="error"></div>
         </div>
 

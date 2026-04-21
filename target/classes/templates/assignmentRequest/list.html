@@ -12,13 +12,16 @@
 <table>
     <thead>
     <tr>
+
         <th>Request Id</th>
         <th>Request Date</th>
         <th>Type Of Service</th>
-        <th>Required Availability</th>
+        <th>Required Start Availability</th>
+        <th>Required End Availability</th>
         <th>Service Location</th>
-        <th>Specific Preferences</th>
-        <th>List Of Proposed Candidates</th>
+        <th>Required Training</th>
+        <th>Required Experience</th>
+        <th>Required Skills</th>
         <th>PAP/PATI Id</th>
         <th>OVI User Id</th>
         <td></td> <!-- no usar <th> quan no hi ha capçalera -->
@@ -27,20 +30,22 @@
     </thead>
     <tbody>
     <tr th:each="assignmentRequest: ${assignmentRequests}">
-        <td th:text="${assignmentRequest.requestId}"></td>
+        <td th:text="${assignmentRequest.request_Id}"></td>
         <td th:text="${assignmentRequest.requestDate}"></td>
         <td th:text="${assignmentRequest.typeOfService}"></td>
-        <td th:text="${assignmentRequest.requiredAvailability}"></td>
+        <td th:text="${assignmentRequest.requiredStartAvailability}"></td>
+        <td th:text="${assignmentRequest.requiredEndAvailability}"></td>
         <td th:text="${assignmentRequest.serviceLocation}"></td>
-        <td th:text="${assignmentRequest.specificPreferences}"></td>
-        <td th:text="${assignmentRequest.listOfProposedCandidates}"></td>
+        <td th:text="${assignmentRequest.requiredTraining}"></td>
+        <td th:text="${assignmentRequest.requiredExperience}"></td>
+        <td th:text="${assignmentRequest.requiredSkills}"></td>
         <td th:text="${assignmentRequest.pap_patiId}"></td>
         <td th:text="${assignmentRequest.oviUserId}"></td>
 
 
-        <td><a th:href="@{/assignmentRequest/update/{requestId}(requestId=${assignmentRequest.requestId})}" class="btn btn-warning">Edita</a>
+        <td><a th:href="@{/assignmentRequest/update/{request_Id}(request_Id=${assignmentRequest.request_Id})}" class="btn btn-warning">Edita</a>
         </td>
-        <td><a th:href="@{/assignmentRequest/delete/{requestId}(requestId=${assignmentRequest.requestId})}" class="btn btn-danger">Esborra</a>
+        <td><a th:href="@{/assignmentRequest/delete/{request_Id}(request_Id=${assignmentRequest.request_Id})}" class="btn btn-danger">Esborra</a>
         </td>
     </tr>
     </tbody>

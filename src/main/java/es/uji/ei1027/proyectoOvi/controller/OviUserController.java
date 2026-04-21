@@ -57,18 +57,18 @@ public class OviUserController {
             return "oviUser/add";
         }
 
-        if (oviUser.getTutorId() != null && oviUser.getTutorId().trim().isEmpty()) {
-            oviUser.setTutorId(null);
+        if (oviUser.getTutor_id() != null && oviUser.getTutor_id().trim().isEmpty()) {
+            oviUser.setTutor_id(null);
         }
 
         try {
             oviUserDao.addOviUser(oviUser);
         } catch (DuplicateKeyException e) {
-            bindingResult.rejectValue("id", "duplicat",
+            bindingResult.rejectValue("dni", "duplicat",
                     "Ya existe un usuario con este DNI");
             return "oviUser/add";
         } catch (DataIntegrityViolationException e) {
-            bindingResult.rejectValue("tutorId", "no_existe",
+            bindingResult.rejectValue("tutor_id", "no_existe",
                     "El tutor introducido no existe en el sistema");
             return "oviUser/add";
         }
@@ -82,9 +82,9 @@ public class OviUserController {
 //
 //        return "oviUser/update";
 //    }
-    @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
-    public String editOviUser(Model model, @PathVariable String id) {
-        model.addAttribute("oviUser", oviUserDao.getOviUser(id));
+    @RequestMapping(value="/update/{dni}", method = RequestMethod.GET)
+    public String editOviUser(Model model, @PathVariable String dni) {
+        model.addAttribute("oviUser", oviUserDao.getOviUser(dni));
         List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
         model.addAttribute("statusList", statusList);
         return "oviUser/update";
@@ -111,14 +111,14 @@ public class OviUserController {
             return "oviUser/update";
         }
 
-        if (oviUser.getTutorId() != null && oviUser.getTutorId().trim().isEmpty()) {
-            oviUser.setTutorId(null);
+        if (oviUser.getTutor_id() != null && oviUser.getTutor_id().trim().isEmpty()) {
+            oviUser.setTutor_id(null);
         }
 
         try {
             oviUserDao.updateOviUser(oviUser);
         } catch (DataIntegrityViolationException e) {
-            bindingResult.rejectValue("tutorId", "noExiste",
+            bindingResult.rejectValue("tutor_id", "noExiste",
                     "El ID de tutor introducido no existe en el sistema");
             return "oviUser/update";
         }
@@ -126,9 +126,9 @@ public class OviUserController {
         return "redirect:list";
     }
 
-    @RequestMapping(value="/delete/{id}")
-    public String processDelete(@PathVariable String id) {
-        oviUserDao.deleteOviUser(id);
+    @RequestMapping(value="/delete/{dni}")
+    public String processDelete(@PathVariable String dni) {
+        oviUserDao.deleteOviUser(dni);
         return "redirect:../list";
     }
 

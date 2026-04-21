@@ -9,16 +9,17 @@ import java.sql.SQLException;
 public final class OviUserRowMapper implements RowMapper<OviUser> {
     public OviUser mapRow(ResultSet rs, int rowNum) throws SQLException {
         OviUser oviUser = new OviUser();
-        oviUser.setId(rs.getString("id"));
+        oviUser.setDni(rs.getString("dni"));
         oviUser.setName(rs.getString("name"));
         oviUser.setAddress(rs.getString("address"));
         oviUser.setEmail(rs.getString("email"));
         oviUser.setEntityThatIsInvolved(rs.getString("entityThatIsInvolved"));
         oviUser.setTypeOfFunctionalDiversity(rs.getString("typeOfFunctionalDiversity"));
         oviUser.setDateOfAcceptance(rs.getDate("dateOfAcceptance"));
-        oviUser.setStatus(rs.getString("status"));
         oviUser.setUserAndPassword(rs.getString("userAndPassword"));
-        oviUser.setTutorId(rs.getString("id_tutor"));
+        oviUser.setStatus(rs.getString("status"));
+        oviUser.setLifePlan(rs.getString("lifePlan"));
+        oviUser.setTutor_id(rs.getString("tutor_id"));
         return oviUser;
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 public class OviUser {
-    private String id;
+    private String dni;
     private String name;
     private String address;
     private String email;
@@ -13,16 +13,20 @@ public class OviUser {
     private String typeOfFunctionalDiversity;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfAcceptance;
-    private String status;
     private String userAndPassword;
-    private String tutorId;
+    private String status;
+    private String lifePlan;
+    private String tutor_id;
 
-    public String getId() {
-        return id;
+    public OviUser() {
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
     public String getName() {
@@ -73,14 +77,6 @@ public class OviUser {
         this.dateOfAcceptance = dateOfAcceptance;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getUserAndPassword() {
         return userAndPassword;
     }
@@ -89,30 +85,48 @@ public class OviUser {
         this.userAndPassword = userAndPassword;
     }
 
-    public String getTutorId() {
-        return tutorId;
+    public String getStatus() {
+        return status;
     }
 
-    public void setTutorId(String tutorId) {
-        this.tutorId = tutorId;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getLifePlan() {
+        return lifePlan;
+    }
+
+    public void setLifePlan(String lifePlan) {
+        this.lifePlan = lifePlan;
+    }
+
+    public String getTutor_id() {
+        return tutor_id;
+    }
+
+    public void setTutor_id(String tutor_id) {
+        this.tutor_id = tutor_id;
     }
 
     @Override
     public String toString() {
         return "OviUser{" +
-                "id='" + id + '\'' +
+                "dni='" + dni + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
                 ", entityThatIsInvolved='" + entityThatIsInvolved + '\'' +
                 ", typeOfFunctionalDiversity='" + typeOfFunctionalDiversity + '\'' +
                 ", dateOfAcceptance=" + dateOfAcceptance +
-                ", status='" + status + '\'' +
                 ", userAndPassword='" + userAndPassword + '\'' +
-                ", tutorId='" + tutorId + '\'' +
+                ", status='" + status + '\'' +
+                ", lifePlan='" + lifePlan + '\'' +
+                ", tutor_id='" + tutor_id + '\'' +
                 '}';
     }
+
     public int compareTo(OviUser altre) {
-        return this.getId().compareTo(altre.getId());
+        return this.getDni().compareTo(altre.getDni());
     }
 }

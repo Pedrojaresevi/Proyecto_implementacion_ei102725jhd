@@ -12,9 +12,9 @@
     <form class="form-horizontal" th:action="@{/oviUser/update}" th:object="${oviUser}" method="post">
 
         <div class="form-group row">
-            <label for="id" class="control-label col-sm-2">Id: </label>
-            <input id="id" type="text" th:field="*{id}" class="form-control col-sm-4" readonly="readonly">
-            <div th:if="${#fields.hasErrors('id')}" th:errors="*{id}"  class="error"></div>
+            <label for="dni" class="control-label col-sm-2">Id: </label>
+            <input id="dni" type="text" th:field="*{dni}" class="form-control col-sm-4" maxlength="9" readonly="readonly">
+            <div th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"  class="error"></div>
         </div>
 
         <div class="form-group row">
@@ -71,9 +71,15 @@
         </div>
 
         <div class="form-group row">
-            <label for="tutorId" class="control-label col-sm-2">Id tutor:</label>
-            <input type="text" class="form-control" id="tutorId" th:field="*{tutorId}" maxlength="150"/>
-            <div th:if="${#fields.hasErrors('tutorId')}" th:errors="*{tutorId}"  class="error"></div>
+            <label for="lifePlan" class="control-label col-sm-2">Life Plan:</label>
+            <input type="text" class="form-control" id="lifePlan" th:field="*{lifePlan}" maxlength="150"/>
+            <div th:if="${#fields.hasErrors('lifePlan')}" th:errors="*{lifePlan}"  class="error"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="tutor_id" class="control-label col-sm-2">Id tutor:</label>
+            <input type="text" class="form-control" id="tutor_id" th:field="*{tutor_id}" maxlength="9"/>
+            <div th:if="${#fields.hasErrors('tutor_id')}" th:errors="*{tutor_id}"  class="error"></div>
         </div>
 
         <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>

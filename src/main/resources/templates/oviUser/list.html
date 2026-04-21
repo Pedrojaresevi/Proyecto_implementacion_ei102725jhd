@@ -19,8 +19,9 @@
         <th>Entity That Is Involved</th>
         <th>Type of Functional Diversity</th>
         <th>Date of Acceptance</th>
-        <th>Status</th>
         <th>User and Password</th>
+        <th>Status</th>
+        <th>Life Plan</th>
         <th>Tutor Id</th>
         <td></td> <!-- no usar <th> quan no hi ha capçalera -->
         <td></td>
@@ -28,20 +29,21 @@
     </thead>
     <tbody>
     <tr th:each="oviUser: ${oviUsers}">
-        <td th:text="${oviUser.id}"></td>
+        <td th:text="${oviUser.dni}"></td>
         <td th:text="${oviUser.name}"></td>
         <td th:text="${oviUser.address}"></td>
         <td th:text="${oviUser.email}"></td>
         <td th:text="${oviUser.entityThatIsInvolved}"></td>
         <td th:text="${oviUser.typeOfFunctionalDiversity}"></td>
         <td th:text="${oviUser.dateOfAcceptance}"></td>
-        <td th:text="${oviUser.status}"></td>
         <td th:text="${oviUser.userAndPassword}"></td>
-        <td th:text="${oviUser.tutorId}"></td>
+        <td th:text="${oviUser.status}"></td>
+        <td th:text="${oviUser.lifePlan}"></td>
+        <td th:text="${oviUser.tutor_id}"></td>
 
-        <td><a th:href="@{/oviUser/update/{id}(id=${oviUser.id})}" class="btn btn-warning">Edita</a>
+        <td><a th:href="@{/oviUser/update/{dni}(dni=${oviUser.dni})}" class="btn btn-warning">Edita</a>
         </td>
-        <td><a th:href="@{/oviUser/delete/{id}(id=${oviUser.id})}" class="btn btn-danger">Esborra</a>
+        <td><a th:href="@{/oviUser/delete/{dni}(dni=${oviUser.dni})}" class="btn btn-danger">Esborra</a>
         </td>
     </tr>
     </tbody>

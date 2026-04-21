@@ -3,27 +3,27 @@ package es.uji.ei1027.proyectoOvi.models;
 import java.util.Date;
 
 public class Contract {
-    private long contractId;
-    private long requestId;
+    private String contractId;
+    private String requestId;
     private Date startDate;
     private Date endDate;
     private String status;
     private String placeWhereThePDFIsGonnaBeSaved;
     private String pap_patiID;
 
-    public long getContractId() {
+    public String getContractId() {
         return contractId;
     }
 
-    public void setContractId(long contractId) {
+    public void setContractId(String contractId) {
         this.contractId = contractId;
     }
 
-    public long getRequestId() {
+    public String getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(long requestId) {
+    public void setRequestId(String requestId) {
         this.requestId = requestId;
     }
 

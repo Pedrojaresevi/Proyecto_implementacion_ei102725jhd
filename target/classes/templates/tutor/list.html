@@ -12,7 +12,7 @@
 <table>
     <thead>
     <tr>
-        <th>Id</th>
+        <th>DNI</th>
         <th>Name</th>
         <th>Email</th>
         <th>Status</th>
@@ -22,14 +22,14 @@
     </thead>
     <tbody>
     <tr th:each="tutor: ${tutors}">
-        <td th:text="${tutor.id}"></td>
+        <td th:text="${tutor.dni}"></td>
         <td th:text="${tutor.name}"></td>
         <td th:text="${tutor.email}"></td>
         <td th:text="${tutor.status}"></td>
 
-        <td><a th:href="@{/tutor/update/{id}(id=${tutor.id})}" class="btn btn-warning">Edita</a>
+        <td><a th:href="@{/tutor/update/{dni}(dni=${tutor.dni})}" class="btn btn-warning">Edita</a>
         </td>
-        <td><a th:href="@{/tutor/delete/{id}(id=${tutor.id})}" class="btn btn-danger">Esborra</a>
+        <td><a th:href="@{/tutor/delete/{dni}(dni=${tutor.dni})}" class="btn btn-danger">Esborra</a>
         </td>
     </tr>
     </tbody>

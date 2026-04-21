@@ -12,8 +12,18 @@ public class AssignmentRequest {
     private String requiredTraining;
     private String requiredExperience;
     private String requiredSkills;
-    private String pap_patiId;
-    private String oviUserId;
+    private String oviuser_id;
+
+    public AssignmentRequest() {
+    }
+
+    public String getRequest_Id() {
+        return request_Id;
+    }
+
+    public void setRequest_Id(String request_Id) {
+        this.request_Id = request_Id;
+    }
 
     public Date getRequestDate() {
         return requestDate;
@@ -31,38 +41,6 @@ public class AssignmentRequest {
         this.typeOfService = typeOfService;
     }
 
-    public String getServiceLocation() {
-        return serviceLocation;
-    }
-
-    public void setServiceLocation(String serviceLocation) {
-        this.serviceLocation = serviceLocation;
-    }
-
-    public String getPap_patiId() {
-        return pap_patiId;
-    }
-
-    public void setPap_patiId(String pap_patiId) {
-        this.pap_patiId = pap_patiId;
-    }
-
-    public String getOviUserId() {
-        return oviUserId;
-    }
-
-    public void setOviUserId(String oviUserId) {
-        this.oviUserId = oviUserId;
-    }
-
-    public String getRequest_Id() {
-        return request_Id;
-    }
-
-    public void setRequest_Id(String request_Id) {
-        this.request_Id = request_Id;
-    }
-
     public Date getRequiredStartAvailability() {
         return requiredStartAvailability;
     }
@@ -77,6 +55,14 @@ public class AssignmentRequest {
 
     public void setRequiredEndAvailability(Date requiredEndAvailability) {
         this.requiredEndAvailability = requiredEndAvailability;
+    }
+
+    public String getServiceLocation() {
+        return serviceLocation;
+    }
+
+    public void setServiceLocation(String serviceLocation) {
+        this.serviceLocation = serviceLocation;
     }
 
     public String getRequiredTraining() {
@@ -103,6 +89,14 @@ public class AssignmentRequest {
         this.requiredSkills = requiredSkills;
     }
 
+    public String getOviuser_id() {
+        return oviuser_id;
+    }
+
+    public void setOviuser_id(String oviuser_id) {
+        this.oviuser_id = oviuser_id;
+    }
+
     @Override
     public String toString() {
         return "AssignmentRequest{" +
@@ -115,8 +109,7 @@ public class AssignmentRequest {
                 ", requiredTraining='" + requiredTraining + '\'' +
                 ", requiredExperience='" + requiredExperience + '\'' +
                 ", requiredSkills='" + requiredSkills + '\'' +
-                ", pap_patiId='" + pap_patiId + '\'' +
-                ", oviUserId='" + oviUserId + '\'' +
+                ", oviuser_id='" + oviuser_id + '\'' +
                 '}';
     }
 }

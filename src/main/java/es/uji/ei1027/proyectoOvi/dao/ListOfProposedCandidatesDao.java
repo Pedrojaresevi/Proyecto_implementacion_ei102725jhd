@@ -41,7 +41,7 @@ public class ListOfProposedCandidatesDao {
     public ListOfProposedCandidates getListOfProposedCandidates(String list_id) {
         try {
             return jdbcTemplate.queryForObject("SELECT * FROM ListOfProposedCandidates WHERE list_id=?",
-                    new OviUserRowMapper(), list_id);
+                    new ListOfProposedCandidatesRowMapper(), list_id);
         } catch (EmptyResultDataAccessException e)  {
             return null;
         }

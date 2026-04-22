@@ -1,0 +1,36 @@
+package es.uji.ei1027.proyectoOvi.controller;
+
+import es.uji.ei1027.proyectoOvi.models.ListOfProposedCandidates;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+import java.util.Arrays;
+import java.util.List;
+
+
+public class ListOfProposedCandidatesValidator implements Validator {
+    @Override
+    public boolean supports(Class<?> cls) {
+        return ListOfProposedCandidates.class.equals(cls);
+    }
+
+    @Override
+    public void validate(Object obj, Errors errors) {
+        ListOfProposedCandidates listOfProposedCandidates = (ListOfProposedCandidates) obj;
+        if (listOfProposedCandidates.getList_id().trim().equals(""))
+            errors.rejectValue("list_id", "obligatori",
+                    "Cal introduir un valor");
+        //
+        if (listOfProposedCandidates.getSuitabilityScore() < 0 || listOfProposedCandidates.getSuitabilityScore() > 100)
+            errors.rejectValue("suitabilityScore", "valor incorrecto",
+                    "La puntuació ha d'estar entre 0 i 100");
+        //
+        if (listOfProposedCandidates.getPappati_id().trim().equals(""))
+            errors.rejectValue("pappati_id","obligatori",
+                    "Cal introduir un valor");
+        if (listOfProposedCandidates.getRequest_id().trim().equals(""))
+            errors.rejectValue("request_id","obligatori",
+                    "Cal introduir un valor");
+
+    }
+}

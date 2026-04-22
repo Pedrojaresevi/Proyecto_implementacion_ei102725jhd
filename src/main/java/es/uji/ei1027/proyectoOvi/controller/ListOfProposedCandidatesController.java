@@ -44,20 +44,18 @@ public class ListOfProposedCandidatesController {
             return "ListOfProposedCandidates/add";
         }
 
-        if (oviUser.getTutor_id() != null && oviUser.getTutor_id().trim().isEmpty()) {
-            oviUser.setTutor_id(null);
-        }
-
         try {
-            oviUserDao.addOviUser(oviUser);
+            listOfProposedCandidatesDao.addListOfProposedCandidates(listOfProposedCandidates);
         } catch (DuplicateKeyException e) {
-            bindingResult.rejectValue("dni", "duplicat",
-                    "Ya existe un usuario con este DNI");
-            return "oviUser/add";
+            bindingResult.rejectValue("list_id", "duplicat",
+                    "Ja existeix una proposta amb aquest ID");
+            return "ListOfProposedCandidates/add";
         } catch (DataIntegrityViolationException e) {
-            bindingResult.rejectValue("tutor_id", "no_existe",
-                    "El tutor introducido no existe en el sistema");
-            return "oviUser/add";
+            bindingResult.rejectValue("pappati_id", "no_existe",
+                    "El candidat no es vàlid");
+            bindingResult.rejectValue("request_id","no_existe",
+                    "La petició no es vàlida");
+            return "ListOfProposedCandidates/add";
         }
 
         return "redirect:list";

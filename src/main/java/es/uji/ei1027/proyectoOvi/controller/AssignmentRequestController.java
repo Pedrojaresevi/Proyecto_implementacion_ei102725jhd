@@ -29,7 +29,7 @@ public class AssignmentRequestController {
     }
 
     @RequestMapping(value="/add")
-    public String addNegotiation(Model model) {
+    public String addAssignmentRequest(Model model) {
         model.addAttribute("assignmentRequest", new AssignmentRequest());
         return "assignmentRequest/add";
     }
@@ -45,6 +45,8 @@ public class AssignmentRequestController {
         }
 
         try {
+            // Asignamos la fecha actual automáticamente antes de guardar
+            assignmentRequest.setRequestDate(new java.util.Date());
             assignmentRequestDao.addAssignmentRequest(assignmentRequest);
         } catch (DuplicateKeyException e) {
             bindingResult.rejectValue("request_Id", "duplicat",
@@ -56,7 +58,7 @@ public class AssignmentRequestController {
     }
 
     @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
-    public String editNegotiation(Model model, @PathVariable String id) {
+    public String editAssignmentRequest(Model model, @PathVariable String id) {
         model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
         return "assignmentRequest/update";
     }

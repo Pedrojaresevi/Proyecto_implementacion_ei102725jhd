@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <title>Crear una Asigment Request</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/proyecte.css"
+        th:href="@{/css/proyecte.css}"/>
+</head>
+<body>
+<main class="container">
+  <h1>Nuevo Asigment Request</h1>
+  <form class="form-horizontal" th:action="@{/assignmentRequest/add}" th:object="${assignmentRequest}" method="post">
+
+    <div class="form-group row">
+      <label for="request_Id" class="control-label col-sm-2">Id: </label>
+      <input id="request_Id" type="text" th:field="*{request_Id}" class="form-control col-sm-4" maxlength="9">
+      <div th:if="${#fields.hasErrors('request_Id')}" th:errors="*{request_Id}"  class="error"></div>
+    </div>
+
+    <div class="form-group row">
+      <label for="typeOfService" class="control-label col-sm-2">Tipo de Servicio:</label>
+      <input type="text" class="form-control" id="typeOfService" th:field="*{typeOfService}" maxlength="150" />
+      <div th:if="${#fields.hasErrors('typeOfService')}" th:errors="*{typeOfService}"  class="error"></div>
+
+    </div>
+
+    <div class="form-group row">
+      <label for="requiredStartAvailability" class="control-label col-sm-2">Fecha Inicio:</label>
+      <input type="date" class="form-control" id="requiredStartAvailability" th:field="*{requiredStartAvailability}"/>
+      <div th:if="${#fields.hasErrors('requiredStartAvailability')}" th:errors="*{requiredStartAvailability}"  class="error"></div>
+    </div>
+
+    <div class="form-group row">
+      <label for="requiredEndAvailability" class="control-label col-sm-2">Fecha Fin:</label>
+      <input type="date" class="form-control" id="requiredEndAvailability" th:field="*{requiredEndAvailability}"/>
+      <div th:if="${#fields.hasErrors('requiredEndAvailability')}" th:errors="*{requiredEndAvailability}"  class="error"></div>
+    </div>
+
+    <div class="form-group row">
+      <label for="serviceLocation" class="control-label col-sm-2">Ubicación:</label>
+      <input type="text" class="form-control" id="serviceLocation" th:field="*{serviceLocation}" maxlength="150"/>
+      <div th:if="${#fields.hasErrors('serviceLocation')}" th:errors="*{serviceLocation}"  class="error"></div>
+    </div>
+
+    <div class="form-group row">
+      <label for="requiredTraining" class="control-label col-sm-2">Formación Requerida:</label>
+      <input type="text" class="form-control" id="requiredTraining" th:field="*{requiredTraining}" maxlength="150"/>
+      <div th:if="${#fields.hasErrors('requiredTraining')}" th:errors="*{requiredTraining}"  class="error"></div>
+    </div>
+
+    <div class="form-group row">
+      <label for="requiredExperience" class="control-label col-sm-2">Experiencia:</label>
+      <input type="text" class="form-control" id="requiredExperience" th:field="*{requiredExperience}" maxlength="150"/>
+      <div th:if="${#fields.hasErrors('requiredExperience')}" th:errors="*{requiredExperience}"  class="error"></div>
+    </div>
+
+    <div class="form-group row">
+      <label for="requiredSkills" class="control-label col-sm-2">Habilidades:</label>
+      <input type="text" class="form-control" id="requiredSkills" th:field="*{requiredSkills}" maxlength="150"/>
+      <div th:if="${#fields.hasErrors('requiredSkills')}" th:errors="*{requiredSkills}"  class="error"></div>
+    </div>
+
+    <div class="form-group row">
+      <label for="oviuser_id" class="control-label col-sm-2">DNI Usuario OVI:</label>
+      <input type="text" class="form-control" id="oviuser_id" th:field="*{oviuser_id}" maxlength="9"/>
+      <div th:if="${#fields.hasErrors('oviuser_id')}" th:errors="*{oviuser_id}"  class="error"></div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrar Solicitud</button>
+    <br><br>
+    <a href="/" class="btn btn-secondary">Volver</a>
+  </form>
+</main>
+</body>
+</html>

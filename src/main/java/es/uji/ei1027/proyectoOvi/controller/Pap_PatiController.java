@@ -1,8 +1,7 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
-import es.uji.ei1027.proyectoOvi.dao.Pap_PatiDao;
+import es.uji.ei1027.proyectoOvi.dao.PapPatiDao;
 import es.uji.ei1027.proyectoOvi.models.Pap_Pati;
-import es.uji.ei1027.proyectoOvi.models.Tutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
@@ -19,10 +18,10 @@ import java.util.List;
 @Controller
 @RequestMapping("/pap_pati")
 public class Pap_PatiController {
-    private Pap_PatiDao pap_patiDao;
+    private PapPatiDao pap_patiDao;
 
     @Autowired
-    public void setPap_patiDao(Pap_PatiDao pap_patiDao){
+    public void setPap_patiDao(PapPatiDao pap_patiDao){
         this.pap_patiDao = pap_patiDao;
     }
 

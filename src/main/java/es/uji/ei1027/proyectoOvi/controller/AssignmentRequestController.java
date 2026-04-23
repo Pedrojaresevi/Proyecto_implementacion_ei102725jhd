@@ -1,7 +1,9 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
 import es.uji.ei1027.proyectoOvi.dao.AssignmentRequestDao;
+import es.uji.ei1027.proyectoOvi.dao.PapPatiDao;
 import es.uji.ei1027.proyectoOvi.models.AssignmentRequest;
+import es.uji.ei1027.proyectoOvi.models.Pap_Pati;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -13,14 +15,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/assignmentRequest")
 public class AssignmentRequestController {
     private AssignmentRequestDao assignmentRequestDao;
+    private PapPatiDao papPatiDao;
 
     @Autowired
     public void setAssignmentRequestDao(AssignmentRequestDao assignmentRequestDao){
         this.assignmentRequestDao=assignmentRequestDao;
+    }
+    //Setter para inyectar el DAO de asistentes
+    @Autowired
+    public void setPapPatiDao(PapPatiDao papPatiDao){
+        this.papPatiDao = papPatiDao;
     }
 
     @RequestMapping("/list")
@@ -90,4 +100,19 @@ public class AssignmentRequestController {
         assignmentRequestDao.deleteAssignmentRequest(id);
         return "redirect:../list";
     }
+
+    //Nuevo metodo para reciba el ID de la solicitud y pase al modelo tanto los datos de la solicitud como la lista de candidatos propuestos.
+    @RequestMapping("/proposals/{id}")
+    public String listProposals(Model model, @PathVariable String id) {
+        // 1. Recuperamos la solicitud para mostrar sus detalles arriba
+        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+        model.addAttribute("assignmentRequest", request);
+
+        // 2. Busca los candidatos (PAP/PATI)
+        List<Pap_Pati> listaCandidatos = papPatiDao.getProposalsForRequest(id);
+        model.addAttribute("candidates", listaCandidatos);
+
+        return "assignmentRequest/proposals";
+    }
+
 }

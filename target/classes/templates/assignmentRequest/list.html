@@ -24,6 +24,7 @@
         <th>Required Skills</th>
         <th>PAP/PATI Id</th>
         <th>OVI User Id</th>
+        <th>Status</th>
         <td></td> <!-- no usar <th> quan no hi ha capçalera -->
         <td></td>
     </tr>
@@ -40,6 +41,7 @@
         <td th:text="${assignmentRequest.requiredExperience}"></td>
         <td th:text="${assignmentRequest.requiredSkills}"></td>
         <td th:text="${assignmentRequest.oviuser_id}"></td>
+        <td th:text="${assignmentRequest.status}"></td>
 
 
         <td><a th:href="@{/assignmentRequest/update/{request_Id}(request_Id=${assignmentRequest.request_Id})}" class="btn btn-warning">Edita</a>

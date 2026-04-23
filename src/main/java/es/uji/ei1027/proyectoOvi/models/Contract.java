@@ -1,11 +1,15 @@
 package es.uji.ei1027.proyectoOvi.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class Contract {
     private String contractId;
     private String requestId;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
     private String status;
     private String placeWhereThePDFIsGonnaBeSaved;

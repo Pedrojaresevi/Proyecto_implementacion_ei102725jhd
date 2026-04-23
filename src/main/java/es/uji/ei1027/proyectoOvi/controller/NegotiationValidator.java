@@ -11,19 +11,23 @@ import java.util.List;
 public class NegotiationValidator implements Validator {
     @Override
     public boolean supports(Class<?> cls) {
-        return NegotiationController.class.equals(cls);
+        return Negotiation.class.equals(cls);
     }
 
     @Override
     public void validate(Object obj, Errors errors) {
         Negotiation negotiation = (Negotiation) obj;
-        if (negotiation.getNegotiation_Id().trim().equals(""))
+        if (negotiation.getNegotiation_Id() == null || negotiation.getNegotiation_Id().trim().equals(""))
             errors.rejectValue("negotiation_Id", "obligatori", "Cal introduir un valor");
-
+        //
         List<String> valors = Arrays.asList("accepted", "refused", "in progress");
         if (!valors.contains(negotiation.getStatus()))
             errors.rejectValue("status", "valor incorrecte",
                     "Deu ser: accepted,refused o in progress");
+        //
+        if (negotiation.getListId() == null || negotiation.getListId().trim().equals(""))
+            errors.rejectValue("list_id","obligatori",
+                    "Cal introduir un valor");
     }
 }
 

@@ -10,13 +10,13 @@ import java.util.List;
 public class AssignmentRequestValidator implements Validator {
     @Override
     public boolean supports(Class<?> cls) {
-        return AssignmentRequestController.class.equals(cls);
+        return AssignmentRequest.class.equals(cls);
     }
 
     @Override
     public void validate(Object obj, Errors errors) {
         AssignmentRequest assignmentRequest = (AssignmentRequest) obj;
-        if (assignmentRequest.getRequest_Id().trim().equals(""))
+        if (assignmentRequest.getRequest_Id() == null || assignmentRequest.getRequest_Id().trim().equals(""))
             errors.rejectValue("request_Id", "obligatori", "Cal introduir un valor");
         //
         List<String> valors = Arrays.asList("accepted", "refused", "in progress");
@@ -24,8 +24,8 @@ public class AssignmentRequestValidator implements Validator {
             errors.rejectValue("status", "valor incorrecte",
                     "Deu ser: accepted,refused o in progress");
         //
-        if (assignmentRequest.getOviuser_id().trim().equals(""))
-            errors.rejectValue("oviuser_id","obligatorio",
+        if (assignmentRequest.getOviuser_id() == null || assignmentRequest.getOviuser_id().trim().equals(""))
+            errors.rejectValue("oviuser_id","obligatori",
                     "Cal introduir un valor");
     }
 }

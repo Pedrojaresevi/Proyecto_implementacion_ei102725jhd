@@ -1,12 +1,17 @@
 package es.uji.ei1027.proyectoOvi.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class AssignmentRequest {
     private String request_Id;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date requestDate;
     private String typeOfService;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date requiredStartAvailability;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date requiredEndAvailability;
     private String serviceLocation;
     private String requiredTraining;

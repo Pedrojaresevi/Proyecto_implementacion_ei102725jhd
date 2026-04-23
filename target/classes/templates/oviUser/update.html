@@ -78,7 +78,7 @@
 
         <div class="form-group row">
             <label for="tutor_id" class="control-label col-sm-2">Id tutor:</label>
-            <input type="text" class="form-control" id="tutor_id" th:field="*{tutor_id}" maxlength="9"/>
+            <input type="text" class="form-control" id="tutor_id" th:field="*{tutor_id}" maxlength="9" />
             <div th:if="${#fields.hasErrors('tutor_id')}" th:errors="*{tutor_id}"  class="error"></div>
         </div>
 

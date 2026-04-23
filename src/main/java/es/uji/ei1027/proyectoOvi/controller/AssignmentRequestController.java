@@ -70,6 +70,10 @@ public class AssignmentRequestController {
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String processUpdateSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
                                       BindingResult bindingResult, Model model) {
+        // Se recupera la fecha original de la base de datos usando el ID
+        AssignmentRequest original = assignmentRequestDao.getAssignmentRequest(assignmentRequest.getRequest_Id());
+        assignmentRequest.setRequestDate(original.getRequestDate());
+        //Validar después de poner la fecha para que el validador no se queje
         AssignmentRequestValidator assignmentRequestValidator = new AssignmentRequestValidator();
         assignmentRequestValidator.validate(assignmentRequest, bindingResult);
 

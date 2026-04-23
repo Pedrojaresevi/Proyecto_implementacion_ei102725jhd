@@ -17,7 +17,7 @@ public class ListOfProposedCandidatesValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         ListOfProposedCandidates listOfProposedCandidates = (ListOfProposedCandidates) obj;
-        if (listOfProposedCandidates.getList_id().trim().equals(""))
+        if (listOfProposedCandidates.getList_id() == null || listOfProposedCandidates.getList_id().trim().equals(""))
             errors.rejectValue("list_id", "obligatori",
                     "Cal introduir un valor");
         //
@@ -25,10 +25,10 @@ public class ListOfProposedCandidatesValidator implements Validator {
             errors.rejectValue("suitabilityScore", "valor incorrecto",
                     "La puntuació ha d'estar entre 0 i 100");
         //
-        if (listOfProposedCandidates.getPappati_id().trim().equals(""))
+        if (listOfProposedCandidates.getPappati_id() == null || listOfProposedCandidates.getPappati_id().trim().equals(""))
             errors.rejectValue("pappati_id","obligatori",
                     "Cal introduir un valor");
-        if (listOfProposedCandidates.getRequest_id().trim().equals(""))
+        if (listOfProposedCandidates.getRequest_id() == null || listOfProposedCandidates.getRequest_id().trim().equals(""))
             errors.rejectValue("request_id","obligatori",
                     "Cal introduir un valor");
 

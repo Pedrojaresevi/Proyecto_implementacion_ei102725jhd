@@ -11,13 +11,13 @@ import java.util.List;
 public class TutorValidator implements Validator {
     @Override
     public boolean supports(Class<?> cls) {
-        return TutorController.class.equals(cls);
+        return Tutor.class.equals(cls);
     }
 
     @Override
     public void validate(Object obj, Errors errors) {
         Tutor tutor = (Tutor) obj;
-        if (tutor.getDni().trim().equals(""))
+        if (tutor.getDni() == null || tutor.getDni().trim().equals(""))
             errors.rejectValue("id", "obligatori",
                     "Cal introduir un valor");
         //

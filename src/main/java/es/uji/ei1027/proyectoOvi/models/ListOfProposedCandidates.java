@@ -1,10 +1,13 @@
 package es.uji.ei1027.proyectoOvi.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class ListOfProposedCandidates {
     private String list_id;
     private float suitabilityScore;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date proposalDate;
     private String pappati_id;
     private String request_id;

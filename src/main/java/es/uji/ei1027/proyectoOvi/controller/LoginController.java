@@ -42,9 +42,9 @@ public class LoginController {
         // if (ovi != null && ovi.getPassword().equals(password)) { ... }
 
         // Ejemplo rápido para que puedas probar con un OVI User (DNI: 12345678A)
-        if (username.equals("12345678A") && password.equals("1234")) {
+        if (username.equals("10000001A") && password.equals("1234")) {
             UserDetails user = new UserDetails();
-            user.setDni("12345678A");
+            user.setDni("10000001A");
             user.setUsername("Usuario Prueba");
             user.setRole("oviuser");
 

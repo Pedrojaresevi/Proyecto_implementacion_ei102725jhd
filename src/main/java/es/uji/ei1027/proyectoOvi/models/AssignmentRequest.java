@@ -18,7 +18,7 @@ public class AssignmentRequest {
     private String requiredExperience;
     private String requiredSkills;
     private String oviuser_id;
-    private String status;
+    private String status = "in progress";
 
     public AssignmentRequest() {
     }

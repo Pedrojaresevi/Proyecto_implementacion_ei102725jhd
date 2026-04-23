@@ -80,7 +80,32 @@ public class AssignmentRequestController {
 
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
-                                   BindingResult bindingResult) {
+                                   BindingResult bindingResult, HttpSession session) {
+        // 1. ASIGNAR EL DNI DEL USUARIO LOGUEADO
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user != null) {
+            assignmentRequest.setOviuser_id(user.getDni());
+        }
+
+        // 2. GENERACIÓN DEL ID SECUENCIAL
+        String ultimoId = assignmentRequestDao.getLastRequestId();
+        String nuevoId;
+
+        if (ultimoId == null || ultimoId.isEmpty()) {
+            nuevoId = "REQ1";
+        } else {
+            String numeroStr = ultimoId.substring(3);
+            int numero = Integer.parseInt(numeroStr);
+            numero++;
+            nuevoId = "REQ" + numero;
+        }
+
+        // 3. ASIGNAR VALORES AUTOMÁTICOS
+        assignmentRequest.setRequest_Id(nuevoId);
+        assignmentRequest.setStatus("in progress");
+        assignmentRequest.setRequestDate(new java.util.Date());
+
+        // 4. VALIDAR Y GUARDAR
         AssignmentRequestValidator assignmentRequestValidator = new AssignmentRequestValidator();
         assignmentRequestValidator.validate(assignmentRequest, bindingResult);
 
@@ -89,18 +114,15 @@ public class AssignmentRequestController {
         }
 
         try {
-            // Asignamos la fecha actual automáticamente antes de guardar
-            assignmentRequest.setRequestDate(new java.util.Date());
             assignmentRequestDao.addAssignmentRequest(assignmentRequest);
         } catch (DuplicateKeyException e) {
-            bindingResult.rejectValue("request_Id", "duplicat",
-                    "Ya existe una solicitud con este ID");
+            bindingResult.rejectValue("request_Id", "duplicat", "Ya existe una solicitud con este ID");
             return "assignmentRequest/add";
-        }catch (DataIntegrityViolationException e) {
-            bindingResult.rejectValue("oviuser_id", "no_existe",
-                    "El oviUser no es vàlid");
+        } catch (DataIntegrityViolationException e) {
+            bindingResult.rejectValue("oviuser_id", "no_existe", "El oviUser no es vàlid");
             return "assignmentRequest/add";
         }
+
         return "redirect:list";
     }
 

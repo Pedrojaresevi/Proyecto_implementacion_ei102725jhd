@@ -28,3 +28,8 @@ h2 {
 label {
     font-weight: bold;
 }
+/* Ajuste para que la tabla ocupe bien el espacio */
+.container-fluid {
+    padding-left: 20px;
+    padding-right: 20px;
+}

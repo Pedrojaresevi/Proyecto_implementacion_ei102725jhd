@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class AssignmentRequestDao {
+public class AssignmentRequestDao  {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -71,6 +71,17 @@ public class AssignmentRequestDao {
             );
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<AssignmentRequest>();
+        }
+    }
+
+    public String getLastRequestId() {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT request_id FROM AssignmentRequest ORDER BY CAST(SUBSTRING(request_id FROM 4) AS INTEGER) DESC LIMIT 1",
+                    String.class
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         }
     }
 }

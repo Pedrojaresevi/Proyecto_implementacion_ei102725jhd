@@ -15,6 +15,7 @@ public final class ContractRowMapper implements RowMapper<Contract> {
         contract.setEndDate(rs.getDate("endDate"));
         contract.setPlaceWhereThePDFIsGonnaBeSaved(rs.getString("PlaceWhereThePDFIsGonnaBeSaved"));
         contract.setStatus(rs.getString("status"));
+        contract.setPap_patiID(rs.getString("pap_patiID"));
         return contract;
     }
 }

@@ -29,7 +29,7 @@ public class ContractDao {
                 contract.getContractId());
     }
 
-    public void deleteContract(long contractId) {
+    public void deleteContract(String contractId) {
         jdbcTemplate.update("DELETE FROM Contract WHERE contractId=?",
                 contractId);
     }
@@ -40,7 +40,7 @@ public class ContractDao {
                 contract.getStatus(), contract.getPlaceWhereThePDFIsGonnaBeSaved(), contract.getPap_patiID(), contract.getContractId());
     }
 
-    public Contract getContract(long contractId) {
+    public Contract getContract(String contractId) {
         try {
             return jdbcTemplate.queryForObject("SELECT FROM Contract WHERE contractId=?",
                     new ContractRowMapper(), contractId);

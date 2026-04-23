@@ -19,7 +19,7 @@ public class ListOfProposedCandidatesDao {
     }
 
     public void addListOfProposedCandidates(ListOfProposedCandidates listOfProposedCandidates) {
-        jdbcTemplate.update("INSERT INTO OviUser VALUES (?,?,?,?,?)",
+        jdbcTemplate.update("INSERT INTO ListOfProposedCandidates VALUES (?,?,?,?,?)",
                 listOfProposedCandidates.getList_id(),
                 listOfProposedCandidates.getSuitabilityScore(),
                 listOfProposedCandidates.getProposalDate(),

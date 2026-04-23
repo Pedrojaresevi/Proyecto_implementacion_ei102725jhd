@@ -60,4 +60,17 @@ public class AssignmentRequestDao {
             return null;
         }
     }
+
+    // Nuevo metodo para filtrar solicitudes por el DNI del OviUser
+    public List<AssignmentRequest> getRequestsByOviUser(String oviuserId) {
+        try {
+            return jdbcTemplate.query(
+                    "SELECT * FROM AssignmentRequest WHERE oviuser_id=?",
+                    new AssignmentRequestRowMapper(),
+                    oviuserId
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<AssignmentRequest>();
+        }
+    }
 }

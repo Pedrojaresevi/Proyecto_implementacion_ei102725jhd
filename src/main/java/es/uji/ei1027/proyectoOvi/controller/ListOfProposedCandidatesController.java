@@ -60,4 +60,5 @@ public class ListOfProposedCandidatesController {
 
         return "redirect:list";
     }
+
 }

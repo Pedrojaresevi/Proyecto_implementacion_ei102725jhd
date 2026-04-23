@@ -1,9 +1,15 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
 import es.uji.ei1027.proyectoOvi.dao.AssignmentRequestDao;
+import es.uji.ei1027.proyectoOvi.dao.ListOfProposedCandidatesDao;
 import es.uji.ei1027.proyectoOvi.dao.PapPatiDao;
 import es.uji.ei1027.proyectoOvi.models.AssignmentRequest;
+import es.uji.ei1027.proyectoOvi.models.ListOfProposedCandidates;
 import es.uji.ei1027.proyectoOvi.models.Pap_Pati;
+import es.uji.ei1027.proyectoOvi.models.UserDetails;
+
+
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -22,6 +28,7 @@ import java.util.List;
 public class AssignmentRequestController {
     private AssignmentRequestDao assignmentRequestDao;
     private PapPatiDao papPatiDao;
+    private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
 
     @Autowired
     public void setAssignmentRequestDao(AssignmentRequestDao assignmentRequestDao){
@@ -32,11 +39,37 @@ public class AssignmentRequestController {
     public void setPapPatiDao(PapPatiDao papPatiDao){
         this.papPatiDao = papPatiDao;
     }
+    //Setter para inyectar el DAO de list
+    @Autowired
+    public void setListOfProposedCandidatesDao(ListOfProposedCandidatesDao listOfProposedCandidatesDao){
+        this.listOfProposedCandidatesDao = listOfProposedCandidatesDao;
+    }
 
+//    @RequestMapping("/list")
+//    public String listAssignmentRequests(Model model){
+//        model.addAttribute("assignmentRequests", assignmentRequestDao.getAssignmentRequests());
+//        return "assignmentRequest/list";
+//    }
+    //List depediendo del rol
     @RequestMapping("/list")
-    public String listAssignmentRequests(Model model){
-        model.addAttribute("assignmentRequests", assignmentRequestDao.getAssignmentRequests());
-        return "assignmentRequest/list";
+    public String list(Model model, HttpSession session) {
+        // 1. Obtenemos el usuario de la sesión (ajusta el nombre del atributo "user" si es otro)
+        // Suponiendo que tu objeto de sesión tiene un método getDni() y getRole()
+        UserDetails user = (UserDetails) session.getAttribute("user");
+
+        if (user == null) {
+            return "redirect:/login"; // Si no hay sesión, al login
+        }
+
+        if (user.getRole().equals("technician")) {
+            // El técnico ve tofo
+            model.addAttribute("assignmentRequests", assignmentRequestDao.getAssignmentRequests());
+            return "technician/assignmentRequest/list";
+        } else {
+            // El OVI User solo ve lo SUYO usando el nuevo método
+            model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByOviUser(user.getDni()));
+            return "assignmentRequest/list";
+        }
     }
 
     @RequestMapping(value="/add")
@@ -113,6 +146,39 @@ public class AssignmentRequestController {
         model.addAttribute("candidates", listaCandidatos);
 
         return "assignmentRequest/proposals";
+    }
+    // METODO 1: ACEPTAR Y GENERAR MATCH
+    @RequestMapping(value="/accept/{id}")
+    public String acceptAndMatch(@PathVariable String id) {
+        // 1. Cambiamos estado de la solicitud
+        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+        request.setStatus("accepted");
+        assignmentRequestDao.updateAssignmentRequest(request);
+
+        // 2. Ejecutamos el Match automático (lo que hablábamos antes)
+        List<Pap_Pati> compatibles = papPatiDao.getProposalsForRequest(id);
+
+        for (Pap_Pati pap : compatibles) {
+            ListOfProposedCandidates proposal = new ListOfProposedCandidates();
+            proposal.setList_id("L-" + id + "-" + pap.getDni());
+            proposal.setRequest_id(id);
+            proposal.setPappati_id(pap.getDni());
+            proposal.setProposalDate(new java.util.Date());
+            proposal.setSuitabilityScore(100.0f);
+
+            listOfProposedCandidatesDao.addListOfProposedCandidates(proposal);
+        }
+        return "redirect:/assignmentRequest/list";
+    }
+
+    // METODO 2: RECHAZAR (SIN MATCH)
+    @RequestMapping(value="/reject/{id}")
+    public String rejectRequest(@PathVariable String id) {
+        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+        request.setStatus("refused"); // O el estado que uses en tu DB
+        assignmentRequestDao.updateAssignmentRequest(request);
+
+        return "redirect:/assignmentRequest/list";
     }
 
 }

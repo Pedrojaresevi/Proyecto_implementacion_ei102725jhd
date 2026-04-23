@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<nav th:fragment="navbar" class="navbar navbar-light bg-light mb-0 py-1 shadow-sm">
+    <div class="container-fluid">
+        <span class="navbar-brand mb-0 h1">Proyecto OVI</span>
+        <div class="d-flex align-items-center" th:if="${session.user != null}">
+            <span class="me-3 text-secondary" th:text="${session.user.username}">Usuario</span>
+            <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm">Cerrar Sesión</a>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

@@ -19,6 +19,7 @@ public final class AssignmentRequestRowMapper implements RowMapper<AssignmentReq
         assignmentRequest.setRequiredSkills(rs.getString("requiredSkills"));
         assignmentRequest.setRequest_Id(rs.getString("request_Id"));
         assignmentRequest.setOviuser_id(rs.getString("oviuser_id"));
+        assignmentRequest.setStatus(rs.getString("status"));
         return assignmentRequest;
     }
 }

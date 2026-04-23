@@ -3,6 +3,7 @@ package es.uji.ei1027.proyectoOvi.controller;
 import es.uji.ei1027.proyectoOvi.dao.AssignmentRequestDao;
 import es.uji.ei1027.proyectoOvi.models.AssignmentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,8 +53,11 @@ public class AssignmentRequestController {
             bindingResult.rejectValue("request_Id", "duplicat",
                     "Ya existe una solicitud con este ID");
             return "assignmentRequest/add";
+        }catch (DataIntegrityViolationException e) {
+            bindingResult.rejectValue("oviuser_id", "no_existe",
+                    "El oviUser no es vàlid");
+            return "assignmentRequest/add";
         }
-
         return "redirect:list";
     }
 

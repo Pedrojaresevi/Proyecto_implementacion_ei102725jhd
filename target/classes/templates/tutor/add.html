@@ -14,7 +14,7 @@
 
         <div class="form-group row">
             <label for="id" class="control-label col-sm-2">DNI: </label>
-            <input id="id" type="text" th:field="*{dni}" class="form-control col-sm-4">
+            <input id="id" type="text" th:field="*{dni}" class="form-control col-sm-4" maxlength="9">
             <div th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"  class="error"></div>
         </div>
 
@@ -44,6 +44,8 @@
 
 
         <button type="submit" class="btn btn-primary">Añadir tutor</button>
+        <br><br>
+        <a href="/" class="btn btn-secondary">Volver</a>
     </form>
 </main>
 </body>

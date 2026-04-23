@@ -13,6 +13,7 @@ public class AssignmentRequest {
     private String requiredExperience;
     private String requiredSkills;
     private String oviuser_id;
+    private String status;
 
     public AssignmentRequest() {
     }
@@ -97,6 +98,14 @@ public class AssignmentRequest {
         this.oviuser_id = oviuser_id;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "AssignmentRequest{" +
@@ -110,6 +119,7 @@ public class AssignmentRequest {
                 ", requiredExperience='" + requiredExperience + '\'' +
                 ", requiredSkills='" + requiredSkills + '\'' +
                 ", oviuser_id='" + oviuser_id + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

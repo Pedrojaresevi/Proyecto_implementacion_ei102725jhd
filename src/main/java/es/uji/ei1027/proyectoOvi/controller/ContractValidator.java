@@ -16,12 +16,18 @@ public class ContractValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         Contract contract = (Contract) obj;
-        if (contract.getContractId() == null || contract.getContractId().trim().equals(""))
-            errors.rejectValue("contractId", "obligatori", "Cal introduir un valor");
+        if (contract.getContract_Id() == null || contract.getContract_Id().trim().equals(""))
+            errors.rejectValue("contract_Id", "obligatori", "Cal introduir un valor");
         //
         List<String> valors = Arrays.asList("accepted", "refused", "in progress");
         if (!valors.contains(contract.getStatus()))
             errors.rejectValue("status", "valor incorrecte",
                     "Deu ser: accepted,refused o in progress");
+        if (contract.getPappati_id() == null || contract.getPappati_id().trim().equals(""))
+            errors.rejectValue("pappati_id", "obligatori", "Cal introduir un valor");
+
+        if (contract.getRequest_Id() == null || contract.getRequest_Id().trim().equals(""))
+            errors.rejectValue("request_Id", "obligatori", "Cal introduir un valor");
+
     }
 }

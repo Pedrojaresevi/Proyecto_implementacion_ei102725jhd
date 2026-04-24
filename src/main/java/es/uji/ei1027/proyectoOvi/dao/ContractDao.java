@@ -20,29 +20,29 @@ public class ContractDao {
 
     public void addContract(Contract contract) {
         jdbcTemplate.update("INSER INTO Contract VALUES (?,?,?,?,?,?,?)",
-                contract.getContractId(), contract.getRequestId(), contract.getStartDate(), contract.getEndDate(),
-                contract.getStatus(), contract.getPlaceWhereThePDFIsGonnaBeSaved(), contract.getPap_patiID());
+                contract.getContract_Id(), contract.getRequest_Id(), contract.getStartDate(), contract.getEndDate(),
+                contract.getStatus(), contract.getPlaceWhereThePDFIsGonnaBeSaved(), contract.getPappati_id());
     }
 
     public void deleteContract(Contract contract) {
-        jdbcTemplate.update("DELETE FROM Contract WHERE contractId=?",
-                contract.getContractId());
+        jdbcTemplate.update("DELETE FROM Contract WHERE contract_Id=?",
+                contract.getContract_Id());
     }
 
     public void deleteContract(String contractId) {
-        jdbcTemplate.update("DELETE FROM Contract WHERE contractId=?",
+        jdbcTemplate.update("DELETE FROM Contract WHERE contract_Id=?",
                 contractId);
     }
 
     public void updateContract(Contract contract) {
-        jdbcTemplate.update("UPDATE Contract SET requestId=?, startDate=?, endDate=?, status=?, PlaceWhereThePDFIsGonnaBeSaved=?, pap_patiId=? WHERE contractId=?",
-                contract.getRequestId(), contract.getStartDate(), contract.getEndDate(),
-                contract.getStatus(), contract.getPlaceWhereThePDFIsGonnaBeSaved(), contract.getPap_patiID(), contract.getContractId());
+        jdbcTemplate.update("UPDATE Contract SET request_Id=?, startDate=?, endDate=?, status=?, PlaceWhereThePDFIsGonnaBeSaved=?, pappati_id=? WHERE contract_Id=?",
+                contract.getRequest_Id(), contract.getStartDate(), contract.getEndDate(),
+                contract.getStatus(), contract.getPlaceWhereThePDFIsGonnaBeSaved(), contract.getPappati_id(), contract.getContract_Id());
     }
 
     public Contract getContract(String contractId) {
         try {
-            return jdbcTemplate.queryForObject("SELECT FROM Contract WHERE contractId=?",
+            return jdbcTemplate.queryForObject("SELECT FROM Contract WHERE contract_Id=?",
                     new ContractRowMapper(), contractId);
         } catch (EmptyResultDataAccessException e)  {
             return null;

@@ -13,9 +13,9 @@
     <form class="form-horizontal" th:action="@{/contract/add}" th:object="${contract}" method="post">
 
         <div class="form-group row">
-            <label for="contractId" class="control-label col-sm-2">Id del Contrato: </label>
-            <input id="contractId" type="text" th:field="*{contractId}" class="form-control col-sm-4" maxlength="20">
-            <div th:if="${#fields.hasErrors('contractId')}" th:errors="*{contractId}"  class="error"></div>
+            <label for="contract_Id" class="control-label col-sm-2">Id del Contrato: </label>
+            <input id="contract_Id" type="text" th:field="*{contract_Id}" class="form-control col-sm-4" maxlength="20">
+            <div th:if="${#fields.hasErrors('contract_Id')}" th:errors="*{contract_Id}"  class="error"></div>
         </div>
 
         <div class="form-group row">
@@ -49,16 +49,16 @@
         </div>
 
         <div class="form-group row">
-            <label for="requestId" class="control-label col-sm-2">Id de la solicitud: </label>
-            <input id="requestId" type="text" th:field="*{requestId}" class="form-control col-sm-4" maxlength="20" required>
-            <div th:if="${#fields.hasErrors('requestId')}" th:errors="*{requestId}"  class="error"></div>
+            <label for="request_Id" class="control-label col-sm-2">Id de la solicitud: </label>
+            <input id="request_Id" type="text" th:field="*{request_Id}" class="form-control col-sm-4" maxlength="20" required>
+            <div th:if="${#fields.hasErrors('request_Id')}" th:errors="*{request_Id}"  class="error"></div>
         </div>
 
 
         <div class="form-group row">
-            <label for="pap_patiID" class="control-label col-sm-2">ID del PAP/PATI:</label>
-            <input type="text" class="form-control" id="pap_patiID" th:field="*{pap_patiID}" maxlength="9" required />
-            <div th:if="${#fields.hasErrors('pap_patiID')}" th:errors="*{pap_patiID}" class="error"></div>
+            <label for="pappati_id" class="control-label col-sm-2">ID del PAP/PATI:</label>
+            <input type="text" class="form-control" id="pappati_id" th:field="*{pappati_id}" maxlength="9" required />
+            <div th:if="${#fields.hasErrors('pappati_id')}" th:errors="*{pappati_id}" class="error"></div>
         </div>
 
         <button type="submit" class="btn btn-primary">Añadir Contrato</button>

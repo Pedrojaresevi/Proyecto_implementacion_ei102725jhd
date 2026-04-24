@@ -50,7 +50,7 @@ public class ContractController {
         try {
             contractDao.addContract(contract);
         } catch (DuplicateKeyException e) {
-            bindingResult.rejectValue("contractId", "duplicat",
+            bindingResult.rejectValue("contract_Id", "duplicat",
                     "Ya existe un contrato con este ID");
             return "contract/add";
         }

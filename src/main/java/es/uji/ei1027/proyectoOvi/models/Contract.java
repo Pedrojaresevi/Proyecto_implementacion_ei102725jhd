@@ -5,30 +5,30 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 public class Contract {
-    private String contractId;
-    private String requestId;
+    private String contract_Id;
+    private String request_Id;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
     private String status;
     private String placeWhereThePDFIsGonnaBeSaved;
-    private String pap_patiID;
+    private String pappati_id;
 
-    public String getContractId() {
-        return contractId;
+    public String getContract_Id() {
+        return contract_Id;
     }
 
-    public void setContractId(String contractId) {
-        this.contractId = contractId;
+    public void setContract_Id(String contract_Id) {
+        this.contract_Id = contract_Id;
     }
 
-    public String getRequestId() {
-        return requestId;
+    public String getRequest_Id() {
+        return request_Id;
     }
 
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
+    public void setRequest_Id(String request_Id) {
+        this.request_Id = request_Id;
     }
 
     public Date getStartDate() {
@@ -63,24 +63,24 @@ public class Contract {
         this.placeWhereThePDFIsGonnaBeSaved = placeWhereThePDFIsGonnaBeSaved;
     }
 
-    public String getPap_patiID() {
-        return pap_patiID;
+    public String getPappati_id() {
+        return pappati_id;
     }
 
-    public void setPap_patiID(String pap_patiID) {
-        this.pap_patiID = pap_patiID;
+    public void setPappati_id(String pappati_id) {
+        this.pappati_id = pappati_id;
     }
 
     @Override
     public String toString() {
         return "Contract{" +
-                "contractId=" + contractId +
-                ", requestId=" + requestId +
+                "contract_Id=" + contract_Id +
+                ", request_Id=" + request_Id +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", status='" + status + '\'' +
                 ", placeWhereThePDFIsGonnaBeSaved='" + placeWhereThePDFIsGonnaBeSaved + '\'' +
-                ", pap_patiID='" + pap_patiID + '\'' +
+                ", pappati_id='" + pappati_id + '\'' +
                 '}';
     }
 }

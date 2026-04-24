@@ -9,13 +9,13 @@ import java.sql.SQLException;
 public final class ContractRowMapper implements RowMapper<Contract> {
     public Contract mapRow(ResultSet rs, int rowNum) throws SQLException {
         Contract contract = new Contract();
-        contract.setContractId("contractId");
-        contract.setRequestId("requestId");
+        contract.setContract_Id("contractId");
+        contract.setRequest_Id("request_Id");
         contract.setStartDate(rs.getDate("startDate"));
         contract.setEndDate(rs.getDate("endDate"));
         contract.setPlaceWhereThePDFIsGonnaBeSaved(rs.getString("PlaceWhereThePDFIsGonnaBeSaved"));
         contract.setStatus(rs.getString("status"));
-        contract.setPap_patiID(rs.getString("pap_patiID"));
+        contract.setPappati_id(rs.getString("pappati_id"));
         return contract;
     }
 }

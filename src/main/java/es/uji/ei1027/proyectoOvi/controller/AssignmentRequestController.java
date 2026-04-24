@@ -149,6 +149,7 @@ public class AssignmentRequestController {
 
     @RequestMapping(value="/delete/{id}")
     public String processDelete(@PathVariable String id) {
+        listOfProposedCandidatesDao.deleteCandidatesByRequestId(id);
         assignmentRequestDao.deleteAssignmentRequest(id);
         return "redirect:../list";
     }
@@ -172,7 +173,7 @@ public class AssignmentRequestController {
         model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
         return "technician/assignmentRequest/accept";
     }
-    @RequestMapping(value="/accept/{id}")
+    @RequestMapping(value="/accept/execute/{id}")
     public String acceptAndMatch(@PathVariable String id) {
         // 1. Recuperamos la solicitud
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);

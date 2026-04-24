@@ -25,19 +25,19 @@
     </thead>
     <tbody>
     <tr th:each="contract: ${contracts}">
-        <td th:text="${contract.contractId}"></td>
-        <td th:text="${contract.requestId}"></td>
+        <td th:text="${contract.contract_Id}"></td>
+        <td th:text="${contract.request_Id}"></td>
         <td th:text="${contract.startDate}"></td>
         <td th:text="${contract.endDate}"></td>
         <td th:text="${contract.status}"></td>
         <td th:text="${contract.placeWhereThePDFIsGonnaBeSaved}"></td>
-        <td th:text="${contract.pap_patiID}"></td>
+        <td th:text="${contract.pappati_id}"></td>
 
 
 
-        <td><a th:href="@{/contract/update/{contractId}(contractId=${contract.contractId})}" class="btn btn-warning">Edita</a>
+        <td><a th:href="@{/contract/update/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-warning">Edita</a>
         </td>
-        <td><a th:href="@{/contract/delete/{contractId}(contractId=${contract.contractId})}" class="btn btn-danger">Esborra</a>
+        <td><a th:href="@{/contract/delete/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-danger">Esborra</a>
         </td>
     </tr>
     </tbody>

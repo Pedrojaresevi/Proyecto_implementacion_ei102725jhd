@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Bienvenido a OVI Castelló</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    /* Un pequeño estilo para que la pantalla ocupe toda la altura */
+    .hero-section {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<div class="container hero-section">
+  <div class="row w-100 justify-content-center text-center">
+    <div class="col-md-8">
+
+      <h1 class="display-4 fw-bold text-success mb-4">Oficina de Vida Independiente</h1>
+      <h2 class="h4 text-secondary mb-4">OVI Castelló</h2>
+
+      <p class="lead mb-5">
+        Somos una entidad sin ánimo de lucro dirigida y gestionada por personas con
+        diversidad funcional y necesidad de asistencia personal vinculadas a la provincia de Castellón.
+        Nuestro objetivo es fomentar la autonomía y la vida independiente.
+      </p>
+
+      <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+        <a th:href="@{/login}" class="btn btn-success btn-lg px-4 gap-3">
+          Iniciar Sesión
+        </a>
+
+        <a th:href="@{/register}" class="btn btn-outline-success btn-lg px-4">
+          Registrarse como Usuario Nuevo
+        </a>
+      </div>
+
+      <div class="mt-5">
+        <a href="https://ovicastello.org/" target="_blank" class="text-decoration-none text-muted">
+          <small>Visita nuestra web oficial: ovicastello.org</small>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

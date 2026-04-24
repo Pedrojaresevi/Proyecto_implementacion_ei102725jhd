@@ -28,6 +28,11 @@ public class TutorController {
         this.tutorDao = tutorDao;
     }
 
+    @Autowired
+    public void setOviUserDao(OviUserDao oviUserDao){
+        this.oviUserDao = oviUserDao;
+    }
+
     @RequestMapping("/list")
     public String listTutors(Model model){
         model.addAttribute("tutors", tutorDao.getTutors());

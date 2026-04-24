@@ -55,4 +55,12 @@ public class ListOfProposedCandidatesDao {
             return null;
         }
     }
+    // Metodo para borrar todos los candidatos propuestos asociados a una solicitud específica
+    public void deleteCandidatesByRequestId(String requestId) {
+        // La consulta SQL para borrar por request_id
+        String sql = "DELETE FROM listofproposedcandidates WHERE request_id = ?";
+
+        // Ejecutamos la consulta pasándole el ID que recibimos como parámetro
+        jdbcTemplate.update(sql, requestId);
+    }
 }

@@ -8,6 +8,10 @@
           th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+    <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
 <h1>Gestió de la OVI</h1>
 <ul>
     <li><a href="pap_pati/list">Gestión de PAP/PATI</a></li>

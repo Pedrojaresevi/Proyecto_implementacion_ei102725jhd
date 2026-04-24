@@ -7,6 +7,10 @@
     <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+    <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
 <main class="container">
     <h1>Modificar OviUser</h1>
     <form class="form-horizontal" th:action="@{/oviUser/update}" th:object="${oviUser}" method="post">
@@ -84,7 +88,7 @@
 
         <button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
         <br><br>
-        <a href="/" class="btn btn-secondary">Volver</a>
+        <a href="/oviUser/list" class="btn btn-secondary">Volver</a>
     </form>
 </main>
 </body>

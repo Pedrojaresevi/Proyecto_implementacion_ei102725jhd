@@ -33,7 +33,8 @@ public class LoginController {
             user.setRole("technician");
 
             session.setAttribute("user", user); // ¡Aquí se guarda en la sesión!
-            return "redirect:/assignmentRequest/list";
+            //return "redirect:/assignmentRequest/list";
+            return "redirect:/dashboard";
         }
 
         // 2. LÓGICA PARA EL OVI USER
@@ -49,7 +50,8 @@ public class LoginController {
             user.setRole("oviuser");
 
             session.setAttribute("user", user);
-            return "redirect:/assignmentRequest/list";
+            //return "redirect:/assignmentRequest/list";
+            return "redirect:/dashboard";
         }
 
         // Si falla, volvemos al login con error

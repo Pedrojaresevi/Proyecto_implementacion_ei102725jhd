@@ -8,6 +8,10 @@
           th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+    <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
 <main class="container">
     <h1>Modificar Negociación</h1>
     <form class="form-horizontal" th:action="@{/negotiation/update}" th:object="${negotiation}" method="post">

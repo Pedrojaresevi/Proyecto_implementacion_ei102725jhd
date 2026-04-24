@@ -6,11 +6,20 @@
 
 <nav th:fragment="navbar" class="navbar navbar-light bg-light mb-0 py-1 shadow-sm">
     <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1">Proyecto OVI</span>
+
+        <div class="d-flex align-items-center">
+            <span class="navbar-brand mb-0 h1 me-4">Proyecto OVI</span>
+
+            <a th:if="${session.user != null}" th:href="@{/dashboard}" class="btn btn-outline-primary btn-sm">
+                🏠 Home
+            </a>
+        </div>
+
         <div class="d-flex align-items-center" th:if="${session.user != null}">
             <span class="me-3 text-secondary" th:text="${session.user.username}">Usuario</span>
             <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm">Cerrar Sesión</a>
         </div>
+
     </div>
 </nav>
 

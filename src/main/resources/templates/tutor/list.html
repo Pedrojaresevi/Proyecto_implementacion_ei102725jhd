@@ -27,6 +27,12 @@
         <td th:text="${tutor.email}"></td>
         <td th:text="${tutor.status}"></td>
 
+        <td>
+            <a th:href="@{/tutor/users/{dni}(dni=${tutor.dni})}" class="btn btn-info btn-sm text-white">
+                Ver personas a cargo
+            </a>
+        </td>
+
         <td><a th:href="@{/tutor/update/{dni}(dni=${tutor.dni})}" class="btn btn-warning">Edita</a>
         </td>
         <td><a th:href="@{/tutor/delete/{dni}(dni=${tutor.dni})}" class="btn btn-danger">Esborra</a>

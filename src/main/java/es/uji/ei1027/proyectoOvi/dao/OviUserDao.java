@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -61,6 +62,18 @@ public class OviUserDao {
                     new OviUserRowMapper());
         } catch (EmptyResultDataAccessException e)  {
             return null;
+        }
+    }
+
+    public List<OviUser> getOviUsersByTutor(String tutorDni) {
+        try {
+            return jdbcTemplate.query(
+                    "SELECT * FROM OviUser WHERE tutor_id = ?",
+                    new OviUserRowMapper(),
+                    tutorDni
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<OviUser>();
         }
     }
 }

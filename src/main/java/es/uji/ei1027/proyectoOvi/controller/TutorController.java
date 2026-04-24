@@ -1,5 +1,6 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
+import es.uji.ei1027.proyectoOvi.dao.OviUserDao;
 import es.uji.ei1027.proyectoOvi.dao.TutorDao;
 import es.uji.ei1027.proyectoOvi.models.Tutor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/tutor")
 public class TutorController {
     private TutorDao tutorDao;
+    private OviUserDao oviUserDao;
 
     @Autowired
     public void setTutorDao(TutorDao tutorDao){
@@ -85,5 +87,16 @@ public class TutorController {
     public String processDelete(@PathVariable String dni) {
         tutorDao.deleteTutor(dni);
         return "redirect:../list";
+    }
+
+    @RequestMapping("/users/{dni}")
+    public String listUsersByTutor(Model model, @PathVariable String dni) {
+        // Obtenemos el tutor para mostrar su nombre en el título
+        model.addAttribute("tutor", tutorDao.getTutor(dni));
+
+        // Obtenemos la lista de personas a su cargo
+        model.addAttribute("oviUsers", oviUserDao.getOviUsersByTutor(dni));
+
+        return "tutor/list_minors";
     }
 }

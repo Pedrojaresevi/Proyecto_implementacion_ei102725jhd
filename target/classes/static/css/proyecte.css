@@ -33,3 +33,8 @@ label {
     padding-left: 20px;
     padding-right: 20px;
 }
+/* Ajuste para que la tabla ocupe bien el espacio */
+.container-fluid {
+    padding-left: 20px;
+    padding-right: 20px;
+}

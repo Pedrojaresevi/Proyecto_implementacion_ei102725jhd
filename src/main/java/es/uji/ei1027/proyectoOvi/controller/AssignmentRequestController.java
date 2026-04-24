@@ -16,10 +16,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -169,38 +166,69 @@ public class AssignmentRequestController {
 
         return "assignmentRequest/proposals";
     }
-    // METODO 1: ACEPTAR Y GENERAR MATCH
+    // 1. Solo muestra la pantalla de confirmación
+    @RequestMapping(value="/accept/{id}", method = RequestMethod.GET)
+    public String confirmAccept(Model model, @PathVariable String id) {
+        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
+        return "technician/assignmentRequest/accept";
+    }
     @RequestMapping(value="/accept/{id}")
     public String acceptAndMatch(@PathVariable String id) {
-        // 1. Cambiamos estado de la solicitud
+        // 1. Recuperamos la solicitud
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-        request.setStatus("accepted");
-        assignmentRequestDao.updateAssignmentRequest(request);
+        // OPCIONAL: Solo ejecutamos si la solicitud NO estaba aceptada ya
+        if (request != null && !"accepted".equals(request.getStatus())) {
+            // 2. Cambiamos estado
+            request.setStatus("accepted");
+            assignmentRequestDao.updateAssignmentRequest(request);
+            // 3. Ejecutamos el Match automático
+            List<Pap_Pati> compatibles = papPatiDao.getProposalsForRequest(id);
+            for (Pap_Pati pap : compatibles) {
+                try {
+                    ListOfProposedCandidates proposal = new ListOfProposedCandidates();
+                    proposal.setList_id("L-" + id + "-" + pap.getDni());
+                    proposal.setRequest_id(id);
+                    proposal.setPappati_id(pap.getDni());
+                    proposal.setProposalDate(new java.util.Date());
+                    proposal.setSuitabilityScore(100.0f);
 
-        // 2. Ejecutamos el Match automático (lo que hablábamos antes)
-        List<Pap_Pati> compatibles = papPatiDao.getProposalsForRequest(id);
-
-        for (Pap_Pati pap : compatibles) {
-            ListOfProposedCandidates proposal = new ListOfProposedCandidates();
-            proposal.setList_id("L-" + id + "-" + pap.getDni());
-            proposal.setRequest_id(id);
-            proposal.setPappati_id(pap.getDni());
-            proposal.setProposalDate(new java.util.Date());
-            proposal.setSuitabilityScore(100.0f);
-
-            listOfProposedCandidatesDao.addListOfProposedCandidates(proposal);
+                    listOfProposedCandidatesDao.addListOfProposedCandidates(proposal);
+                } catch (DuplicateKeyException e) {
+                    // Si ya existía esta propuesta, simplemente la saltamos y seguimos con el siguiente
+                    continue;
+                }
+            }
         }
         return "redirect:/assignmentRequest/list";
     }
 
-    // METODO 2: RECHAZAR (SIN MATCH)
-    @RequestMapping(value="/reject/{id}")
-    public String rejectRequest(@PathVariable String id) {
+    // Muestra la pantalla de confirmación de rechazo
+    @RequestMapping(value="/reject/{id}", method = RequestMethod.GET)
+    public String confirmReject(Model model, @PathVariable String id) {
+        // Recupera la solicitud y la envía a la vista para que pueda mostrar el ID
+        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
+        return "technician/assignmentRequest/reject";
+    }
+
+    // Ejecuta el rechazo real y vuelve a la lista
+    @RequestMapping(value="/reject/execute/{id}", method = RequestMethod.POST)
+    public String executeReject(@PathVariable String id, @RequestParam("rejectReason") String rejectReason) {
+
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-        request.setStatus("refused"); // O el estado que uses en tu DB
-        assignmentRequestDao.updateAssignmentRequest(request);
+
+        if (request != null && !"refused".equals(request.getStatus())) {
+            request.setStatus("refused");
+
+            // ⚠️ ATENCIÓN AQUÍ ⚠️
+            // Si tienes un campo en tu clase AssignmentRequest para guardar el motivo, sería algo así:
+            // request.setRejectReason(rejectReason);
+
+            assignmentRequestDao.updateAssignmentRequest(request);
+
+            // Opcional: Podrías hacer un print para comprobar que llega bien el texto
+            System.out.println("Solicitud " + id + " rechazada por: " + rejectReason);
+        }
 
         return "redirect:/assignmentRequest/list";
     }
-
 }

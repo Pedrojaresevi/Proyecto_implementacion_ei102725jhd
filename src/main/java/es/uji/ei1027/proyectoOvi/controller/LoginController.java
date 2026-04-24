@@ -54,6 +54,16 @@ public class LoginController {
             return "redirect:/dashboard";
         }
 
+        if (username.equals("T001") && password.equals("1234")) {
+            UserDetails user = new UserDetails();
+            user.setDni("T001");
+            user.setUsername("Tutor Prueba");
+            user.setRole("tutor");
+
+            session.setAttribute("user", user);
+            return "redirect:/assignmentRequest/list";
+        }
+
         // Si falla, volvemos al login con error
         model.addAttribute("error", "Usuario o contraseña incorrectos");
         return "login";

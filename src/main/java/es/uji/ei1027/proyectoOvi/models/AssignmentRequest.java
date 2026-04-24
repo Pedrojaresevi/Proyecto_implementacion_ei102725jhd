@@ -20,6 +20,8 @@ public class AssignmentRequest {
     private String oviuser_id;
     private String status = "in progress";
 
+    private String tutor_id;
+
     public AssignmentRequest() {
     }
 
@@ -101,6 +103,14 @@ public class AssignmentRequest {
 
     public void setOviuser_id(String oviuser_id) {
         this.oviuser_id = oviuser_id;
+    }
+
+    public String getTutor_id() {
+        return tutor_id;
+    }
+
+    public void setTutor_id(String tutor_id) {
+        this.tutor_id = tutor_id;
     }
 
     public String getStatus() {

@@ -19,11 +19,11 @@ public class AssignmentRequestDao  {
     }
 
     public void addAssignmentRequest(AssignmentRequest assignmentRequest) {
-        jdbcTemplate.update("INSERT INTO AssignmentRequest VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+        jdbcTemplate.update("INSERT INTO AssignmentRequest VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                 assignmentRequest.getRequest_Id(), assignmentRequest.getRequestDate(), assignmentRequest.getTypeOfService(),
                 assignmentRequest.getRequiredStartAvailability(), assignmentRequest.getRequiredEndAvailability(), assignmentRequest.getServiceLocation(),
                 assignmentRequest.getRequiredTraining(), assignmentRequest.getRequiredExperience(), assignmentRequest.getRequiredSkills(),
-                assignmentRequest.getOviuser_id(),assignmentRequest.getStatus());
+                assignmentRequest.getOviuser_id(),assignmentRequest.getStatus(), assignmentRequest.getTutor_id());
     }
 
     public void deleteAssignmentRequest(AssignmentRequest assignmentRequest) {
@@ -36,11 +36,11 @@ public class AssignmentRequestDao  {
     }
 
     public void updateAssignmentRequest(AssignmentRequest assignmentRequest) {
-        jdbcTemplate.update("UPDATE AssignmentRequest SET requestDate=?, typeOfService=?, requiredStartAvailability=?, requiredEndAvailability=?, serviceLocation=?, requiredTraining=?, requiredExperience=?, requiredSkills=?, oviuser_id=?, status=? WHERE request_Id=?",
+        jdbcTemplate.update("UPDATE AssignmentRequest SET requestDate=?, typeOfService=?, requiredStartAvailability=?, requiredEndAvailability=?, serviceLocation=?, requiredTraining=?, requiredExperience=?, requiredSkills=?, oviuser_id=?, status=?, tutor_id=? WHERE request_Id=?",
                 assignmentRequest.getRequestDate(), assignmentRequest.getTypeOfService(),
                 assignmentRequest.getRequiredStartAvailability(), assignmentRequest.getRequiredEndAvailability(), assignmentRequest.getServiceLocation(),
                 assignmentRequest.getRequiredTraining(), assignmentRequest.getRequiredExperience(), assignmentRequest.getRequiredSkills(),
-                assignmentRequest.getOviuser_id(),assignmentRequest.getStatus(), assignmentRequest.getRequest_Id());
+                assignmentRequest.getOviuser_id(),assignmentRequest.getStatus(), assignmentRequest.getTutor_id() , assignmentRequest.getRequest_Id());
     }
 
     public AssignmentRequest getAssignmentRequest(String requestId) {
@@ -68,6 +68,18 @@ public class AssignmentRequestDao  {
                     "SELECT * FROM AssignmentRequest WHERE oviuser_id=?",
                     new AssignmentRequestRowMapper(),
                     oviuserId
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<AssignmentRequest>();
+        }
+    }
+
+    public List<AssignmentRequest> getRequestsByTutor(String tutorId) {
+        try {
+            return jdbcTemplate.query(
+                    "SELECT * FROM AssignmentRequest WHERE tutor_id=?",
+                    new AssignmentRequestRowMapper(),
+                    tutorId
             );
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<AssignmentRequest>();

@@ -62,24 +62,50 @@ public class AssignmentRequestController {
             // El técnico ve tofo
             model.addAttribute("assignmentRequests", assignmentRequestDao.getAssignmentRequests());
             return "technician/assignmentRequest/list";
-        } else {
+        } else if(user.getRole().equals("oviuser")) {
             // El OVI User solo ve lo SUYO usando el nuevo método
             model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByOviUser(user.getDni()));
             return "assignmentRequest/list";
+        }else{
+            model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByTutor(user.getDni()));
+            return "tutor/assignmentRequest/list";
         }
     }
 
     @RequestMapping(value="/add")
-    public String addAssignmentRequest(Model model) {
+    public String addAssignmentRequest(Model model, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
         model.addAttribute("assignmentRequest", new AssignmentRequest());
-        return "assignmentRequest/add";
+
+        if(user.getRole().equals("oviuser"))
+            return "assignmentRequest/add";
+        else
+            return "tutor/assignmentRequest/add";
     }
 
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
                                    BindingResult bindingResult, HttpSession session) {
-        // 1. ASIGNAR EL DNI DEL USUARIO LOGUEADO
+
         UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user != null) {
+            if ("oviuser".equals(user.getRole())) {
+                assignmentRequest.setOviuser_id(user.getDni());
+                // Aseguramos que tutor_id esté nulo por la regla CHECK de la BD
+                assignmentRequest.setTutor_id(null);
+            } else if ("tutor".equals(user.getRole())) {
+                assignmentRequest.setTutor_id(user.getDni());
+                // Aseguramos que oviuser_id esté nulo
+                assignmentRequest.setOviuser_id(null);
+            }
+        }
+
+        // 1. ASIGNAR EL DNI DEL USUARIO LOGUEADO
         if (user != null) {
             assignmentRequest.setOviuser_id(user.getDni());
         }
@@ -107,6 +133,9 @@ public class AssignmentRequestController {
         assignmentRequestValidator.validate(assignmentRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
+            if (user != null && "tutor".equals(user.getRole())) {
+                return "tutor/assignmentRequest/add";
+            }
             return "assignmentRequest/add";
         }
 

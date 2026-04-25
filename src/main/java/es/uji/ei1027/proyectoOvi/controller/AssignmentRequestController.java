@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -253,5 +254,19 @@ public class AssignmentRequestController {
         }
 
         return "redirect:/assignmentRequest/list";
+    }
+
+    @ModelAttribute("provincias")
+    public List<String> getProvincias() {
+        return Arrays.asList(
+                "Alicante", "Castellón", "Valencia", "Madrid", "Barcelona", "Tarragona", "Albacete"
+        );
+    }
+
+    @ModelAttribute("skillsDisponibles")
+    public List<String> getSkillsDisponibles() {
+        return Arrays.asList(
+                "Lenguaje de signos", "Primeros auxilios", "Manejo de silla de ruedas", "Conducción", "Cocina", "Acompañamiento"
+        );
     }
 }

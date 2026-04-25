@@ -25,7 +25,7 @@
     <th>Required Training</th>
     <th>Required Experience</th>
     <th>Required Skills</th>
-    <th>OVI User Id</th>
+    <th>DNI realizador</th>
     <th>Status</th>
     <th class="text-center">Acciones de Gestión</th>
     <td></td> <!-- no usar <th> quan no hi ha capçalera -->
@@ -43,7 +43,7 @@
     <td th:text="${assignmentRequest.requiredTraining}"></td>
     <td th:text="${assignmentRequest.requiredExperience}"></td>
     <td th:text="${assignmentRequest.requiredSkills}"></td>
-    <td th:text="${assignmentRequest.oviuser_id}"></td>
+    <td th:text="${assignmentRequest.oviuser_id == null ? assignmentRequest.tutor_id : assignmentRequest.oviuser_id}"></td>
 
     <td>
         <span th:text="${assignmentRequest.status}"

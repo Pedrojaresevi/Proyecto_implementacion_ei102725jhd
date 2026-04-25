@@ -105,10 +105,11 @@ public class AssignmentRequestController {
             }
         }
 
-        // 1. ASIGNAR EL DNI DEL USUARIO LOGUEADO
-        if (user != null) {
-            assignmentRequest.setOviuser_id(user.getDni());
-        }
+        System.out.println("=== DEBUG ANTES DE VALIDAR ===");
+        System.out.println("Rol del usuario en sesión: " + (user != null ? user.getRole() : "NULO"));
+        System.out.println("Valor de oviuser_id: " + assignmentRequest.getOviuser_id());
+        System.out.println("Valor de tutor_id: " + assignmentRequest.getTutor_id());
+        System.out.println("==============================");
 
         // 2. GENERACIÓN DEL ID SECUENCIAL
         String ultimoId = assignmentRequestDao.getLastRequestId();

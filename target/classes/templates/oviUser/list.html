@@ -8,6 +8,10 @@
           th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+    <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
 <h1>Lista de OVI Users</h1>
 <table>
     <thead>
@@ -50,6 +54,6 @@
 </table>
 <a href="add" class="btn btn-primary">Añadir OVI user</a>
 <br><br>
-<a href="/" class="btn btn-secondary">Volver</a>
+<a href="/dashboard" class="btn btn-secondary">Volver</a>
 </body>
 </html>

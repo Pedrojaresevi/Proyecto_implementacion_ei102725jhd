@@ -62,13 +62,16 @@ public class AssignmentRequestController {
             // El técnico ve tofo
             model.addAttribute("assignmentRequests", assignmentRequestDao.getAssignmentRequests());
             return "technician/assignmentRequest/list";
-        } else if(user.getRole().equals("oviuser")) {
-            // El OVI User solo ve lo SUYO usando el nuevo método
-            model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByOviUser(user.getDni()));
+        } else {
+            // Cargamos la lista correspondiente según quién sea
+            if (user.getRole().equals("oviuser")) {
+                model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByOviUser(user.getDni()));
+            } else if (user.getRole().equals("tutor")) {
+                model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByTutor(user.getDni()));
+            }
+
+            // Ambos van al mismo archivo HTML a mostrar su lista
             return "assignmentRequest/list";
-        }else{
-            model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByTutor(user.getDni()));
-            return "tutor/assignmentRequest/list";
         }
     }
 
@@ -82,10 +85,8 @@ public class AssignmentRequestController {
 
         model.addAttribute("assignmentRequest", new AssignmentRequest());
 
-        if(user.getRole().equals("oviuser"))
-            return "assignmentRequest/add";
-        else
-            return "tutor/assignmentRequest/add";
+        // Ambos roles van al mismo formulario
+        return "assignmentRequest/add";
     }
 
     @RequestMapping(value="/add", method= RequestMethod.POST)
@@ -104,12 +105,6 @@ public class AssignmentRequestController {
                 assignmentRequest.setOviuser_id(null);
             }
         }
-
-        System.out.println("=== DEBUG ANTES DE VALIDAR ===");
-        System.out.println("Rol del usuario en sesión: " + (user != null ? user.getRole() : "NULO"));
-        System.out.println("Valor de oviuser_id: " + assignmentRequest.getOviuser_id());
-        System.out.println("Valor de tutor_id: " + assignmentRequest.getTutor_id());
-        System.out.println("==============================");
 
         // 2. GENERACIÓN DEL ID SECUENCIAL
         String ultimoId = assignmentRequestDao.getLastRequestId();
@@ -134,9 +129,6 @@ public class AssignmentRequestController {
         assignmentRequestValidator.validate(assignmentRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            if (user != null && "tutor".equals(user.getRole())) {
-                return "tutor/assignmentRequest/add";
-            }
             return "assignmentRequest/add";
         }
 

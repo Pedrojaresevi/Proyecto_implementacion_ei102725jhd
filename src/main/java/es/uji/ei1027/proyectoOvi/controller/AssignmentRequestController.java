@@ -259,7 +259,14 @@ public class AssignmentRequestController {
     @ModelAttribute("provincias")
     public List<String> getProvincias() {
         return Arrays.asList(
-                "Alicante", "Castellón", "Valencia", "Madrid", "Barcelona", "Tarragona", "Albacete"
+                "Albacete", "Alicante", "Castellón", "Valencia", "Madrid", "Barcelona", "Tarragona"
+        );
+    }
+
+    @ModelAttribute("anyosExperiencia")
+    public List<String> getRequiredExperience() {
+        return Arrays.asList(
+                "0", "1", "2", "3", "4", "5 o más"
         );
     }
 

@@ -37,14 +37,12 @@
 
     <div class="form-group row">
       <label for="serviceLocation" class="control-label col-sm-2">Ubicación:</label>
-      <div class="col-sm-4">
-        <select class="form-select" id="serviceLocation" th:field="*{serviceLocation}">
-          <option value="">Selecciona una provincia...</option>
-          <option th:each="provincia : ${provincias}"
-                  th:value="${provincia}"
-                  th:text="${provincia}"></option>
-        </select>
-      </div>
+      <select class="form-select" id="serviceLocation" th:field="*{serviceLocation}">
+        <option value="">Selecciona una provincia...</option>
+        <option th:each="provincia : ${provincias}"
+                th:value="${provincia}"
+                th:text="${provincia}"></option>
+      </select>
       <div th:if="${#fields.hasErrors('serviceLocation')}" th:errors="*{serviceLocation}" class="error"></div>
     </div>
 
@@ -55,19 +53,26 @@
     </div>
 
     <div class="form-group row">
-      <label for="requiredExperience" class="control-label col-sm-2">Experiencia necesaria:</label>
-      <input type="text" class="form-control" id="requiredExperience" th:field="*{requiredExperience}" maxlength="150"/>
-      <div th:if="${#fields.hasErrors('requiredExperience')}" th:errors="*{requiredExperience}"  class="error"></div>
+      <label for="serviceLocation" class="control-label col-sm-2">Experiencia necesaria:</label>
+      <select class="form-select" id="requiredExperience" th:field="*{requiredExperience}">
+        <option value="">Seleccione cuántos años de experiencia...</option>
+        <option th:each="anyo : ${anyosExperiencia}"
+                th:value="${anyo}"
+                th:text="${anyo}"></option>
+      </select>
+      <div th:if="${#fields.hasErrors('requiredExperience')}" th:errors="*{requiredExperience}" class="error"></div>
     </div>
 
     <div class="form-group row">
-      <label class="control-label col-sm-2">Habilidades requeridas:</label>
-      <div class="col-sm-10">
-        <div th:each="skill : ${skillsDisponibles}" class="form-check form-check-inline">
+      <label class="control-label col-sm-12">Habilidades requeridas:</label>
+
+      <div class="ms-4">
+        <div th:each="skill : ${skillsDisponibles}" class="form-check">
           <input class="form-check-input" type="checkbox" th:field="*{requiredSkills}" th:value="${skill}">
-          <label class="form-check-label" th:for="${#ids.prev('requiredSkills')}" th:text="${skill}"></label>
+          <label class="form-check-label fw-normal" th:for="${#ids.prev('requiredSkills')}" th:text="${skill}"></label>
         </div>
       </div>
+
       <div th:if="${#fields.hasErrors('requiredSkills')}" th:errors="*{requiredSkills}" class="error"></div>
     </div>
 

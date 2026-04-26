@@ -61,7 +61,7 @@ public class LoginController {
             user.setRole("tutor");
 
             session.setAttribute("user", user);
-            return "redirect:/assignmentRequest/list";
+            return "redirect:/dashboard";
         }
 
         // Si falla, volvemos al login con error

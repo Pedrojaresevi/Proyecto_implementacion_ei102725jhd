@@ -46,9 +46,9 @@
         </div>
 
         <div class="form-group row">
-            <label for="placeWhereThePDFisGonnaBeSaved" class="control-label col-sm-2">Lugar dónde el PDF será guardado:</label>
-            <input type="text" class="form-control" id="placeWhereThePDFisGonnaBeSaved" th:field="*{placeWhereThePDFisGonnaBeSaved}" maxlength="150" required />
-            <div th:if="${#fields.hasErrors('placeWhereThePDFisGonnaBeSaved')}" th:errors="*{placeWhereThePDFisGonnaBeSaved}"  class="error"></div>
+            <label for="placeWhereThePDFIsGonnaBeSaved" class="control-label col-sm-2">Lugar dónde el PDF será guardado:</label>
+            <input type="text" class="form-control" id="placeWhereThePDFIsGonnaBeSaved" th:field="*{placeWhereThePDFIsGonnaBeSaved}" maxlength="150" required />
+            <div th:if="${#fields.hasErrors('placeWhereThePDFIsGonnaBeSaved')}" th:errors="*{placeWhereThePDFIsGonnaBeSaved}"  class="error"></div>
 
         </div>
 
@@ -67,7 +67,7 @@
 
         <button type="submit" class="btn btn-primary">Añadir Contrato</button>
         <br><br>
-        <a href="/" class="btn btn-secondary">Volver</a>
+        <a href="/contract/list" class="btn btn-secondary">Volver</a>
     </form>
 </main>
 </body>

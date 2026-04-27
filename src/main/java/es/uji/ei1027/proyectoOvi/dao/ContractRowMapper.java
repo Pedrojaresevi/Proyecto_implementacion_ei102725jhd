@@ -9,8 +9,8 @@ import java.sql.SQLException;
 public final class ContractRowMapper implements RowMapper<Contract> {
     public Contract mapRow(ResultSet rs, int rowNum) throws SQLException {
         Contract contract = new Contract();
-        contract.setContract_Id("contractId");
-        contract.setRequest_Id("request_Id");
+        contract.setContract_Id(rs.getString("contract_Id"));
+        contract.setRequest_Id(rs.getString("request_Id"));
         contract.setStartDate(rs.getDate("startDate"));
         contract.setEndDate(rs.getDate("endDate"));
         contract.setPlaceWhereThePDFIsGonnaBeSaved(rs.getString("PlaceWhereThePDFIsGonnaBeSaved"));

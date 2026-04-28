@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+    <meta charset="UTF-8" />
+    <title>Gestionar Solicitud PAP/PATI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+    <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
+<main class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Expediente Completo del Candidato</h2>
+        <span th:if="${pap_pati.status == 'accepted'}" class="badge bg-success fs-5">Aceptado</span>
+        <span th:if="${pap_pati.status == 'refused'}" class="badge bg-danger fs-5">Rechazado</span>
+        <span th:if="${pap_pati.status == 'in progress'}" class="badge bg-warning text-dark fs-5">Pendiente de Revisión</span>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="bi bi-person-badge"></i> Datos Personales</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4"><strong>Nombre completo:</strong> <p th:text="${pap_pati.name} + ' ' + ${pap_pati.surname}"></p></div>
+                <div class="col-md-4"><strong>DNI:</strong> <p th:text="${pap_pati.dni}"></p></div>
+                <div class="col-md-4"><strong>Fecha de Nacimiento:</strong> <p th:text="${pap_pati.dateOfBirth}"></p></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4"><strong>Email:</strong> <p th:text="${pap_pati.email}"></p></div>
+                <div class="col-md-4"><strong>Teléfono:</strong> <p th:text="${pap_pati.phone}"></p></div>
+                <div class="col-md-4"><strong>Dirección:</strong> <p th:text="${pap_pati.address}"></p></div>
+            </div>
+        </div>
+
+        <div class="card-header bg-secondary text-white">
+            <h4 class="mb-0">Perfil Profesional y Disponibilidad</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6"><strong>Formación Específica:</strong> <p th:text="${pap_pati.specificTraining}"></p></div>
+                <div class="col-md-6"><strong>Experiencia:</strong> <p th:text="${pap_pati.typeOfExperience}"></p></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6"><strong>Habilidades:</strong> <p th:text="${pap_pati.skills}"></p></div>
+                <div class="col-md-6"><strong>Movilidad Geográfica:</strong> <p th:text="${pap_pati.geographicMobility}"></p></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6"><strong>Disponible desde:</strong> <p th:text="${pap_pati.startDate}"></p></div>
+                <div class="col-md-6"><strong>Disponible hasta:</strong> <p th:text="${pap_pati.endDate}"></p></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <strong>Enlace al Currículum:</strong> <br>
+                    <a th:href="${pap_pati.curriculumVitae}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
+                        Ver Documento CV
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer bg-light text-muted">
+            <small>Identificador de usuario: <span th:text="${pap_pati.userAndPassword}"></span></small>
+        </div>
+    </div>
+
+    <div class="mt-4 p-4 border rounded bg-white shadow-sm" th:if="${pap_pati.status == 'in progress'}">
+        <h4>¿Deseas validar esta solicitud?</h4>
+        <p class="text-muted">Al aceptar, el candidato podrá ser asignado a solicitudes de usuarios OVI.</p>
+        <div class="d-flex gap-3 mt-3">
+            <a th:href="@{/pap_pati/accept/{dni}(dni=${pap_pati.dni})}" class="btn btn-success btn-lg px-5">Aceptar Candidato</a>
+            <a th:href="@{/pap_pati/reject/{dni}(dni=${pap_pati.dni})}" class="btn btn-danger btn-lg px-5">Rechazar Candidato</a>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a th:href="@{/pap_pati/list}" class="btn btn-outline-secondary">Volver al listado</a>
+    </div>
+</main>
+</body>
+</html>

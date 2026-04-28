@@ -42,7 +42,7 @@ public class ContractDao {
 
     public Contract getContract(String contractId) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Contract WHERE contract_Id=?",
+            return jdbcTemplate.queryForObject("SELECT *  FROM Contract WHERE contract_Id=?",
                     new ContractRowMapper(), contractId);
         } catch (EmptyResultDataAccessException e)  {
             return null;

@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AssignmentRequestValidator implements Validator {
+
     @Override
     public boolean supports(Class<?> cls) {
         return AssignmentRequest.class.equals(cls);

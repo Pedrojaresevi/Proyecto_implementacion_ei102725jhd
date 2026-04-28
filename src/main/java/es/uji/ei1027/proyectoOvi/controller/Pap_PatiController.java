@@ -85,4 +85,39 @@ public class Pap_PatiController {
         pap_patiDao.deletePap_Pati(id);
         return "redirect:../list";
     }
+    @ModelAttribute("provincias")
+    public List<String> getProvincias() {
+        return Arrays.asList(
+                "Albacete", "Alicante", "Castellón", "Valencia", "Madrid", "Barcelona", "Tarragona"
+        );
+    }
+
+    @ModelAttribute("anyosExperiencia")
+    public List<String> getRequiredExperience() {
+        return Arrays.asList(
+                "Sin experiencia", "1 año", "2 años", "3 años", "4 años", "5 años o más"
+        );
+    }
+
+    @ModelAttribute("formacionesDisponibles")
+    public List<String> getRequiredTraining() {
+        return Arrays.asList(
+                "Sin formación requerida",
+                "Auxiliar de ayuda a domicilio",
+                "Técnico en cuidados auxiliares de enfermería",
+                "Grado en Enfermería",
+                "Grado en Fisioterapia",
+                "Grado en Trabajo Social",
+                "Grado en Terapia Ocupacional",
+                "Certificado en primeros auxilios",
+                "Carnet de conducir"
+        );
+    }
+
+    @ModelAttribute("skillsDisponibles")
+    public List<String> getSkillsDisponibles() {
+        return Arrays.asList(
+                "Lenguaje de signos", "Primeros auxilios", "Manejo de silla de ruedas", "Conducción", "Cocina", "Acompañamiento"
+        );
+    }
 }

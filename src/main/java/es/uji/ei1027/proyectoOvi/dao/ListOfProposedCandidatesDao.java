@@ -63,4 +63,15 @@ public class ListOfProposedCandidatesDao {
         // Ejecutamos la consulta pasándole el ID que recibimos como parámetro
         jdbcTemplate.update(sql, requestId);
     }
+    public List<ListOfProposedCandidates> getProposalsByRequestId(String requestId) {
+        try {
+            return jdbcTemplate.query(
+                    "SELECT * FROM ListOfProposedCandidates WHERE request_id = ? ORDER BY suitabilityScore DESC",
+                    new ListOfProposedCandidatesRowMapper(),
+                    requestId
+            );
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
 }

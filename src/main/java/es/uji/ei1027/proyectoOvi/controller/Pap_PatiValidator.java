@@ -27,7 +27,7 @@ public class Pap_PatiValidator implements Validator {
     );
 
     private static final List<String> MOVILIDADES = Arrays.asList(
-            "Local", "Provincial", "Total"
+            "Albacete", "Alicante", "Castellón", "Valencia", "Madrid", "Barcelona", "Tarragona"
     );
 
     private static final List<String> SKILLS = Arrays.asList(

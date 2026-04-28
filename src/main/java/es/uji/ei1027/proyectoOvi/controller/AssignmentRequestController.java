@@ -178,15 +178,26 @@ public class AssignmentRequestController {
     }
 
     //Nuevo metodo para reciba el ID de la solicitud y pase al modelo tanto los datos de la solicitud como la lista de candidatos propuestos.
+//    @RequestMapping("/proposals/{id}")
+//    public String listProposals(Model model, @PathVariable String id) {
+//        // 1. Recuperamos la solicitud para mostrar sus detalles arriba
+//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+//        model.addAttribute("assignmentRequest", request);
+//
+//        // 2. Busca los candidatos (PAP/PATI)
+//        List<Pap_Pati> listaCandidatos = papPatiDao.getProposalsForRequest(id);
+//        model.addAttribute("candidates", listaCandidatos);
+//
+//        return "assignmentRequest/proposals";
+//    }
     @RequestMapping("/proposals/{id}")
     public String listProposals(Model model, @PathVariable String id) {
-        // 1. Recuperamos la solicitud para mostrar sus detalles arriba
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
         model.addAttribute("assignmentRequest", request);
 
-        // 2. Busca los candidatos (PAP/PATI)
-        List<Pap_Pati> listaCandidatos = papPatiDao.getProposalsForRequest(id);
-        model.addAttribute("candidates", listaCandidatos);
+        // Ahora cargamos desde ListOfProposedCandidates, no desde PapPati directamente
+        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByRequestId(id);
+        model.addAttribute("proposals", proposals);
 
         return "assignmentRequest/proposals";
     }
@@ -196,35 +207,172 @@ public class AssignmentRequestController {
         model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
         return "technician/assignmentRequest/accept";
     }
+//    @RequestMapping(value="/accept/execute/{id}")
+//    public String acceptAndMatch(@PathVariable String id) {
+//        // 1. Recuperamos la solicitud
+//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+//        // OPCIONAL: Solo ejecutamos si la solicitud NO estaba aceptada ya
+//        if (request != null && !"accepted".equals(request.getStatus())) {
+//            // 2. Cambiamos estado
+//            request.setStatus("accepted");
+//            assignmentRequestDao.updateAssignmentRequest(request);
+//            // 3. Ejecutamos el Match automático
+//            List<Pap_Pati> compatibles = papPatiDao.getProposalsForRequest(id);
+//            for (Pap_Pati pap : compatibles) {
+//                try {
+//                    ListOfProposedCandidates proposal = new ListOfProposedCandidates();
+//                    proposal.setList_id("L-" + id + "-" + pap.getDni());
+//                    proposal.setRequest_id(id);
+//                    proposal.setPappati_id(pap.getDni());
+//                    proposal.setProposalDate(new java.util.Date());
+//                    proposal.setSuitabilityScore(100.0f);
+//
+//                    listOfProposedCandidatesDao.addListOfProposedCandidates(proposal);
+//                } catch (DuplicateKeyException e) {
+//                    // Si ya existía esta propuesta, simplemente la saltamos y seguimos con el siguiente
+//                    continue;
+//                }
+//            }
+//        }
+//        return "redirect:/assignmentRequest/list";
+//    }
+//    @RequestMapping(value="/accept/execute/{id}")
+//    public String acceptAndMatch(@PathVariable String id) {
+//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+//
+//        if (request != null && !"accepted".equals(request.getStatus())) {
+//            request.setStatus("accepted");
+//            assignmentRequestDao.updateAssignmentRequest(request);
+//
+//            List<Pap_Pati> compatibles = papPatiDao.getProposalsForRequest(id);
+//            int counter = 1;
+//            for (Pap_Pati pap : compatibles) {
+//                try {
+//                    ListOfProposedCandidates proposal = new ListOfProposedCandidates();
+//
+//                    // list_id único usando contador
+//                    proposal.setList_id("L-" + id + "-" + counter);
+//                    proposal.setRequest_id(id);
+//                    proposal.setPappati_id(pap.getDni());
+//                    proposal.setProposalDate(new java.util.Date());
+//
+//                    // Calcular suitabilityScore dinámicamente (5 condiciones = 20% cada una)
+//                    float score = 0f;
+//                    if (pap.getStartDate() != null &&
+//                            !pap.getStartDate().after(request.getRequiredStartAvailability())) score += 20f;
+//                    if (pap.getEndDate() != null &&
+//                            !pap.getEndDate().before(request.getRequiredEndAvailability())) score += 20f;
+//                    if (pap.getAddress() != null && request.getServiceLocation() != null &&
+//                            (pap.getAddress().toLowerCase()
+//                                    .contains(request.getServiceLocation().toLowerCase()) ||
+//                                    (pap.getGeographicMobility() != null &&
+//                                            pap.getGeographicMobility().toLowerCase()
+//                                                    .contains(request.getServiceLocation().toLowerCase())))) score += 20f;
+//                    if (pap.getSkills() != null && request.getRequiredSkills() != null &&
+//                            pap.getSkills().toLowerCase()
+//                                    .contains(request.getRequiredSkills().toLowerCase())) score += 20f;
+//                    if (pap.getSpecificTraining() != null && request.getRequiredTraining() != null &&
+//                            pap.getSpecificTraining().toLowerCase()
+//                                    .contains(request.getRequiredTraining().toLowerCase())) score += 20f;
+//
+//                    proposal.setSuitabilityScore(score);
+//
+//                    listOfProposedCandidatesDao.addListOfProposedCandidates(proposal);
+//                    counter++;
+//                } catch (DuplicateKeyException e) {
+//                    counter++;
+//                    continue;
+//                }
+//            }
+//        }
+//        return "redirect:/assignmentRequest/list";
+//    }
+    // Metodo auxiliar para convertir experiencia a número
+    private int experienciaANumero(String exp) {
+        if (exp == null) return 0;
+        switch (exp.trim()) {
+            case "Sin experiencia": return 0;
+            case "1 año":           return 1;
+            case "2 años":          return 2;
+            case "3 años":          return 3;
+            case "4 años":          return 4;
+            case "5 años o más":    return 5;
+            default:                return 0;
+        }
+    }
+
     @RequestMapping(value="/accept/execute/{id}")
     public String acceptAndMatch(@PathVariable String id) {
-        // 1. Recuperamos la solicitud
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-        // OPCIONAL: Solo ejecutamos si la solicitud NO estaba aceptada ya
+
         if (request != null && !"accepted".equals(request.getStatus())) {
-            // 2. Cambiamos estado
             request.setStatus("accepted");
             assignmentRequestDao.updateAssignmentRequest(request);
-            // 3. Ejecutamos el Match automático
+
+            // Primero borramos propuestas anteriores si las hubiera
+            listOfProposedCandidatesDao.deleteCandidatesByRequestId(id);
+
             List<Pap_Pati> compatibles = papPatiDao.getProposalsForRequest(id);
+            int counter = 1;
+
             for (Pap_Pati pap : compatibles) {
+                // Calcular score: 5 criterios opcionales = 20% cada uno
+                float score = 0f;
+
+                // 1. Ubicación / movilidad
+                if (request.getServiceLocation() != null) {
+                    boolean ciudadOk = pap.getAddress() != null &&
+                            pap.getAddress().toLowerCase()
+                                    .contains(request.getServiceLocation().toLowerCase());
+                    boolean movilidadOk = pap.getGeographicMobility() != null &&
+                            pap.getGeographicMobility().toLowerCase()
+                                    .contains(request.getServiceLocation().toLowerCase());
+                    if (ciudadOk || movilidadOk) score += 20f;
+                }
+
+                // 2. Habilidades
+                if (pap.getSkills() != null && request.getRequiredSkills() != null &&
+                        pap.getSkills().toLowerCase()
+                                .contains(request.getRequiredSkills().toLowerCase())) {
+                    score += 20f;
+                }
+
+                // 3. Formación específica
+                if (pap.getSpecificTraining() != null && request.getRequiredTraining() != null &&
+                        pap.getSpecificTraining().toLowerCase()
+                                .contains(request.getRequiredTraining().toLowerCase())) {
+                    score += 20f;
+                }
+
+                // 4. Experiencia: el candidato cumple si tiene >= experiencia requerida
+                int expCandidato = experienciaANumero(pap.getTypeOfExperience());
+                int expRequerida = experienciaANumero(request.getRequiredExperience());
+                if (expCandidato >= expRequerida) {
+                    score += 20f;
+                }
+
+                // 5. Disponibilidad (ya filtrada en SQL, pero sumamos puntos)
+                score += 20f;
+
                 try {
                     ListOfProposedCandidates proposal = new ListOfProposedCandidates();
-                    proposal.setList_id("L-" + id + "-" + pap.getDni());
+                    proposal.setList_id("L-" + id + "-" + counter);
                     proposal.setRequest_id(id);
                     proposal.setPappati_id(pap.getDni());
                     proposal.setProposalDate(new java.util.Date());
-                    proposal.setSuitabilityScore(100.0f);
+                    proposal.setSuitabilityScore(score);
 
                     listOfProposedCandidatesDao.addListOfProposedCandidates(proposal);
+                    counter++;
                 } catch (DuplicateKeyException e) {
-                    // Si ya existía esta propuesta, simplemente la saltamos y seguimos con el siguiente
+                    counter++;
                     continue;
                 }
             }
         }
         return "redirect:/assignmentRequest/list";
     }
+
 
     // Muestra la pantalla de confirmación de rechazo
     @RequestMapping(value="/reject/{id}", method = RequestMethod.GET)

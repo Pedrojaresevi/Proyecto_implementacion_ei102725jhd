@@ -58,26 +58,76 @@ public class PapPatiDao {
         }
     }
     //Metodo para obtener los candidatos propuestos para una solicitud
+//    public List<Pap_Pati> getProposalsForRequest(String requestId) {
+//        try {
+//            // Consulta que cruza la solicitud con los candidatos
+//            String sql = "SELECT p.* " +
+//                    "FROM PapPati p " +
+//                    "JOIN AssignmentRequest r ON r.request_Id = ? " +
+//                    "WHERE p.status = 'accepted' " + // Solo activos
+//                    // 1. Disponibilidad: El candidato debe empezar antes o igual y terminar después o igual que la petición
+//                    "AND p.startDate <= r.requiredStartAvailability " +
+//                    "AND p.endDate >= r.requiredEndAvailability " +
+//                    // 2. Proximidad: Que la ciudad coincida o que el candidato tenga movilidad total
+//                    // Usamos ILIKE para que no importe mayúsculas/minúsculas y % para búsqueda parcial
+//                    "AND (p.address ILIKE '%' || r.serviceLocation || '%' OR p.geographicMobility = 'Total') " +
+//                    // 3. Preferencias/Habilidades: Que el candidato tenga alguna de las habilidades requeridas
+//                    "AND (p.skills ILIKE '%' || r.requiredSkills || '%' OR p.specificTraining ILIKE '%' || r.requiredTraining || '%')";
+//
+//            return jdbcTemplate.query(sql, new Pap_PatiRowMapper(), requestId);
+//        } catch (EmptyResultDataAccessException e) {
+//            return new java.util.ArrayList<>();
+//        }
+//    }
+//    public List<Pap_Pati> getProposalsForRequest(String requestId) {
+//        try {
+//            String sql = "SELECT p.* " +
+//                    "FROM PapPati p, AssignmentRequest r " +
+//                    "WHERE r.request_Id = ? " +
+//                    // Solo candidatos activos
+//                    "AND p.status = 'accepted' " +
+//                    // 1. Disponibilidad
+//                    "AND p.startDate <= r.requiredStartAvailability " +
+//                    "AND p.endDate >= r.requiredEndAvailability " +
+//                    // 2. Movilidad: ciudad coincide O la provincia del candidato coincide con serviceLocation
+//                    "AND (p.address ILIKE '%' || r.serviceLocation || '%' " +
+//                    "     OR p.geographicMobility ILIKE '%' || r.serviceLocation || '%') " +
+//                    // 3. Habilidades
+//                    "AND p.skills ILIKE '%' || r.requiredSkills || '%' " +
+//                    // 4. Experiencia
+//                    "AND p.typeOfExperience = r.requiredExperience " +
+//                    // 5. Formación específica
+//                    "AND p.specificTraining ILIKE '%' || r.requiredTraining || '%'";
+//
+//            return jdbcTemplate.query(sql, new Pap_PatiRowMapper(), requestId);
+//        } catch (EmptyResultDataAccessException e) {
+//            return new java.util.ArrayList<>();
+//        }
+//    }
     public List<Pap_Pati> getProposalsForRequest(String requestId) {
         try {
-            // Consulta que cruza la solicitud con los candidatos
             String sql = "SELECT p.* " +
-                    "FROM PapPati p " +
-                    "JOIN AssignmentRequest r ON r.request_Id = ? " +
-                    "WHERE p.status = 'accepted' " + // Solo activos
-                    // 1. Disponibilidad: El candidato debe empezar antes o igual y terminar después o igual que la petición
+                    "FROM PapPati p, AssignmentRequest r " +
+                    "WHERE r.request_Id = ? " +
+                    "AND p.status = 'accepted' " +
+                    // Disponibilidad: condición obligatoria (sin fechas no tiene sentido)
                     "AND p.startDate <= r.requiredStartAvailability " +
                     "AND p.endDate >= r.requiredEndAvailability " +
-                    // 2. Proximidad: Que la ciudad coincida o que el candidato tenga movilidad total
-                    // Usamos ILIKE para que no importe mayúsculas/minúsculas y % para búsqueda parcial
-                    "AND (p.address ILIKE '%' || r.serviceLocation || '%' OR p.geographicMobility = 'Total') " +
-                    // 3. Preferencias/Habilidades: Que el candidato tenga alguna de las habilidades requeridas
-                    "AND (p.skills ILIKE '%' || r.requiredSkills || '%' OR p.specificTraining ILIKE '%' || r.requiredTraining || '%')";
+                    // Al menos uno de los siguientes debe cumplirse
+                    "AND (" +
+                    "  (p.address ILIKE '%' || r.serviceLocation || '%' " +
+                    "   OR p.geographicMobility ILIKE '%' || r.serviceLocation || '%') " +
+                    "  OR p.skills ILIKE '%' || r.requiredSkills || '%' " +
+                    "  OR p.specificTraining ILIKE '%' || r.requiredTraining || '%' " +
+                    "  OR p.typeOfExperience = r.requiredExperience " +
+                    "  OR (r.requiredExperience = 'Sin experiencia') " +
+                    ")";
 
             return jdbcTemplate.query(sql, new Pap_PatiRowMapper(), requestId);
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<>();
         }
     }
+
 }
 

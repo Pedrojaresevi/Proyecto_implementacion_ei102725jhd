@@ -17,50 +17,44 @@
     <p class="lead">Candidatos seleccionados para la solicitud: <strong th:text="${assignmentRequest.request_Id}">ID</strong></p>
   </header>
 
-  <section class="card mb-4 shadow-sm">
-    <div class="card-header bg-light">
-      <h2 class="h5 mb-0">Detalles de tu Solicitud</h2>
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col-md-4"><strong>Servicio:</strong> <span th:text="${assignmentRequest.typeOfService}">---</span></div>
-        <div class="col-md-4"><strong>Ubicación:</strong> <span th:text="${assignmentRequest.serviceLocation}">---</span></div>
-        <div class="col-md-4"><strong>Estado:</strong> <span class="badge bg-success" th:text="${assignmentRequest.status}">---</span></div>
-      </div>
-    </div>
-  </section>
-
   <section>
     <h2 class="h4 mb-3">Asistentes Disponibles (PAP/PATI)</h2>
     <div class="table-responsive">
       <table class="table table-striped table-hover align-middle">
         <thead class="table-dark">
         <tr>
-          <th scope="col">Nombre Completo</th>
-          <th scope="col">Formación Específica</th>
-          <th scope="col">Experiencia</th>
-          <th scope="col">Habilidades</th>
-          <th scope="col">Movilidad</th>
+          <th scope="col">ID Propuesta</th>
+          <th scope="col">Candidato (DNI)</th>
+          <th scope="col">Fecha Propuesta</th>
+          <th scope="col">Compatibilidad</th>
           <th scope="col" class="text-center">Acción</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="candidate : ${candidates}">
-          <td th:text="${candidate.name + ' ' + candidate.surname}">Nombre Apellido</td>
-          <td th:text="${candidate.specificTraining}">Máster Educación</td>
-          <td th:text="${candidate.typeOfExperience}">5 años docencia</td>
-          <td th:text="${candidate.skills}">Liderazgo, Estrategia</td>
-          <td th:text="${candidate.geographicMobility}">Total</td>
+        <tr th:each="proposal : ${proposals}">
+          <td th:text="${proposal.list_id}">L-REQ1-1</td>
+          <td th:text="${proposal.pappati_id}">DNI</td>
+          <td th:text="${#dates.format(proposal.proposalDate, 'dd/MM/yyyy')}">01/01/2025</td>
+          <td>
+            <!-- Barra de progreso visual para el score -->
+            <div class="progress" style="min-width: 120px;">
+              <div class="progress-bar bg-success"
+                   role="progressbar"
+                   th:style="'width: ' + ${proposal.suitabilityScore} + '%'"
+                   th:text="${proposal.suitabilityScore} + '%'">
+              </div>
+            </div>
+          </td>
           <td class="text-center">
             <form th:action="@{/assignmentRequest/selectCandidate}" method="post">
               <input type="hidden" name="requestId" th:value="${assignmentRequest.request_Id}" />
-              <input type="hidden" name="candidateId" th:value="${candidate.dni}" />
+              <input type="hidden" name="candidateId" th:value="${proposal.pappati_id}" />
               <button type="submit" class="btn btn-success btn-sm">Elegir Asistente</button>
             </form>
           </td>
         </tr>
-        <tr th:if="${#lists.isEmpty(candidates)}">
-          <td colspan="6" class="text-center text-muted p-4">
+        <tr th:if="${#lists.isEmpty(proposals)}">
+          <td colspan="5" class="text-center text-muted p-4">
             No hay candidatos disponibles que coincidan con los requisitos en este momento.
           </td>
         </tr>

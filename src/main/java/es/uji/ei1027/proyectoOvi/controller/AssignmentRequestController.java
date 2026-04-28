@@ -266,7 +266,22 @@ public class AssignmentRequestController {
     @ModelAttribute("anyosExperiencia")
     public List<String> getRequiredExperience() {
         return Arrays.asList(
-                "0", "1", "2", "3", "4", "5 o más"
+                "Sin experiencia", "1 año", "2 años", "3 años", "4 años", "5 años o más"
+        );
+    }
+
+    @ModelAttribute("formacionesDisponibles")
+    public List<String> getRequiredTraining() {
+        return Arrays.asList(
+                "Sin formación requerida",
+                "Auxiliar de ayuda a domicilio",
+                "Técnico en cuidados auxiliares de enfermería",
+                "Grado en Enfermería",
+                "Grado en Fisioterapia",
+                "Grado en Trabajo Social",
+                "Grado en Terapia Ocupacional",
+                "Certificado en primeros auxilios",
+                "Carnet de conducir"
         );
     }
 

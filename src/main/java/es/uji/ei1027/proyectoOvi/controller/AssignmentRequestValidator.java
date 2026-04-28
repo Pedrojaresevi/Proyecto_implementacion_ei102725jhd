@@ -17,6 +17,7 @@ public class AssignmentRequestValidator implements Validator {
     public void validate(Object obj, Errors errors) {
         AssignmentRequest assignmentRequest = (AssignmentRequest) obj;
 
+
         // 1. Validación del ID
         if (assignmentRequest.getRequest_Id() == null || assignmentRequest.getRequest_Id().trim().equals("")) {
             errors.rejectValue("request_Id", "obligatori", "Cal introduir un valor");

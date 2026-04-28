@@ -243,10 +243,6 @@ public class AssignmentRequestController {
         if (request != null && !"refused".equals(request.getStatus())) {
             request.setStatus("refused");
 
-            // ⚠️ ATENCIÓN AQUÍ ⚠️
-            // Si tienes un campo en tu clase AssignmentRequest para guardar el motivo, sería algo así:
-            // request.setRejectReason(rejectReason);
-
             assignmentRequestDao.updateAssignmentRequest(request);
 
             // Opcional: Podrías hacer un print para comprobar que llega bien el texto

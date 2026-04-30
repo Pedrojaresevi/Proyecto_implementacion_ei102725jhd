@@ -4,74 +4,87 @@
     <title>Gestionar PAP/PATI</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="/css/proyecte.css"
-          th:href="@{/css/proyecte.css}"/>
+    <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
 <nav class="navbar navbar-light bg-light mb-4 shadow-sm">
     <div th:replace="~{fragments/base :: navbar}"></div>
 </nav>
 
-<h1>Lista de PAP/PATI</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Dni</th>
-        <th>Name</th>
-        <th>Surname</th>
-        <th>DateOfBirth</th>
-        <th>Address</th>
-        <th>Phone</th>
-        <th>Email</th>
-        <th>Specific Training</th>
-        <th>Type Of Experience</th>
-        <th>Curriculum Vitae</th>
-        <th>Status</th>
-        <th>User and Password</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Geographic Mobility</th>
-        <th>Skills</th>
+<div class="container-fluid mt-4">
+    <h1>Lista de PAP/PATI</h1>
 
+    <div class="table-responsive">
+        <table class="table table-striped table-hover mt-3 align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th>DNI</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>F. Nacimiento</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Formación Específica</th>
+                <th>Experiencia</th>
+                <th>CV</th>
+                <th>Estado</th>
+                <th>Usuario/Pass</th>
+                <th>F. Inicio</th>
+                <th>F. Fin</th>
+                <th>Movilidad</th>
+                <th>Habilidades</th>
 
-        <td></td> <!-- no usar <th> quan no hi ha capçalera -->
-        <td></td>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="pap_pati: ${allpap_pati}">
-        <td th:text="${pap_pati.dni}"></td>
-        <td th:text="${pap_pati.name}"></td>
-        <td th:text="${pap_pati.surname}"></td>
-        <td th:text="${pap_pati.dateOfBirth}"></td>
-        <td th:text="${pap_pati.address}"></td>
-        <td th:text="${pap_pati.phone}"></td>
-        <td th:text="${pap_pati.email}"></td>
-        <td th:text="${pap_pati.specificTraining}"></td>
-        <td th:text="${pap_pati.typeOfExperience}"></td>
-        <td th:text="${pap_pati.curriculumVitae}"></td>
-        <td th:text="${pap_pati.status}"></td>
-        <td th:text="${pap_pati.userAndPassword}"></td>
-        <td th:text="${pap_pati.startDate}"></td>
-        <td th:text="${pap_pati.endDate}"></td>
-        <td th:text="${pap_pati.geographicMobility}"></td>
-        <td th:text="${pap_pati.skills}"></td>
+                <th>Acciones</th>
 
+                <th>Gestión Técnico</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pap_pati: ${allpap_pati}">
+                <td th:text="${pap_pati.dni}"></td>
+                <td th:text="${pap_pati.name}"></td>
+                <td th:text="${pap_pati.surname}"></td>
+                <td th:text="${pap_pati.dateOfBirth}"></td>
+                <td th:text="${pap_pati.address}"></td>
+                <td th:text="${pap_pati.phone}"></td>
+                <td th:text="${pap_pati.email}"></td>
+                <td th:text="${pap_pati.specificTraining}"></td>
+                <td th:text="${pap_pati.typeOfExperience}"></td>
+                <td th:text="${pap_pati.curriculumVitae}"></td>
 
+                <td>
+                    <span th:if="${pap_pati.status == 'accepted'}" class="badge bg-success">Aceptado</span>
+                    <span th:if="${pap_pati.status == 'refused'}" class="badge bg-danger">Rechazado</span>
+                    <span th:if="${pap_pati.status == 'in progress'}" class="badge bg-warning text-dark">En progreso</span>
+                </td>
 
+                <td th:text="${pap_pati.userAndPassword}"></td>
+                <td th:text="${pap_pati.startDate}"></td>
+                <td th:text="${pap_pati.endDate}"></td>
+                <td th:text="${pap_pati.geographicMobility}"></td>
+                <td th:text="${pap_pati.skills}"></td>
 
+                <td>
+                    <div class="d-flex flex-column gap-1">
+                        <a th:href="@{/pap_pati/update/{id}(id=${pap_pati.dni})}" class="btn btn-warning btn-sm">Edita</a>
+                        <a th:href="@{/pap_pati/delete/{id}(id=${pap_pati.dni})}" class="btn btn-danger btn-sm">Esborra</a>
+                    </div>
+                </td>
 
+                <td>
+                    <a th:href="@{/pap_pati/manage/{dni}(dni=${pap_pati.dni})}" class="btn btn-info btn-sm text-white">Gestionar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
+    <div class="mt-4 mb-5">
+        <a href="add" class="btn btn-primary">Añadir PAP/PATI</a>
+        <a href="/dashboard" class="btn btn-secondary ms-2">Volver</a>
+    </div>
+</div>
 
-        <td><a th:href="@{/pap_pati/update/{id}(id=${pap_pati.dni})}" class="btn btn-warning">Edita</a>
-        </td>
-        <td><a th:href="@{/pap_pati/delete/{id}(id=${pap_pati.dni})}" class="btn btn-danger">Esborra</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<a href="add" class="btn btn-primary">Añadir PAP/PATI</a>
-<br><br>
-<a href="/dashboard" class="btn btn-secondary">Volver</a>
 </body>
 </html>

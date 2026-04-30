@@ -46,9 +46,14 @@
     <td th:text="${assignmentRequest.oviuser_id == null ? assignmentRequest.tutor_id : assignmentRequest.oviuser_id}"></td>
 
     <td>
-        <span th:text="${assignmentRequest.status}"
-              th:class="${assignmentRequest.status == 'in progress' ? 'badge bg-warning text-dark' : (assignmentRequest.status == 'accepted' ? 'badge bg-success' : 'badge bg-danger')}">
-        </span>
+         <span th:text="${assignmentRequest.status}"
+               th:class="${assignmentRequest.status == 'in progress' ? 'badge bg-warning text-dark' : (assignmentRequest.status == 'accepted' ? 'badge bg-success' : 'badge bg-danger')}">
+    </span>
+      <div th:if="${assignmentRequest.status == 'refused' and assignmentRequest.rejectReason != null}"
+           class="text-muted small mt-1">
+        <strong>Motivo:</strong>
+        <em th:text="${assignmentRequest.rejectReason}"></em>
+      </div>
     </td>
 
     <td class="text-center">

@@ -118,41 +118,41 @@ public class Pap_PatiController {
         );
     }
 
-    // --- RUTAS DEL TÉCNICO ---
-
-    @RequestMapping(value="/accept/{dni}", method = RequestMethod.GET)
-    public String confirmAccept(Model model, @PathVariable String dni) {
-        model.addAttribute("pap_pati", pap_patiDao.getPap_Pati(dni));
-        return "technician/pap_pati/accept";
-    }
-
-    @RequestMapping(value="/accept/execute/{dni}")
-    public String executeAccept(@PathVariable String dni) {
-        Pap_Pati papPati = pap_patiDao.getPap_Pati(dni);
-        if (papPati != null && "in progress".equals(papPati.getStatus())) {
-            papPati.setStatus("accepted");
-            pap_patiDao.updatePap_Pati(papPati);
-        }
-        return "redirect:/pap_pati/list";
-    }
-
-    @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
-    public String confirmReject(Model model, @PathVariable String dni) {
-        model.addAttribute("pap_pati", pap_patiDao.getPap_Pati(dni));
-        return "technician/pap_pati/reject";
-    }
-
-    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
-    public String executeReject(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason) {
-        Pap_Pati papPati = pap_patiDao.getPap_Pati(dni);
-        if (papPati != null && "in progress".equals(papPati.getStatus())) {
-            papPati.setStatus("refused");
-            pap_patiDao.updatePap_Pati(papPati);
-            // Aquí podríais guardar el rejectReason en la BD si tuvierais un campo para ello
-            System.out.println("Candidato " + dni + " rechazado. Motivo: " + rejectReason);
-        }
-        return "redirect:/pap_pati/list";
-    }
+//    // --- RUTAS DEL TÉCNICO ---
+//
+//    @RequestMapping(value="/accept/{dni}", method = RequestMethod.GET)
+//    public String confirmAccept(Model model, @PathVariable String dni) {
+//        model.addAttribute("pap_pati", pap_patiDao.getPap_Pati(dni));
+//        return "technician/pap_pati/accept";
+//    }
+//
+//    @RequestMapping(value="/accept/execute/{dni}")
+//    public String executeAccept(@PathVariable String dni) {
+//        Pap_Pati papPati = pap_patiDao.getPap_Pati(dni);
+//        if (papPati != null && "in progress".equals(papPati.getStatus())) {
+//            papPati.setStatus("accepted");
+//            pap_patiDao.updatePap_Pati(papPati);
+//        }
+//        return "redirect:/pap_pati/list";
+//    }
+//
+//    @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
+//    public String confirmReject(Model model, @PathVariable String dni) {
+//        model.addAttribute("pap_pati", pap_patiDao.getPap_Pati(dni));
+//        return "technician/pap_pati/reject";
+//    }
+//
+//    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
+//    public String executeReject(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason) {
+//        Pap_Pati papPati = pap_patiDao.getPap_Pati(dni);
+//        if (papPati != null && "in progress".equals(papPati.getStatus())) {
+//            papPati.setStatus("refused");
+//            pap_patiDao.updatePap_Pati(papPati);
+//            // Aquí podríais guardar el rejectReason en la BD si tuvierais un campo para ello
+//            System.out.println("Candidato " + dni + " rechazado. Motivo: " + rejectReason);
+//        }
+//        return "redirect:/pap_pati/list";
+//    }
 
     @RequestMapping(value="/manage/{dni}", method = RequestMethod.GET)
     public String managePapPati(Model model, @PathVariable String dni) {

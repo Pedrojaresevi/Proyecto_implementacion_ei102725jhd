@@ -110,17 +110,13 @@ public class PapPatiDao {
                     "FROM PapPati p, AssignmentRequest r " +
                     "WHERE r.request_Id = ? " +
                     "AND p.status = 'accepted' " +
-                    // Disponibilidad: condición obligatoria (sin fechas no tiene sentido)
-                    "AND p.startDate <= r.requiredStartAvailability " +
-                    "AND p.endDate >= r.requiredEndAvailability " +
-                    // Al menos uno de los siguientes debe cumplirse
                     "AND (" +
-                    "  (p.address ILIKE '%' || r.serviceLocation || '%' " +
-                    "   OR p.geographicMobility ILIKE '%' || r.serviceLocation || '%') " +
-                    "  OR p.skills ILIKE '%' || r.requiredSkills || '%' " +
+                    "  (p.startDate <= r.requiredStartAvailability AND p.endDate >= r.requiredEndAvailability) " +
+                    "  OR (p.address ILIKE '%' || r.serviceLocation || '%' " +
+                    "      OR p.geographicMobility ILIKE '%' || r.serviceLocation || '%') " +
                     "  OR p.specificTraining ILIKE '%' || r.requiredTraining || '%' " +
                     "  OR p.typeOfExperience = r.requiredExperience " +
-                    "  OR (r.requiredExperience = 'Sin experiencia') " +
+                    "  OR p.skills ILIKE '%' || r.requiredSkills || '%' " +
                     ")";
 
             return jdbcTemplate.query(sql, new Pap_PatiRowMapper(), requestId);

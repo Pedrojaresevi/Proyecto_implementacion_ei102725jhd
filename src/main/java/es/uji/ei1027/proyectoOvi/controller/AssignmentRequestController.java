@@ -201,12 +201,12 @@ public class AssignmentRequestController {
 
         return "assignmentRequest/proposals";
     }
-    // 1. Solo muestra la pantalla de confirmación
-    @RequestMapping(value="/accept/{id}", method = RequestMethod.GET)
-    public String confirmAccept(Model model, @PathVariable String id) {
-        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
-        return "technician/assignmentRequest/accept";
-    }
+//    // 1. Solo muestra la pantalla de confirmación
+//    @RequestMapping(value="/accept/{id}", method = RequestMethod.GET)
+//    public String confirmAccept(Model model, @PathVariable String id) {
+//        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
+//        return "technician/assignmentRequest/accept";
+//    }
 //    @RequestMapping(value="/accept/execute/{id}")
 //    public String acceptAndMatch(@PathVariable String id) {
 //        // 1. Recuperamos la solicitud
@@ -374,31 +374,31 @@ public class AssignmentRequestController {
     }
 
 
-    // Muestra la pantalla de confirmación de rechazo
-    @RequestMapping(value="/reject/{id}", method = RequestMethod.GET)
-    public String confirmReject(Model model, @PathVariable String id) {
-        // Recupera la solicitud y la envía a la vista para que pueda mostrar el ID
-        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
-        return "technician/assignmentRequest/reject";
-    }
-
-    // Ejecuta el rechazo real y vuelve a la lista
-    @RequestMapping(value="/reject/execute/{id}", method = RequestMethod.POST)
-    public String executeReject(@PathVariable String id, @RequestParam("rejectReason") String rejectReason) {
-
-        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-
-        if (request != null && !"refused".equals(request.getStatus())) {
-            request.setStatus("refused");
-
-            assignmentRequestDao.updateAssignmentRequest(request);
-
-            // Opcional: Podrías hacer un print para comprobar que llega bien el texto
-            System.out.println("Solicitud " + id + " rechazada por: " + rejectReason);
-        }
-
-        return "redirect:/assignmentRequest/list";
-    }
+//    // Muestra la pantalla de confirmación de rechazo
+//    @RequestMapping(value="/reject/{id}", method = RequestMethod.GET)
+//    public String confirmReject(Model model, @PathVariable String id) {
+//        // Recupera la solicitud y la envía a la vista para que pueda mostrar el ID
+//        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
+//        return "technician/assignmentRequest/reject";
+//    }
+//
+//    // Ejecuta el rechazo real y vuelve a la lista
+//    @RequestMapping(value="/reject/execute/{id}", method = RequestMethod.POST)
+//    public String executeReject(@PathVariable String id, @RequestParam("rejectReason") String rejectReason) {
+//
+//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+//
+//        if (request != null && !"refused".equals(request.getStatus())) {
+//            request.setStatus("refused");
+//
+//            assignmentRequestDao.updateAssignmentRequest(request);
+//
+//            // Opcional: Podrías hacer un print para comprobar que llega bien el texto
+//            System.out.println("Solicitud " + id + " rechazada por: " + rejectReason);
+//        }
+//
+//        return "redirect:/assignmentRequest/list";
+//    }
 
     @ModelAttribute("provincias")
     public List<String> getProvincias() {
@@ -434,5 +434,113 @@ public class AssignmentRequestController {
         return Arrays.asList(
                 "Lenguaje de signos", "Primeros auxilios", "Manejo de silla de ruedas", "Conducción", "Cocina", "Acompañamiento"
         );
+    }
+    private void generateAndSaveCandidates(AssignmentRequest req) {
+        // Primero borramos propuestas anteriores si las hubiera
+        listOfProposedCandidatesDao.deleteCandidatesByRequestId(req.getRequest_Id());
+
+        List<Pap_Pati> candidates = papPatiDao.getProposalsForRequest(req.getRequest_Id());
+
+        int counter = 1;
+        for (Pap_Pati candidate : candidates) {
+            float score = calculateScore(candidate, req);
+
+            ListOfProposedCandidates proposal = new ListOfProposedCandidates();
+            proposal.setList_id("L-" + req.getRequest_Id() + "-" + counter++);
+            proposal.setPappati_id(candidate.getDni());
+            proposal.setRequest_id(req.getRequest_Id());
+            proposal.setProposalDate(new java.util.Date());
+            proposal.setSuitabilityScore(score);
+
+            listOfProposedCandidatesDao.addListOfProposedCandidates(proposal);
+        }
+    }
+
+    private float calculateScore(Pap_Pati candidate, AssignmentRequest req) {
+        float score = 0;
+
+        // Disponibilidad (condición base, 20 puntos)
+        if (candidate.getStartDate() != null && candidate.getEndDate() != null
+                && req.getRequiredStartAvailability() != null && req.getRequiredEndAvailability() != null
+                && !candidate.getStartDate().after(req.getRequiredStartAvailability())
+                && !candidate.getEndDate().before(req.getRequiredEndAvailability())) {
+            score += 20;
+        }
+
+        // Proximidad geográfica (20 puntos)
+        if (candidate.getAddress() != null && req.getServiceLocation() != null
+                && (candidate.getAddress().toLowerCase().contains(req.getServiceLocation().toLowerCase())
+                || (candidate.getGeographicMobility() != null
+                && candidate.getGeographicMobility().toLowerCase()
+                .contains(req.getServiceLocation().toLowerCase())))) {
+            score += 20;
+        }
+
+        // Formación específica (20 puntos)
+        if (candidate.getSpecificTraining() != null && req.getRequiredTraining() != null
+                && candidate.getSpecificTraining().toLowerCase()
+                .contains(req.getRequiredTraining().toLowerCase())) {
+            score += 20;
+        }
+
+        // Tipo de experiencia (20 puntos)
+        if (candidate.getTypeOfExperience() != null && req.getRequiredExperience() != null
+                && candidate.getTypeOfExperience().equals(req.getRequiredExperience())) {
+            score += 20;
+        }
+
+        // Habilidades (20 puntos)
+        if (candidate.getSkills() != null && req.getRequiredSkills() != null
+                && candidate.getSkills().toLowerCase()
+                .contains(req.getRequiredSkills().toLowerCase())) {
+            score += 20;
+        }
+
+        return score; // Máximo 100, mínimo 20 (por el filtro OR del DAO)
+    }
+
+    // --- ACEPTAR ---
+    @RequestMapping(value="/accept/{id}", method = RequestMethod.GET)
+    public String confirmAccept(Model model, @PathVariable String id) {
+        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
+        return "technician/assignmentRequest/accept";
+    }
+
+    @RequestMapping(value="/accept/execute/{id}", method = RequestMethod.GET)
+    public String executeAccept(@PathVariable String id) {
+        AssignmentRequest req = assignmentRequestDao.getAssignmentRequest(id);
+        if (req != null && "in progress".equals(req.getStatus())) {
+            req.setStatus("accepted");
+            assignmentRequestDao.updateAssignmentRequest(req);
+            generateAndSaveCandidates(req); // ← genera la lista
+        }
+        return "redirect:/assignmentRequest/list";
+    }
+
+    // --- RECHAZAR ---
+    @RequestMapping(value="/reject/{id}", method = RequestMethod.GET)
+    public String confirmReject(Model model, @PathVariable String id) {
+        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
+        return "technician/assignmentRequest/reject";
+    }
+
+    @RequestMapping(value="/reject/execute/{id}", method = RequestMethod.POST)
+    public String executeReject(@PathVariable String id,
+                                @RequestParam("rejectReason") String rejectReason) {
+        AssignmentRequest req = assignmentRequestDao.getAssignmentRequest(id);
+        if (req != null && "in progress".equals(req.getStatus())) {
+            req.setStatus("refused");
+            req.setRejectReason(rejectReason); // ← se guarda en BD
+            assignmentRequestDao.updateAssignmentRequest(req);
+        }
+        return "redirect:/assignmentRequest/list";
+    }
+
+    // --- VER CANDIDATOS PROPUESTOS ---
+    @RequestMapping(value="/proposals/{id}", method = RequestMethod.GET)
+    public String viewProposals(Model model, @PathVariable String id) {
+        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
+        model.addAttribute("proposals", listOfProposedCandidatesDao.getProposalsByRequestId(id));
+        return "assignmentRequest/proposals";
     }
 }

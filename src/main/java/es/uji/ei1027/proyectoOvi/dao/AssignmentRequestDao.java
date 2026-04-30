@@ -36,11 +36,11 @@ public class AssignmentRequestDao  {
     }
 
     public void updateAssignmentRequest(AssignmentRequest assignmentRequest) {
-        jdbcTemplate.update("UPDATE AssignmentRequest SET requestDate=?, typeOfService=?, requiredStartAvailability=?, requiredEndAvailability=?, serviceLocation=?, requiredTraining=?, requiredExperience=?, requiredSkills=?, oviuser_id=?, status=?, tutor_id=? WHERE request_Id=?",
+        jdbcTemplate.update("UPDATE AssignmentRequest SET requestDate=?, typeOfService=?, requiredStartAvailability=?, requiredEndAvailability=?, serviceLocation=?, requiredTraining=?, requiredExperience=?, requiredSkills=?, oviuser_id=?, status=?, tutor_id=?, rejectReason=? WHERE request_Id=?",
                 assignmentRequest.getRequestDate(), assignmentRequest.getTypeOfService(),
                 assignmentRequest.getRequiredStartAvailability(), assignmentRequest.getRequiredEndAvailability(), assignmentRequest.getServiceLocation(),
                 assignmentRequest.getRequiredTraining(), assignmentRequest.getRequiredExperience(), assignmentRequest.getRequiredSkills(),
-                assignmentRequest.getOviuser_id(),assignmentRequest.getStatus(), assignmentRequest.getTutor_id() , assignmentRequest.getRequest_Id());
+                assignmentRequest.getOviuser_id(),assignmentRequest.getStatus(), assignmentRequest.getTutor_id() ,assignmentRequest.getRejectReason(), assignmentRequest.getRequest_Id());
     }
 
     public AssignmentRequest getAssignmentRequest(String requestId) {

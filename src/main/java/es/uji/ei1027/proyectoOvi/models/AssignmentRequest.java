@@ -19,6 +19,8 @@ public class AssignmentRequest {
     private String requiredSkills;
     private String oviuser_id;
     private String status = "in progress";
+    private String rejectReason;
+
 
     private String tutor_id;
 
@@ -105,20 +107,28 @@ public class AssignmentRequest {
         this.oviuser_id = oviuser_id;
     }
 
-    public String getTutor_id() {
-        return tutor_id;
-    }
-
-    public void setTutor_id(String tutor_id) {
-        this.tutor_id = tutor_id;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
+
+    public String getTutor_id() {
+        return tutor_id;
+    }
+
+    public void setTutor_id(String tutor_id) {
+        this.tutor_id = tutor_id;
     }
 
     @Override
@@ -135,6 +145,8 @@ public class AssignmentRequest {
                 ", requiredSkills='" + requiredSkills + '\'' +
                 ", oviuser_id='" + oviuser_id + '\'' +
                 ", status='" + status + '\'' +
+                ", rejectReason='" + rejectReason + '\'' +
+                ", tutor_id='" + tutor_id + '\'' +
                 '}';
     }
 }

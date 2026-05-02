@@ -67,7 +67,7 @@
 
         <button type="submit" class="btn btn-primary">Añadir Contrato</button>
         <br><br>
-        <a href="/contract/list" class="btn btn-secondary">Volver</a>
+        <a th:href="@{'/contract/user/' + ${user.dni}}" class="btn btn-info text-white w-100">Volver</a>
     </form>
 </main>
 </body>

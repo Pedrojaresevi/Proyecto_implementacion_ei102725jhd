@@ -60,7 +60,7 @@
 
         <button type="submit" class="btn btn-primary">Añadir Negociación</button>
         <br><br>
-        <a href="/" class="btn btn-secondary">Volver</a>
+        <a th:href="@{'/negotiation/user/' + ${user.dni}}" class="btn btn-primary w-100">Volver</a>
     </form>
 </main>
 </body>

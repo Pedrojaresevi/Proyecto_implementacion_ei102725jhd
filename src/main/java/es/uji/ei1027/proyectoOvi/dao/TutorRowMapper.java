@@ -13,6 +13,7 @@ public final class TutorRowMapper implements RowMapper<Tutor> {
         tutor.setName(rs.getString("name"));
         tutor.setEmail(rs.getString("email"));
         tutor.setStatus(rs.getString("status"));
+        tutor.setUserAndPassword(rs.getString("user_and_password"));
         return tutor;
     }
 }

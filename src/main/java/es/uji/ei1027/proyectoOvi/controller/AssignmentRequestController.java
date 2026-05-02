@@ -76,6 +76,20 @@ public class AssignmentRequestController {
         }
     }
 
+//    @RequestMapping(value="/add")
+//    public String addAssignmentRequest(Model model, HttpSession session) {
+//        UserDetails user = (UserDetails) session.getAttribute("user");
+//
+//        if (user == null) {
+//            return "redirect:/login";
+//        }
+//
+//        model.addAttribute("assignmentRequest", new AssignmentRequest());
+//
+//        // Ambos roles van al mismo formulario
+//        return "assignmentRequest/add";
+//    }
+
     @RequestMapping(value="/add")
     public String addAssignmentRequest(Model model, HttpSession session) {
         UserDetails user = (UserDetails) session.getAttribute("user");
@@ -83,6 +97,9 @@ public class AssignmentRequestController {
         if (user == null) {
             return "redirect:/login";
         }
+
+        // ¡ESTA ES LA LÍNEA QUE FALTABA! Le pasamos el usuario a la vista
+        model.addAttribute("user", user);
 
         model.addAttribute("assignmentRequest", new AssignmentRequest());
 
@@ -542,5 +559,12 @@ public class AssignmentRequestController {
         model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
         model.addAttribute("proposals", listOfProposedCandidatesDao.getProposalsByRequestId(id));
         return "assignmentRequest/proposals";
+    }
+    //
+    @RequestMapping("/user/{dni}")
+    public String listRequestsByUser(Model model, @PathVariable String dni) {
+        // Necesitas tener un método en assignmentRequestDao que filtre por DNI
+        model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByOviUser(dni));
+        return "assignmentRequest/list"; // Deberás crear este HTML
     }
 }

@@ -1,29 +1,100 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>EI1027</title>
+    <title>Dashboard - OVI Castelló</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="/css/proyecte.css"
-          th:href="@{/css/proyecte.css}"/>
+    <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
-<body>
+<body class="bg-light">
 <nav class="navbar navbar-light bg-light mb-4 shadow-sm">
     <div th:replace="~{fragments/base :: navbar}"></div>
 </nav>
 
-<h1>Gestió de la OVI</h1>
-<ul>
-    <li><a href="pap_pati/list">Gestión de PAP/PATI</a></li>
-    <li><a href="oviUser/list">Gestión de OVIusers</a></li>
-    <li><a href="tutor/list">Gestión de Tutores</a></li>
-    <li><a href="contract/list">Gestión de Contratos</a></li>
-    <li><a href="assignmentRequest/list">Gestión de Assigment Requests</a></li>
-    <li><a href="negotiation/list">Gestión de Negociaciones</a></li>
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-5">Hola, <span th:text="${user.username}">Usuario</span></h1>
+            <p class="lead">Panel de Control - Rol: <strong th:text="${user.role}">rol</strong></p>
+        </div>
+        <div class="col-auto">
+            <a th:href="@{/logout}" class="btn btn-outline-danger">Cerrar Sesión</a>
+        </div>
+    </div>
 
+    <hr>
 
+    <div th:if="${user.role == 'technician'}" class="mt-4">
+        <h2 class="h4 text-primary mb-3">Gestió Global de la OVI</h2>
+        <div class="list-group shadow-sm">
+            <a th:href="@{/pap_pati/list}" class="list-group-item list-group-item-action">Gestión de PAP/PATI</a>
+            <a th:href="@{/oviUser/list}" class="list-group-item list-group-item-action">Gestión de OVIusers</a>
+            <a th:href="@{/tutor/list}" class="list-group-item list-group-item-action">Gestión de Tutores</a>
+            <a th:href="@{/contract/list}" class="list-group-item list-group-item-action">Gestión de Contratos</a>
+            <a th:href="@{/assignmentRequest/list}" class="list-group-item list-group-item-action">Gestión de Assignment Requests</a>
+            <a th:href="@{/negotiation/list}" class="list-group-item list-group-item-action">Gestión de Negociaciones</a>
+        </div>
+    </div>
 
-</ul>
-</ul>
+    <div th:if="${user.role == 'oviuser'}" class="mt-4">
+        <h2 class="h3 mb-4 text-info">Mi Gestión de Asistencia</h2>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-info shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-file-earmark-text" style="font-size: 2rem; color: #0dcaf0;"></i>
+                        </div>
+                        <h5 class="card-title">Mis Contratos</h5>
+                        <p class="card-text small text-muted">Consulta tus contratos activos con los asistentes PAP/PATI.</p>
+                        <a th:href="@{'/contract/user/' + ${user.dni}}" class="btn btn-info text-white w-100">
+                            Listar Contratos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 border-info shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-plus" style="font-size: 2rem; color: #0dcaf0;"></i>
+                        </div>
+                        <h5 class="card-title">Solicitudes de Asignación</h5>
+                        <p class="card-text small text-muted">Mira el estado de tus peticiones de nuevos asistentes.</p>
+                        <a th:href="@{'/assignmentRequest/user/' + ${user.dni}}" class="btn btn-info text-white w-100">
+                            Listar Solicitudes
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-chat-dots" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Negociaciones</h5>
+                        <p class="card-text small text-muted">Gestiona los acuerdos y chats con los PAP/PATI interesados.</p>
+                        <a th:href="@{'/negotiation/user/' + ${user.dni}}" class="btn btn-primary w-100">
+                            Gestionar Negociaciones
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${user.role == 'tutor'}" class="mt-4">
+        <div class="alert alert-success shadow-sm">
+            <h2 class="h4">Panel de Tutor</h2>
+            <p>Gestionas a las personas con diversidad funcional a tu cargo.</p>
+            <a th:href="@{'/tutor/users/' + ${user.dni}}" class="btn btn-success">Ver mis tutorizados</a>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

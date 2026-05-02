@@ -2,6 +2,8 @@ package es.uji.ei1027.proyectoOvi.controller;
 
 import es.uji.ei1027.proyectoOvi.dao.NegotiationDao;
 import es.uji.ei1027.proyectoOvi.models.Negotiation;
+import es.uji.ei1027.proyectoOvi.models.UserDetails;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
@@ -31,9 +33,27 @@ public class NegotiationController {
         return "negotiation/list";
     }
 
+//    @RequestMapping(value="/add")
+//    public String addNegotiation(Model model) {
+//        model.addAttribute("negotiation", new Negotiation());
+//        return "negotiation/add";
+//    }
     @RequestMapping(value="/add")
-    public String addNegotiation(Model model) {
+    public String addNegotiation(Model model, jakarta.servlet.http.HttpSession session) {
+        // 1. Recuperamos el usuario de la sesión
+        UserDetails user = (UserDetails) session.getAttribute("user");
+
+        // 2. Si no hay usuario, lo mandamos al login
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        // 3. Le pasamos el usuario al modelo para que la vista pueda usar user.dni
+        model.addAttribute("user", user);
+
+        // 4. Pasamos el objeto Negotiation vacío para el formulario
         model.addAttribute("negotiation", new Negotiation());
+
         return "negotiation/add";
     }
 
@@ -68,7 +88,7 @@ public class NegotiationController {
 
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String processUpdateSubmit(@ModelAttribute("negotiation") Negotiation negotiation,
-                                      BindingResult bindingResult, Model model) {
+                                      BindingResult bindingResult, Model model, HttpSession session) {
         NegotiationValidator negotiationValidator = new NegotiationValidator();
         negotiationValidator.validate(negotiation, bindingResult);
 
@@ -77,12 +97,39 @@ public class NegotiationController {
         }
         negotiationDao.updateNegotiation(negotiation);
 
-        return "redirect:list";
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        return "redirect:/negotiation/user/" + user.getDni();
     }
 
     @RequestMapping(value="/delete/{id}")
     public String processDelete(@PathVariable("id") String id) {
         negotiationDao.deleteNegotiation(id);
         return "redirect:../list";
+    }
+    //
+    @RequestMapping("/user/{dni}")
+    public String listNegotiationsByUser(Model model, @PathVariable String dni) {
+        // Necesitas tener un método en negotiationDao que filtre por DNI
+        model.addAttribute("negotiations", negotiationDao.getNegotiationsByUser(dni));
+        return "negotiation/list"; // Deberás crear este HTML
+    }
+    //
+    @RequestMapping("/chat/{id}")
+    public String openChat(@PathVariable("id") String id, Model model, jakarta.servlet.http.HttpSession session) {
+        // 1. Recuperamos el usuario de la sesión
+        UserDetails user = (UserDetails) session.getAttribute("user");
+
+        // 2. Si no hay usuario, lo mandamos al login por seguridad
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        // 3. Pasamos el usuario al modelo (vital para el botón de volver)
+        model.addAttribute("user", user);
+
+        // 4. Pasamos los datos de la negociación
+        model.addAttribute("negotiation", negotiationDao.getNegotiation(id));
+
+        return "negotiation/chat";
     }
 }

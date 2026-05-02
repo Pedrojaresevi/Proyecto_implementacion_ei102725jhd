@@ -65,4 +65,17 @@ public class NegotiationDao {
             return null;
         }
     }
+    public List<Negotiation> getNegotiationsByUser(String oviuserId) {
+        try {
+            // Unimos Negotiation -> ListOfProposedCandidates -> AssignmentRequest
+            String sql = "SELECT n.* FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.oviuser_id = ?";
+
+            return jdbcTemplate.query(sql, new NegotiationRowMapper(), oviuserId);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
 }

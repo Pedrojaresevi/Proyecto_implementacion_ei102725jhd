@@ -5,13 +5,14 @@ public class Tutor {
     private String name;
     private String email;
     private String status;
+    private String userAndPassword;
 
     public String getDni() {
         return dni;
     }
 
-    public void setDni(String id) {
-        this.dni = id;
+    public void setDni(String dni) {
+        this.dni = dni;
     }
 
     public String getName() {
@@ -38,15 +39,25 @@ public class Tutor {
         this.status = status;
     }
 
+    public String getUserAndPassword() {
+        return userAndPassword;
+    }
+
+    public void setUserAndPassword(String userAndPassword) {
+        this.userAndPassword = userAndPassword;
+    }
+
     @Override
     public String toString() {
         return "Tutor{" +
-                "id='" + dni + '\'' +
+                "dni='" + dni + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", status='" + status + '\'' +
+                ", userAndPassword='" + userAndPassword + '\'' +
                 '}';
     }
+
     public int compareTo(Tutor altre) {
         return this.getDni().compareTo(altre.getDni());
     }

@@ -2,10 +2,15 @@ package es.uji.ei1027.proyectoOvi.controller;
 
 import es.uji.ei1027.proyectoOvi.models.UserDetails;
 import es.uji.ei1027.proyectoOvi.models.OviUser;
-// Necesitarás un Dao para buscar al OviUser por DNI y password
-// import es.uji.ei1027.proyectoOvi.dao.OviUserDao;
+import es.uji.ei1027.proyectoOvi.models.Tutor;
+import es.uji.ei1027.proyectoOvi.models.Pap_Pati; // Ajusta el import si tu modelo se llama distinto
+
+import es.uji.ei1027.proyectoOvi.dao.OviUserDao;
+import es.uji.ei1027.proyectoOvi.dao.TutorDao;
+import es.uji.ei1027.proyectoOvi.dao.PapPatiDao; // Ajusta el import según tu DAO
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +20,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
 
+    private OviUserDao oviUserDao;
+    private TutorDao tutorDao;
+    private PapPatiDao papPatiDao;
+
+    @Autowired
+    public void setOviUserDao(OviUserDao oviUserDao) {
+        this.oviUserDao = oviUserDao;
+    }
+
+    @Autowired
+    public void setTutorDao(TutorDao tutorDao) {
+        this.tutorDao = tutorDao;
+    }
+
+    @Autowired
+    public void setPapPatiDao(PapPatiDao papPatiDao) {
+        this.papPatiDao = papPatiDao;
+    }
+
     @RequestMapping("/login")
     public String login(Model model) {
-        return "login"; // Devuelve el HTML del formulario
+        return "login";
     }
 
     @RequestMapping(value="/login", method=RequestMethod.POST)
@@ -25,54 +49,49 @@ public class LoginController {
                              @RequestParam("password") String password,
                              HttpSession session, Model model) {
 
-        // 1. LÓGICA PARA EL TÉCNICO (Ejemplo rápido)
+        // 1. COMPROBAR TÉCNICO OVI (Suele ser un admin estático o tener su propia tabla)
+        // Si tienes una tabla Technician, aquí iría el técnicoDao. De momento lo dejamos genérico.
         if (username.equals("admin") && password.equals("admin")) {
-            UserDetails user = new UserDetails();
-            user.setDni("00000000T");
-            user.setUsername("Administrador");
-            user.setRole("technician");
-
-            session.setAttribute("user", user); // ¡Aquí se guarda en la sesión!
-            //return "redirect:/assignmentRequest/list";
-            return "redirect:/dashboard";
-        }
-
-        // 2. LÓGICA PARA EL OVI USER
-        // Aquí deberías usar tu OviUserDao para buscar en la base de datos:
-        // OviUser ovi = oviUserDao.getOviUser(username); // username suele ser el DNI
-        // if (ovi != null && ovi.getPassword().equals(password)) { ... }
-
-        // Ejemplo rápido para que puedas probar con un OVI User (DNI: 12345678A)
-        if (username.equals("10000001A") && password.equals("1234")) {
-            UserDetails user = new UserDetails();
-            user.setDni("10000001A");
-            user.setUsername("Usuario Prueba");
-            user.setRole("oviuser");
-
-            session.setAttribute("user", user);
-            //return "redirect:/assignmentRequest/list";
-            return "redirect:/dashboard";
-        }
-
-        if (username.equals("T001") && password.equals("1234")) {
-            UserDetails user = new UserDetails();
-            user.setDni("T001");
-            user.setUsername("Tutor Prueba");
-            user.setRole("tutor");
-
+            UserDetails user = new UserDetails("00000000T", "Administrador Técnico", "technician");
             session.setAttribute("user", user);
             return "redirect:/dashboard";
         }
 
-        // Si falla, volvemos al login con error
-        model.addAttribute("error", "Usuario o contraseña incorrectos");
+        // 2. COMPROBAR OVI USER EN BASE DE DATOS
+        OviUser oviUser = oviUserDao.getOviUser(username);
+        // Usamos getUserAndPassword() porque así se llama en tu modelo OviUser
+        if (oviUser != null && oviUser.getUserAndPassword().equals(password)) {
+            UserDetails user = new UserDetails(oviUser.getDni(), oviUser.getName(), "oviuser");
+            session.setAttribute("user", user);
+            return "redirect:/dashboard";
+        }
+
+        // 3. COMPROBAR TUTOR EN BASE DE DATOS
+        Tutor tutor = tutorDao.getTutor(username);
+        // Aquí usamos getPassword() que es el que acabamos de crear
+        if (tutor != null && tutor.getUserAndPassword().equals(password)) {
+            UserDetails user = new UserDetails(tutor.getDni(), tutor.getName(), "tutor");
+            session.setAttribute("user", user);
+            return "redirect:/dashboard";
+        }
+
+        // 4. COMPROBAR PAP/PATI EN BASE DE DATOS
+        Pap_Pati papPati = papPatiDao.getPap_Pati(username);
+        // Usamos getUserAndPassword() porque así se llama en tu modelo Pap_Pati
+        if (papPati != null && papPati.getUserAndPassword().equals(password)) {
+            UserDetails user = new UserDetails(papPati.getDni(), papPati.getName(), "pap_pati");
+            session.setAttribute("user", user);
+            return "redirect:/dashboard";
+        }
+
+        // Si el código llega hasta aquí, significa que ningún usuario coincidió
+        model.addAttribute("error", "DNI o contraseña incorrectos");
         return "login";
     }
 
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // Limpiamos la sesión
+        session.invalidate(); // Limpiamos la sesión al salir
         return "redirect:/login";
     }
-
 }

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+    <title>Chat de Negociación</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="/css/proyecte.css"
+          th:href="@{/css/proyecte.css}"/>
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+    <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
+<main class="container mt-2" style="max-width: 800px;">
+
+    <div class="card shadow">
+        <div class="card-header bg-success text-white d-flex align-items-center py-3">
+            <a th:href="@{'/negotiation/user/' + ${user.dni}}" class="text-white me-3 fs-4">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <div class="rounded-circle bg-light text-success d-flex justify-content-center align-items-center me-3" style="width: 45px; height: 45px; font-size: 1.2rem;">
+                <span th:text="${#strings.substring(negotiation.negotiation_Id,0,1)}">N</span>
+            </div>
+
+            <div>
+                <h5 class="mb-0 fw-bold" th:text="'Negociación #' + ${negotiation.negotiation_Id}">Chat</h5>
+                <small th:text="'Estado: ' + ${negotiation.status}">Estado</small>
+            </div>
+        </div>
+
+        <div class="card-body chat-bg chat-window" id="chatBox">
+
+            <div class="bubble bubble-system">
+                <small class="text-success fw-bold d-block mb-1">Sistema OVI</small>
+                Bienvenido al chat de negociación. Utiliza este espacio para acordar las condiciones del contrato (horarios, lugar, etc.).
+                <div class="time-stamp">Automático</div>
+            </div>
+
+            <div class="bubble bubble-me" th:if="${negotiation.recordOfComunications != null and !negotiation.recordOfComunications.isEmpty()}">
+                <small class="text-secondary fw-bold d-block mb-1">Registro actual:</small>
+                <span th:text="${negotiation.recordOfComunications}"></span>
+            </div>
+
+        </div>
+
+        <div class="card-footer bg-light p-3">
+            <form th:action="@{/negotiation/update}" th:object="${negotiation}" method="post" class="d-flex gap-2">
+
+                <input type="hidden" th:field="*{negotiation_Id}">
+                <input type="hidden" th:field="*{status}">
+                <input type="hidden" th:field="*{startDate}">
+                <input type="hidden" th:field="*{endDate}">
+                <input type="hidden" th:field="*{listId}">
+
+                <input type="text" th:field="*{recordOfComunications}" class="form-control rounded-pill px-4"
+                       placeholder="Escribe tu propuesta o mensaje aquí..." required>
+
+                <button class="btn btn-success rounded-circle" type="submit" style="width: 45px; height: 45px;">
+                    <i class="bi bi-send-fill"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+<script>
+    var chatBox = document.getElementById("chatBox");
+    chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+
+</body>
+</html>

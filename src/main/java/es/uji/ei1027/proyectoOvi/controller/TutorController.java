@@ -2,9 +2,11 @@ package es.uji.ei1027.proyectoOvi.controller;
 
 import es.uji.ei1027.proyectoOvi.dao.OviUserDao;
 import es.uji.ei1027.proyectoOvi.dao.TutorDao;
+import es.uji.ei1027.proyectoOvi.models.OviUser;
 import es.uji.ei1027.proyectoOvi.models.Tutor;
+import es.uji.ei1027.proyectoOvi.models.UserDetails;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +44,7 @@ public class TutorController {
     @RequestMapping(value="/add")
     public String addTutor(Model model) {
         model.addAttribute("tutor", new Tutor());
-        return "tutor/add";
+        return "add_minor";
     }
     //
     @RequestMapping(value="/add", method= RequestMethod.POST)
@@ -52,7 +54,7 @@ public class TutorController {
         tutorValidator.validate(tutor, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "tutor/add";
+            return "add_minor";
         }
 
         try {
@@ -60,7 +62,7 @@ public class TutorController {
         } catch (DuplicateKeyException e) {
             bindingResult.rejectValue("dni", "duplicat",
                     "Ya existe un tutor con este DNI");
-            return "tutor/add";
+            return "add_minor";
         }
 
         return "redirect:list";
@@ -103,5 +105,57 @@ public class TutorController {
         model.addAttribute("oviUsers", oviUserDao.getOviUsersByTutor(dni));
 
         return "tutor/list_minors";
+    }
+    // MÉTODOS PARA AÑADIR MENORES DESDE EL TUTOR
+
+    @RequestMapping(value="/add-minor", method = RequestMethod.GET)
+    public String addMinor(Model model, HttpSession session) {
+        // Recuperamos el usuario conectado de la sesión
+        UserDetails user = (UserDetails) session.getAttribute("user");
+
+        // Si no hay usuario o no tiene permisos, lo mandamos al login
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        OviUser oviUser = new OviUser();
+        // Pre-asignamos el DNI del tutor que ha iniciado sesión
+        oviUser.setTutor_id(user.getDni());
+
+        model.addAttribute("oviUser", oviUser);
+        return "tutor/add_minor";
+    }
+
+    @RequestMapping(value="/add-minor", method = RequestMethod.POST)
+    public String processAddMinorSubmit(@ModelAttribute("oviUser") OviUser oviUser,
+                                        BindingResult bindingResult,
+                                        HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        // Por seguridad, forzamos que el tutor_id sea el del usuario conectado
+        // evitando que alguien manipule el HTML e intente poner otro DNI
+        oviUser.setTutor_id(user.getDni());
+
+        // IMPORTANTE: Aquí necesitarías validar al OviUser (si tienes creado el OviUserValidator)
+        // OviUserValidator oviUserValidator = new OviUserValidator();
+        // oviUserValidator.validate(oviUser, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "tutor/add_minor";
+        }
+
+        try {
+            // Utilizamos el oviUserDao que ya tienes inyectado en este controlador
+            oviUserDao.addOviUser(oviUser);
+        } catch (DuplicateKeyException e) {
+            bindingResult.rejectValue("dni", "duplicat", "Ya existe un usuario con este DNI");
+            return "tutor/add_minor";
+        }
+
+        // Redirigimos a la lista de menores de este tutor concreto
+        return "redirect:/tutor/users/" + user.getDni();
     }
 }

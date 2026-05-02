@@ -57,5 +57,18 @@ public class ContractDao {
             return null;
         }
     }
+    //
+    public List<Contract> getContractsByUser(String oviuserId) {
+        try {
+            // Unimos Contract con AssignmentRequest usando el request_Id
+            String sql = "SELECT c.* FROM Contract c " +
+                    "JOIN AssignmentRequest r ON c.request_Id = r.request_Id " +
+                    "WHERE r.oviuser_id = ?";
+
+            return jdbcTemplate.query(sql, new ContractRowMapper(), oviuserId);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
 
 }

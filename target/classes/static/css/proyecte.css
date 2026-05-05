@@ -33,8 +33,47 @@ label {
     padding-left: 20px;
     padding-right: 20px;
 }
-/* Ajuste para que la tabla ocupe bien el espacio */
-.container-fluid {
-    padding-left: 20px;
-    padding-right: 20px;
+/* =========================================
+   Estilos simulando WhatsApp para el Chat
+   ========================================= */
+.chat-bg {
+    background-color: #e5ddd5;
+    background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+}
+
+.chat-window {
+    height: 60vh;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.bubble {
+    margin-bottom: 15px;
+    max-width: 75%;
+    padding: 10px 15px;
+    border-radius: 12px;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.bubble-system {
+    background-color: #ffffff;
+    align-self: flex-start;
+    border-top-left-radius: 0;
+}
+
+.bubble-me {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    border-top-right-radius: 0;
+}
+
+.time-stamp {
+    font-size: 0.70rem;
+    color: #888;
+    float: right;
+    margin-top: 5px;
+    margin-left: 10px;
 }

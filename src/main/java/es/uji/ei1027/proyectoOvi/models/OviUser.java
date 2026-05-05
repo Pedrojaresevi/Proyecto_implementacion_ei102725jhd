@@ -81,7 +81,7 @@ public class OviUser {
         return password;
     }
 
-    public void setUserAndPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 

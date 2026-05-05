@@ -50,7 +50,6 @@ public class LoginController {
                              HttpSession session, Model model) {
 
         // 1. COMPROBAR TÉCNICO OVI (Suele ser un admin estático o tener su propia tabla)
-        // Si tienes una tabla Technician, aquí iría el técnicoDao. De momento lo dejamos genérico.
         if (username.equals("admin") && password.equals("admin")) {
             UserDetails user = new UserDetails("00000000T", "Administrador Técnico", "technician");
             session.setAttribute("user", user);
@@ -59,8 +58,7 @@ public class LoginController {
 
         // 2. COMPROBAR OVI USER EN BASE DE DATOS
         OviUser oviUser = oviUserDao.getOviUser(username);
-        // Usamos getUserAndPassword() porque así se llama en tu modelo OviUser
-        if (oviUser != null && oviUser.getUserAndPassword().equals(password)) {
+        if (oviUser != null && oviUser.getPassword().equals(password)) {
             UserDetails user = new UserDetails(oviUser.getDni(), oviUser.getName(), "oviuser");
             session.setAttribute("user", user);
             return "redirect:/dashboard";
@@ -68,7 +66,6 @@ public class LoginController {
 
         // 3. COMPROBAR TUTOR EN BASE DE DATOS
         Tutor tutor = tutorDao.getTutor(username);
-        // Aquí usamos getPassword() que es el que acabamos de crear
         if (tutor != null && tutor.getUserAndPassword().equals(password)) {
             UserDetails user = new UserDetails(tutor.getDni(), tutor.getName(), "tutor");
             session.setAttribute("user", user);

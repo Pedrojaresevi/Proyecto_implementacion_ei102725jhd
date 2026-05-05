@@ -23,7 +23,7 @@ public class OviUserDao {
         jdbcTemplate.update("INSERT INTO OviUser VALUES (?,?,?,?,?,?,?,?,?,?,?)",
                 oviUser.getDni(), oviUser.getName(), oviUser.getAddress(), oviUser.getEmail(), oviUser.getEntityThatIsInvolved(),
                 oviUser.getTypeOfFunctionalDiversity(), oviUser.getDateOfAcceptance(),
-                oviUser.getUserAndPassword(),
+                oviUser.getPassword(),
                 oviUser.getStatus(),
                 oviUser.getLifePlan(),
                 oviUser.getTutor_id());
@@ -42,7 +42,7 @@ public class OviUserDao {
         jdbcTemplate.update("UPDATE OviUser SET name=?, address=?, email=?, entityThatIsInvolved=?, typeOfFunctionalDiversity=?, dateOfAcceptance=?, userAndPassword=?, status=?,lifePlan=?, tutor_id=? WHERE dni=?",
                 oviUser.getName(), oviUser.getAddress(), oviUser.getEmail(), oviUser.getEntityThatIsInvolved(),
                 oviUser.getTypeOfFunctionalDiversity(), oviUser.getDateOfAcceptance(),
-                oviUser.getUserAndPassword(), oviUser.getStatus(),
+                oviUser.getPassword(), oviUser.getStatus(),
                 oviUser.getLifePlan(),
                 oviUser.getTutor_id(), oviUser.getDni());
     }

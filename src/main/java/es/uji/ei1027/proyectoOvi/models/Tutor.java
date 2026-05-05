@@ -5,7 +5,7 @@ public class Tutor {
     private String name;
     private String email;
     private String status;
-    private String userAndPassword;
+    private String password;
 
     public String getDni() {
         return dni;
@@ -39,12 +39,12 @@ public class Tutor {
         this.status = status;
     }
 
-    public String getUserAndPassword() {
-        return userAndPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUserAndPassword(String userAndPassword) {
-        this.userAndPassword = userAndPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Tutor {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", status='" + status + '\'' +
-                ", userAndPassword='" + userAndPassword + '\'' +
+                ", userAndPassword='" + password + '\'' +
                 '}';
     }
 

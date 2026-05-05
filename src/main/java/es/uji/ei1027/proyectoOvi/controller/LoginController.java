@@ -66,7 +66,7 @@ public class LoginController {
 
         // 3. COMPROBAR TUTOR EN BASE DE DATOS
         Tutor tutor = tutorDao.getTutor(username);
-        if (tutor != null && tutor.getUserAndPassword().equals(password)) {
+        if (tutor != null && tutor.getPassword().equals(password)) {
             UserDetails user = new UserDetails(tutor.getDni(), tutor.getName(), "tutor");
             session.setAttribute("user", user);
             return "redirect:/dashboard";

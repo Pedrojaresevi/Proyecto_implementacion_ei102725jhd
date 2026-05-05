@@ -113,6 +113,13 @@ public class NegotiationController {
         model.addAttribute("negotiations", negotiationDao.getNegotiationsByUser(dni));
         return "negotiation/list"; // Deberás crear este HTML
     }
+
+    @RequestMapping("/tutor/{dni}")
+    public String listNegotiationsByTutor(Model model, @PathVariable String dni) {
+        model.addAttribute("negotiations", negotiationDao.getNegotiationsByTutor(dni));
+        return "negotiation/tutor/list";
+    }
+
     //
     @RequestMapping("/chat/{id}")
     public String openChat(@PathVariable("id") String id, Model model, jakarta.servlet.http.HttpSession session) {

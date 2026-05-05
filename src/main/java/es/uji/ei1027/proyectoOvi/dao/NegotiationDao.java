@@ -78,4 +78,17 @@ public class NegotiationDao {
             return new java.util.ArrayList<>();
         }
     }
+
+    public List<Negotiation> getNegotiationsByTutor(String tutorDni) {
+        try {
+            String sql = "SELECT n.* FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.tutor_id = ?";
+
+            return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
 }

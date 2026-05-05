@@ -2,22 +2,30 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 </head>
+
 <body>
 
-<nav th:fragment="navbar" class="navbar navbar-light bg-light mb-0 py-1 shadow-sm">
-    <div class="container-fluid">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg bg-white shadow-sm py-2 w-100 mb-4" style="border-bottom: 2px solid #e9ecef;">
+    <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
 
-        <div class="d-flex align-items-center">
-            <span class="navbar-brand mb-0 h1 me-4">Proyecto OVI</span>
+        <!-- Logo -->
+        <a th:href="@{/dashboard}" class="text-decoration-none d-flex align-items-center gap-2">
+            <img th:src="@{/images/logo.png}" alt="Logo" style="height: 40px; object-fit: contain;">
+            <span class="fw-bold text-primary fs-5">OVI - Castellón</span>
+        </a>
 
-            <a th:if="${session.user != null}" th:href="@{/dashboard}" class="btn btn-outline-primary btn-sm">
+        <!-- Derecha: usuario + cerrar sesión -->
+        <div class="d-flex align-items-center gap-4" th:if="${session.user != null}">
+            <a th:href="@{/dashboard}" class="btn btn-outline-primary btn-sm">
                 🏠 Home
             </a>
-        </div>
-
-        <div class="d-flex align-items-center" th:if="${session.user != null}">
-            <span class="me-3 text-secondary" th:text="${session.user.username}">Usuario</span>
-            <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm">Cerrar Sesión</a>
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-person-circle text-secondary" style="font-size: 1.3rem;"></i>
+                <span class="text-secondary fw-semibold" th:text="${session.user.username}">Usuario</span>
+            </div>
+            <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm">
+                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+            </a>
         </div>
 
     </div>

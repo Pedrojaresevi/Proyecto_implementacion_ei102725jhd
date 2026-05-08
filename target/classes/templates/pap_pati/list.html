@@ -29,14 +29,12 @@
                 <th>Experiencia</th>
                 <th>CV</th>
                 <th>Estado</th>
-                <th>Usuario/Pass</th>
+                <th>Tipo Asistente</th>
                 <th>F. Inicio</th>
                 <th>F. Fin</th>
                 <th>Movilidad</th>
                 <th>Habilidades</th>
-
                 <th>Acciones</th>
-
                 <th>Gestión Técnico</th>
             </tr>
             </thead>
@@ -59,7 +57,7 @@
                     <span th:if="${pap_pati.status == 'in progress'}" class="badge bg-warning text-dark">En progreso</span>
                 </td>
 
-                <td th:text="${pap_pati.userAndPassword}"></td>
+                <td th:text="${pap_pati.assistant_type}"></td>
                 <td th:text="${pap_pati.startDate}"></td>
                 <td th:text="${pap_pati.endDate}"></td>
                 <td th:text="${pap_pati.geographicMobility}"></td>

@@ -17,13 +17,17 @@ public class Pap_Pati {
     private String typeOfExperience;
     private String curriculumVitae;
     private String status;
-    private String userAndPassword;
+    private String password;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
     private String geographicMobility;
     private String skills;
+    private String assistant_type;
+
+    public Pap_Pati() {
+    }
 
     public String getName() {
         return name;
@@ -113,12 +117,12 @@ public class Pap_Pati {
         this.status = status;
     }
 
-    public String getUserAndPassword() {
-        return userAndPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUserAndPassword(String userAndPassword) {
-        this.userAndPassword = userAndPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Date getStartDate() {
@@ -153,6 +157,14 @@ public class Pap_Pati {
         this.skills = skills;
     }
 
+    public String getAssistant_type() {
+        return assistant_type;
+    }
+
+    public void setAssistant_type(String assistant_type) {
+        this.assistant_type = assistant_type;
+    }
+
     @Override
     public String toString() {
         return "Pap_Pati{" +
@@ -161,17 +173,18 @@ public class Pap_Pati {
                 ", dni='" + dni + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", address='" + address + '\'' +
-                ", phone=" + phone +
+                ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", specificTraining='" + specificTraining + '\'' +
                 ", typeOfExperience='" + typeOfExperience + '\'' +
                 ", curriculumVitae='" + curriculumVitae + '\'' +
                 ", status='" + status + '\'' +
-                ", userAndPassword='" + userAndPassword + '\'' +
+                ", password='" + password + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", geographicMobility='" + geographicMobility + '\'' +
                 ", skills='" + skills + '\'' +
+                ", assistant_type='" + assistant_type + '\'' +
                 '}';
     }
 }

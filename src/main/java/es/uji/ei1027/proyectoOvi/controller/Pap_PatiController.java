@@ -31,28 +31,29 @@ public class Pap_PatiController {
     @RequestMapping(value="/add")
     public String addPapPati(Model model) {
         model.addAttribute("pap_pati", new Pap_Pati());
-        return "pap_pati/add";
+        return "pap_pati/registrarPapPati";
     }
 
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
                                    BindingResult bindingResult) {
+
+        papPati.setStatus("in progress");
+
         Pap_PatiValidator pap_patiValidator = new Pap_PatiValidator();
         pap_patiValidator.validate(papPati, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "pap_pati/add";
+            return "pap_pati/registrarPapPati";
         }
 
         try {
             pap_patiDao.addPap_Pati(papPati);
         } catch (DuplicateKeyException e) {
-            bindingResult.rejectValue("dni", "duplicat",
-                    "Ya existe un Pap/Pati con este DNI");
-            return "pap_pati/add";
+            bindingResult.rejectValue("dni", "duplicat", "Ya existe un Pap/Pati con este DNI");
+            return "pap_pati/registrarPapPati";
         }
-
-        return "redirect:list";
+        return "redirect:/";
     }
 
     @RequestMapping(value="/update/{id}", method = RequestMethod.GET)

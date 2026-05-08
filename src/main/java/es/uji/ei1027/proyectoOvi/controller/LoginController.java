@@ -75,7 +75,7 @@ public class LoginController {
         // 4. COMPROBAR PAP/PATI EN BASE DE DATOS
         Pap_Pati papPati = papPatiDao.getPap_Pati(username);
         // Usamos getUserAndPassword() porque así se llama en tu modelo Pap_Pati
-        if (papPati != null && papPati.getUserAndPassword().equals(password)) {
+        if (papPati != null && papPati.getPassword().equals(password)) {
             UserDetails user = new UserDetails(papPati.getDni(), papPati.getName(), "pap_pati");
             session.setAttribute("user", user);
             return "redirect:/dashboard";

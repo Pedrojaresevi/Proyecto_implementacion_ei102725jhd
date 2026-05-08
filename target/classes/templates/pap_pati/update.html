@@ -47,6 +47,17 @@
         </div>
 
         <div class="form-group row mb-3">
+            <label for="assistant_type" class="control-label col-sm-2">Tipo de Asistente:</label>
+            <div class="col-sm-4">
+                <select class="form-select" id="assistant_type" th:field="*{assistant_type}">
+                    <option value="">Selecciona un tipo...</option>
+                    <option value="PAP">PAP</option>
+                    <option value="PATI">PATI</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
             <label for="geographicMobility" class="control-label col-sm-2">Movilidad Geográfica:</label>
             <div class="col-sm-6">
                 <select class="form-select" id="geographicMobility" th:field="*{geographicMobility}">
@@ -112,7 +123,7 @@
             </div>
         </div>
 
-        <input type="hidden" th:field="*{userAndPassword}" />
+        <input type="hidden" th:field="*{password}" />
         <input type="hidden" th:field="*{curriculumVitae}" />
         <input type="hidden" th:field="*{address}" />
         <input type="hidden" th:field="*{dateOfBirth}" />

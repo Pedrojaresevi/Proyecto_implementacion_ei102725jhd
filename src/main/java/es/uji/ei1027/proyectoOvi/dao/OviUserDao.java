@@ -76,4 +76,12 @@ public class OviUserDao {
             return new ArrayList<OviUser>();
         }
     }
+    public List<OviUser> getOviUsersByStatus(String status) {
+        try {
+            return jdbcTemplate.query("SELECT * FROM OviUser WHERE status=?",
+                    new OviUserRowMapper(), status);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
 }

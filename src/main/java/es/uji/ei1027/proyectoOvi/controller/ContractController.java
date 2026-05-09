@@ -8,10 +8,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -131,5 +128,10 @@ public class ContractController {
         // Necesitas tener un método en contractDao que filtre por DNI
         model.addAttribute("contracts", contractDao.getContractsByUser(dni));
         return "contract/list"; // Deberás crear este HTML
+    }
+    //
+    @RequestMapping(value="/search", method = RequestMethod.GET)
+    public String searchContractsByDni(@RequestParam("dni") String dni) {
+        return "redirect:/contract/user/" + dni;
     }
 }

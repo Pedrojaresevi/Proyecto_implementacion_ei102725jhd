@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+  <title>Solicitudes de Tutores Pendientes</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+  <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
+<main class="container mt-4">
+  <h1 class="mb-4">Solicitudes de Tutores Pendientes</h1>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+      <tr>
+        <th>DNI</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Estado</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="tutor: ${tutors}">
+        <td th:text="${tutor.dni}"></td>
+        <td th:text="${tutor.name}"></td>
+        <td th:text="${tutor.email}"></td>
+        <td><span class="badge bg-warning text-dark">En progreso</span></td>
+        <td class="text-center">
+          <div class="d-flex gap-1 justify-content-center">
+            <a th:href="@{/tutor/accept/{dni}(dni=${tutor.dni})}"
+               class="btn btn-success btn-sm">Aceptar</a>
+            <a th:href="@{/tutor/reject/{dni}(dni=${tutor.dni})}"
+               class="btn btn-danger btn-sm">Rechazar</a>
+          </div>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(tutors)}">
+        <td colspan="5" class="text-center text-muted p-4">No hay solicitudes pendientes.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <a href="/dashboard" class="btn btn-secondary mt-3">Volver</a>
+</main>
+</body>
+</html>

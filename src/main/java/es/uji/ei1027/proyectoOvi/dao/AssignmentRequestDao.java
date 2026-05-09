@@ -73,7 +73,7 @@ public class AssignmentRequestDao  {
             return new java.util.ArrayList<AssignmentRequest>();
         }
     }
-
+    //
     public List<AssignmentRequest> getRequestsByTutor(String tutorId) {
         try {
             return jdbcTemplate.query(
@@ -94,6 +94,15 @@ public class AssignmentRequestDao  {
             );
         } catch (EmptyResultDataAccessException e) {
             return null;
+        }
+    }
+    //
+    public List<AssignmentRequest> getAssignmentRequestsByStatus(String status) {
+        try {
+            return jdbcTemplate.query("SELECT * FROM AssignmentRequest WHERE status=?",
+                    new AssignmentRequestRowMapper(), status);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
         }
     }
 }

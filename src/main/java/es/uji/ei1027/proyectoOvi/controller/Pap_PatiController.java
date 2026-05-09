@@ -160,4 +160,35 @@ public class Pap_PatiController {
         model.addAttribute("pap_pati", pap_patiDao.getPap_Pati(dni));
         return "technician/pap_pati/manage";
     }
+    @RequestMapping("/pending")
+    public String listPendingPapPati(Model model) {
+        model.addAttribute("allpap_pati", pap_patiDao.getPapPatiByStatus("in progress"));
+        return "technician/pap_pati/pending";
+    }
+
+    @RequestMapping("/accepted")
+    public String listAcceptedPapPati(Model model) {
+        model.addAttribute("allpap_pati", pap_patiDao.getPapPatiByStatus("accepted"));
+        return "technician/pap_pati/accepted";
+    }
+
+    @RequestMapping(value="/accept/{dni}", method = RequestMethod.GET)
+    public String acceptPapPati(@PathVariable String dni) {
+        Pap_Pati papPati = pap_patiDao.getPap_Pati(dni);
+        if (papPati != null) {
+            papPati.setStatus("accepted");
+            pap_patiDao.updatePap_Pati(papPati);
+        }
+        return "redirect:/pap_pati/pending";
+    }
+
+    @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
+    public String rejectPapPati(@PathVariable String dni) {
+        Pap_Pati papPati = pap_patiDao.getPap_Pati(dni);
+        if (papPati != null) {
+            papPati.setStatus("refused");
+            pap_patiDao.updatePap_Pati(papPati);
+        }
+        return "redirect:/pap_pati/pending";
+    }
 }

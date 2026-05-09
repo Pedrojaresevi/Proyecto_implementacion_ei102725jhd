@@ -123,7 +123,7 @@ public class TutorController {
         oviUser.setTutor_id(user.getDni());
 
         model.addAttribute("oviUser", oviUser);
-        return "tutor/add_minor";
+        return "technician/add_minor";
     }
 
     @RequestMapping(value="/add-minor", method = RequestMethod.POST)
@@ -144,7 +144,7 @@ public class TutorController {
         // oviUserValidator.validate(oviUser, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "tutor/add_minor";
+            return "technician/add_minor";
         }
 
         try {
@@ -157,5 +157,31 @@ public class TutorController {
 
         // Redirigimos a la lista de menores de este tutor concreto
         return "redirect:/tutor/users/" + user.getDni();
+    }
+    //
+    @RequestMapping("/pending")
+    public String listPendingTutors(Model model) {
+        model.addAttribute("tutors", tutorDao.getTutorsByStatus("in progress"));
+        return "technician/tutor/pending";
+    }
+
+    @RequestMapping(value="/accept/{dni}", method = RequestMethod.GET)
+    public String acceptTutor(@PathVariable String dni) {
+        Tutor tutor = tutorDao.getTutor(dni);
+        if (tutor != null) {
+            tutor.setStatus("accepted");
+            tutorDao.updateTutor(tutor);
+        }
+        return "redirect:/tutor/pending";
+    }
+
+    @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
+    public String rejectTutor(@PathVariable String dni) {
+        Tutor tutor = tutorDao.getTutor(dni);
+        if (tutor != null) {
+            tutor.setStatus("refused");
+            tutorDao.updateTutor(tutor);
+        }
+        return "redirect:/tutor/pending";
     }
 }

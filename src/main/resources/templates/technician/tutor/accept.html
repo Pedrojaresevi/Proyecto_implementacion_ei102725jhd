@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Confirmar Aceptación de Tutor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+    <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Confirmar Aceptación de Tutor</h4>
+        </div>
+        <div class="card-body">
+            <p>Estás a punto de aceptar al tutor <strong th:text="${tutor.name}"></strong> con DNI <strong th:text="${tutor.dni}"></strong>.</p>
+
+            <div class="d-flex justify-content-end gap-2">
+                <a th:href="@{/tutor/pending}" class="btn btn-secondary">Cancelar</a>
+                <a th:href="@{/tutor/accept/{dni}(dni=${tutor.dni})}" class="btn btn-success">Confirmar</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

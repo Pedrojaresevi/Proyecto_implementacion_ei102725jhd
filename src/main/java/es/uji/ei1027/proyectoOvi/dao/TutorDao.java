@@ -54,4 +54,13 @@ public class TutorDao {
             return null;
         }
     }
+    //
+    public List<Tutor> getTutorsByStatus(String status) {
+        try {
+            return jdbcTemplate.query("SELECT * FROM Tutor WHERE status=?",
+                    new TutorRowMapper(), status);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
 }

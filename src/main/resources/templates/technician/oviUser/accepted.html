@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+    <title>OVI Users Registrados</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+    <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
+<main class="container mt-4">
+    <h1 class="mb-4">OVI Users Registrados</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th>DNI</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Email</th>
+                <th>Entidad</th>
+                <th>Tipo Diversidad</th>
+                <th>F. Nacimiento</th>
+                <th>Plan de Vida</th>
+                <th>Tutor</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="oviUser: ${oviUsers}">
+                <td th:text="${oviUser.dni}"></td>
+                <td th:text="${oviUser.name}"></td>
+                <td th:text="${oviUser.address}"></td>
+                <td th:text="${oviUser.email}"></td>
+                <td th:text="${oviUser.entityThatIsInvolved}"></td>
+                <td th:text="${oviUser.typeOfFunctionalDiversity}"></td>
+                <td th:text="${oviUser.dateOfBirth}"></td>
+                <td th:text="${oviUser.lifePlan}"></td>
+                <td th:text="${oviUser.tutor_id}"></td>
+                <td><span class="badge bg-success">Aceptado</span></td>
+                <td class="text-center">
+                    <a th:href="@{/oviUser/update/{dni}(dni=${oviUser.dni})}"
+                       class="btn btn-warning btn-sm">Editar</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(oviUsers)}">
+                <td colspan="11" class="text-center text-muted p-4">No hay usuarios registrados.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/dashboard" class="btn btn-secondary mt-3">Volver</a>
+</main>
+</body>
+</html>

@@ -567,4 +567,17 @@ public class AssignmentRequestController {
         model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByOviUser(dni));
         return "assignmentRequest/list"; // Deberás crear este HTML
     }
+    //
+    @RequestMapping("/tutor/{dni}")
+    public String listRequestsByTutor(Model model, @PathVariable String dni) {
+        model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByTutor(dni));
+        return "assignmentRequest/list";
+    }
+    @RequestMapping("/pending")
+    public String listPendingAssignmentRequests(Model model) {
+        model.addAttribute("assignmentRequests",
+                assignmentRequestDao.getAssignmentRequestsByStatus("in progress"));
+        return "technician/assignmentRequest/list";
+    }
+
 }

@@ -131,5 +131,37 @@ public class OviUserController {
         oviUserDao.deleteOviUser(dni);
         return "redirect:../list";
     }
+    //
+    @RequestMapping("/pending")
+    public String listPendingOviUsers(Model model) {
+        model.addAttribute("oviUsers", oviUserDao.getOviUsersByStatus("in progress"));
+        return "technician/oviUser/pending";
+    }
+
+    @RequestMapping("/accepted")
+    public String listAcceptedOviUsers(Model model) {
+        model.addAttribute("oviUsers", oviUserDao.getOviUsersByStatus("accepted"));
+        return "technician/oviUser/accepted";
+    }
+
+    @RequestMapping(value="/accept/{dni}", method = RequestMethod.GET)
+    public String acceptOviUser(@PathVariable String dni) {
+        OviUser oviUser = oviUserDao.getOviUser(dni);
+        if (oviUser != null) {
+            oviUser.setStatus("accepted");
+            oviUserDao.updateOviUser(oviUser);
+        }
+        return "redirect:/oviUser/pending";
+    }
+
+    @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
+    public String rejectOviUser(@PathVariable String dni) {
+        OviUser oviUser = oviUserDao.getOviUser(dni);
+        if (oviUser != null) {
+            oviUser.setStatus("refused");
+            oviUserDao.updateOviUser(oviUser);
+        }
+        return "redirect:/oviUser/pending";
+    }
 
 }

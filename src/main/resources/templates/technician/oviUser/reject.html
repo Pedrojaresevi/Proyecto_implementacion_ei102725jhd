@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Confirmar Rechazo de OVI User</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+    <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
+<div class="container mt-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">Confirmar Rechazo de OVI User</h4>
+        </div>
+        <div class="card-body">
+            <p>Estás a punto de <strong>rechazar</strong> al OVI user <strong th:text="${oviUser.name}"></strong> con DNI <strong th:text="${oviUser.dni}"></strong>.</p>
+
+            <div class="alert alert-warning">
+                <strong>Atención:</strong> Al rechazar, el estado cambiará a <em>"refused"</em>.
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <a th:href="@{/oviUser/pending}" class="btn btn-secondary">Cancelar</a>
+                <a th:href="@{/oviUser/reject/{dni}(dni=${oviUser.dni})}" class="btn btn-danger">Confirmar Rechazo</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

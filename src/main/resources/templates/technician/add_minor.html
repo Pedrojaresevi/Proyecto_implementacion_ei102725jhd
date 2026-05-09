@@ -13,7 +13,6 @@
 
 <main class="container">
     <h1 class="mb-4">Registrar a un Menor</h1>
-    <p class="text-muted">Como Tutor, los menores que registres aquí quedarán automáticamente asignados a tu cargo.</p>
 
     <form class="form-horizontal" th:action="@{/tutor/add-minor}" th:object="${oviUser}" method="post">
 
@@ -58,7 +57,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary mt-3">Registrar Menor</button>
-        <a href="/tutor/list_minors" class="btn btn-secondary mt-3 ms-2">Cancelar</a>
+        <a href="/dashboard" class="btn btn-secondary mt-3 ms-2">Cancelar</a>
     </form>
 </main>
 </body>

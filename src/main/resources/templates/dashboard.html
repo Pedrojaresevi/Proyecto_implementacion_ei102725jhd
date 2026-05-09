@@ -23,13 +23,52 @@
 
     <div th:if="${user.role == 'technician'}" class="mt-4">
         <h2 class="h4 text-primary mb-3">Gestió Global de la OVI</h2>
-        <div class="list-group shadow-sm">
-            <a th:href="@{/pap_pati/list}" class="list-group-item list-group-item-action">Gestión de PAP/PATI</a>
-            <a th:href="@{/oviUser/list}" class="list-group-item list-group-item-action">Gestión de OVIusers</a>
-            <a th:href="@{/tutor/list}" class="list-group-item list-group-item-action">Gestión de Tutores</a>
-            <a th:href="@{/contract/list}" class="list-group-item list-group-item-action">Gestión de Contratos</a>
-            <a th:href="@{/assignmentRequest/list}" class="list-group-item list-group-item-action">Gestión de Assignment Requests</a>
-            <a th:href="@{/negotiation/list}" class="list-group-item list-group-item-action">Gestión de Negociaciones</a>
+
+        <div class="list-group shadow-sm mb-4">
+            <!-- 1. Listado con solicitudes de Tutores (in progress) -->
+            <a th:href="@{/tutor/pending}" class="list-group-item list-group-item-action">
+                <i class="bi bi-person-badge me-2"></i>Listado con solicitudes de Tutores
+            </a>
+            <!-- 2. Listado con solicitudes de OVI users (in progress) -->
+            <a th:href="@{/oviUser/pending}" class="list-group-item list-group-item-action">
+                <i class="bi bi-people me-2"></i>Listado con solicitudes de OVI users
+            </a>
+            <!-- 3. Listado con solicitudes de PAPs y PATIs (in progress) -->
+            <a th:href="@{/pap_pati/pending}" class="list-group-item list-group-item-action">
+                <i class="bi bi-person-lines-fill me-2"></i>Listado con solicitudes de PAPs y PATIs
+            </a>
+            <!-- 4. Listado con solicitudes de asignación (in progress) -->
+            <a th:href="@{/assignmentRequest/pending}" class="list-group-item list-group-item-action">
+                <i class="bi bi-clipboard-check me-2"></i>Listado con solicitudes de asignación
+            </a>
+            <!-- 5. Añadir OVI users menores a Tutores -->
+            <a th:href="@{/tutor/add-minor}" class="list-group-item list-group-item-action">
+                <i class="bi bi-person-plus me-2"></i>Añadir OVI users menores a Tutores
+            </a>
+            <!-- 6a. Listado de usuarios OVI registrados (accepted) -->
+            <a th:href="@{/oviUser/accepted}" class="list-group-item list-group-item-action">
+                <i class="bi bi-person-check me-2"></i>Listado con usuarios OVI registrados
+            </a>
+            <!-- 6b. Listado de PAP/PATI registrados (accepted) -->
+            <a th:href="@{/pap_pati/accepted}" class="list-group-item list-group-item-action">
+                <i class="bi bi-person-check me-2"></i>Listado con PAP/PATI registrados
+            </a>
+        </div>
+
+        <!-- 7. Buscar contratos por DNI sin JavaScript -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-file-earmark-text me-2"></i>Ver contratos de un usuario concreto</h5>
+                <p class="card-text text-muted small">Introduce el DNI del OVI user o PAP/PATI para consultar sus contratos.</p>
+                <form th:action="@{/contract/search}" method="get">
+                    <div class="input-group">
+                        <input type="text" name="dni" class="form-control" placeholder="Introduce el DNI (ej. 12345678A)" required />
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search me-1"></i>Buscar contratos
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -60,7 +99,7 @@
                         </div>
                         <h5 class="card-title">Solicitudes de Asignación</h5>
                         <p class="card-text small text-muted">Mira el estado de tus peticiones de nuevos asistentes.</p>
-                        <a th:href="@{'/assignmentRequest/user/' + ${user.dni}}" class="btn btn-info text-white w-100">
+                        <a th:href="@{/assignmentRequest/list}" class="btn btn-info text-white w-100">
                             Listar Solicitudes
                         </a>
                     </div>
@@ -111,7 +150,7 @@
                         </div>
                         <h5 class="card-title">Solicitudes de Asignación</h5>
                         <p class="card-text small text-muted">Mira el estado de tus peticiones de nuevos asistentes.</p>
-                        <a th:href="@{'/assignmentRequest/tutor/' + ${user.dni}}" class="btn btn-info text-white w-100">
+                        <a th:href="@{/assignmentRequest/list}" class="btn btn-info text-white w-100">
                             Listar Solicitudes
                         </a>
                     </div>

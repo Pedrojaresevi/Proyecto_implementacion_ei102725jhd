@@ -124,6 +124,15 @@ public class PapPatiDao {
             return new java.util.ArrayList<>();
         }
     }
+    //
+    public List<Pap_Pati> getPapPatiByStatus(String status) {
+        try {
+            return jdbcTemplate.query("SELECT * FROM PapPati WHERE status=?",
+                    new Pap_PatiRowMapper(), status);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
 
 }
 

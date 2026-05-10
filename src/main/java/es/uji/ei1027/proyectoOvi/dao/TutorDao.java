@@ -33,7 +33,7 @@ public class TutorDao {
     }
 
     public void updateTutor(Tutor tutor) {
-        jdbcTemplate.update("UPDATE Tutor SET name=?, email=?, status=?,userAndPassword=? WHERE dni=?",
+        jdbcTemplate.update("UPDATE Tutor SET name=?, email=?, status=?,password=? WHERE dni=?",
                 tutor.getName(), tutor.getEmail(), tutor.getStatus(),tutor.getPassword(), tutor.getDni());
     }
 

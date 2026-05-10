@@ -44,17 +44,20 @@ public class TutorController {
     @RequestMapping(value="/add")
     public String addTutor(Model model) {
         model.addAttribute("tutor", new Tutor());
-        return "add_minor";
+        return "tutor/add";
     }
+    //
+
     //
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("tutor") Tutor tutor,
                                    BindingResult bindingResult) {
+        tutor.setStatus("in progress");
         TutorValidator tutorValidator = new TutorValidator();
         tutorValidator.validate(tutor, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "add_minor";
+            return "tutor/add";
         }
 
         try {
@@ -62,10 +65,10 @@ public class TutorController {
         } catch (DuplicateKeyException e) {
             bindingResult.rejectValue("dni", "duplicat",
                     "Ya existe un tutor con este DNI");
-            return "add_minor";
+            return "tutor/add";
         }
 
-        return "redirect:list";
+        return "redirect:/";
     }
     //
     @RequestMapping(value="/update/{dni}", method = RequestMethod.GET)
@@ -119,8 +122,7 @@ public class TutorController {
         }
 
         OviUser oviUser = new OviUser();
-        // Pre-asignamos el DNI del tutor que ha iniciado sesión
-        oviUser.setTutor_id(user.getDni());
+
 
         model.addAttribute("oviUser", oviUser);
         return "technician/add_minor";
@@ -128,36 +130,18 @@ public class TutorController {
 
     @RequestMapping(value="/add-minor", method = RequestMethod.POST)
     public String processAddMinorSubmit(@ModelAttribute("oviUser") OviUser oviUser,
-                                        BindingResult bindingResult,
-                                        HttpSession session) {
-        UserDetails user = (UserDetails) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
+                                        BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+            return "tutor/add-minor";
 
-        // Por seguridad, forzamos que el tutor_id sea el del usuario conectado
-        // evitando que alguien manipule el HTML e intente poner otro DNI
-        oviUser.setTutor_id(user.getDni());
+        oviUser.setStatus("accepted");
+        oviUser.setDateOfAcceptance(new java.util.Date());
 
-        // IMPORTANTE: Aquí necesitarías validar al OviUser (si tienes creado el OviUserValidator)
-        // OviUserValidator oviUserValidator = new OviUserValidator();
-        // oviUserValidator.validate(oviUser, bindingResult);
+        oviUserDao.addOviUser(oviUser);
 
-        if (bindingResult.hasErrors()) {
-            return "technician/add_minor";
-        }
-
-        try {
-            // Utilizamos el oviUserDao que ya tienes inyectado en este controlador
-            oviUserDao.addOviUser(oviUser);
-        } catch (DuplicateKeyException e) {
-            bindingResult.rejectValue("dni", "duplicat", "Ya existe un usuario con este DNI");
-            return "tutor/add_minor";
-        }
-
-        // Redirigimos a la lista de menores de este tutor concreto
-        return "redirect:/tutor/users/" + user.getDni();
+        return "redirect:/dashboard";
     }
+
     //
     @RequestMapping("/pending")
     public String listPendingTutors(Model model) {
@@ -166,7 +150,13 @@ public class TutorController {
     }
 
     @RequestMapping(value="/accept/{dni}", method = RequestMethod.GET)
-    public String acceptTutor(@PathVariable String dni) {
+    public String confirmAcceptTutor(Model model, @PathVariable String dni) {
+        model.addAttribute("tutor", tutorDao.getTutor(dni));
+        return "technician/tutor/accept";
+    }
+
+    @RequestMapping(value="/accept/execute/{dni}", method = RequestMethod.GET)
+    public String executeAcceptTutor(@PathVariable String dni) {
         Tutor tutor = tutorDao.getTutor(dni);
         if (tutor != null) {
             tutor.setStatus("accepted");
@@ -176,7 +166,13 @@ public class TutorController {
     }
 
     @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
-    public String rejectTutor(@PathVariable String dni) {
+    public String confirmRejectTutor(Model model, @PathVariable String dni) {
+        model.addAttribute("tutor", tutorDao.getTutor(dni));
+        return "technician/tutor/reject";
+    }
+
+    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.GET)
+    public String executeRejectTutor(@PathVariable String dni) {
         Tutor tutor = tutorDao.getTutor(dni);
         if (tutor != null) {
             tutor.setStatus("refused");

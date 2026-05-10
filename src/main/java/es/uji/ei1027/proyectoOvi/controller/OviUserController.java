@@ -123,8 +123,7 @@ public class OviUserController {
             return "oviUser/update";
         }
 
-        return "redirect:list";
-    }
+        return "redirect:/oviUser/accepted";    }
 
     @RequestMapping(value="/delete/{dni}")
     public String processDelete(@PathVariable String dni) {
@@ -145,7 +144,13 @@ public class OviUserController {
     }
 
     @RequestMapping(value="/accept/{dni}", method = RequestMethod.GET)
-    public String acceptOviUser(@PathVariable String dni) {
+    public String confirmAcceptOviUser(Model model, @PathVariable String dni) {
+        model.addAttribute("oviUser", oviUserDao.getOviUser(dni));
+        return "technician/oviUser/accept";
+    }
+
+    @RequestMapping(value="/accept/execute/{dni}", method = RequestMethod.GET)
+    public String executeAcceptOviUser(@PathVariable String dni) {
         OviUser oviUser = oviUserDao.getOviUser(dni);
         if (oviUser != null) {
             oviUser.setStatus("accepted");
@@ -155,7 +160,13 @@ public class OviUserController {
     }
 
     @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
-    public String rejectOviUser(@PathVariable String dni) {
+    public String confirmRejectOviUser(Model model, @PathVariable String dni) {
+        model.addAttribute("oviUser", oviUserDao.getOviUser(dni));
+        return "technician/oviUser/reject";
+    }
+
+    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.GET)
+    public String executeRejectOviUser(@PathVariable String dni) {
         OviUser oviUser = oviUserDao.getOviUser(dni);
         if (oviUser != null) {
             oviUser.setStatus("refused");

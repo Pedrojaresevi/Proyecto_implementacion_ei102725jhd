@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro de Tutor</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body>
+<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
+  <div th:replace="~{fragments/base :: navbar}"></div>
+</nav>
+
+<main class="container">
+  <h1 class="mb-4">Registrarse como Tutor</h1>
+  <p class="text-muted">Por favor, rellene sus datos para solicitar el alta en el sistema.</p>
+
+  <form class="form-horizontal" th:action="@{/tutor/add}" th:object="${tutor}" method="post">
+
+    <div class="form-group row mb-3">
+      <label for="dni" class="control-label col-sm-2">DNI / NIE:</label>
+      <div class="col-sm-6">
+        <input id="dni" type="text" th:field="*{dni}" class="form-control" maxlength="9" placeholder="Ej: 12345678Z">
+        <div th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}" class="text-danger small"></div>
+      </div>
+    </div>
+
+    <div class="form-group row mb-3">
+      <label for="name" class="control-label col-sm-2">Nombre Completo:</label>
+      <div class="col-sm-6">
+        <input id="name" type="text" th:field="*{name}" class="form-control" maxlength="100">
+        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger small"></div>
+      </div>
+    </div>
+
+    <div class="form-group row mb-3">
+      <label for="email" class="control-label col-sm-2">Correo Electrónico:</label>
+      <div class="col-sm-6">
+        <input id="email" type="email" th:field="*{email}" class="form-control" maxlength="100" placeholder="ejemplo@correo.com">
+        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small"></div>
+      </div>
+    </div>
+
+    <div class="form-group row mb-3">
+      <label for="password" class="control-label col-sm-2">Contraseña:</label>
+      <div class="col-sm-6">
+        <input id="password" type="password" th:field="*{password}" class="form-control" maxlength="20">
+        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger small"></div>
+      </div>
+    </div>
+
+    <div class="form-group row mt-4">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-success">Finalizar Registro</button>
+        <a th:href="@{/}" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </div>
+  </form>
+</main>
+</body>
+</html>

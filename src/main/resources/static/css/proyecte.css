@@ -77,3 +77,15 @@ label {
     margin-top: 5px;
     margin-left: 10px;
 }
+
+
+.btn-gris-oscuro {
+    background-color: #4a4a4a;
+    color: #ffffff;
+    border: 1px solid #4a4a4a;
+}
+
+.btn-gris-oscuro:hover {
+    background-color: #333333;
+    color: #ffffff;
+}

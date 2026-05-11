@@ -69,7 +69,7 @@
                     <!-- Aceptada: puede ver los candidatos propuestos -->
                     <div th:if="${assignmentRequest.status == 'accepted'}">
                         <a th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id})}"
-                           class="btn btn-info btn-sm">Ver candidatos</a>
+                           class="btn btn-primary">Ver candidatos</a>
                     </div>
 
                     <!-- Rechazada: sin acciones, el motivo ya se ve en la columna Estado -->

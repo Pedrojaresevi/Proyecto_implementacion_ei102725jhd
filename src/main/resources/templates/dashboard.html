@@ -55,7 +55,6 @@
             </a>
         </div>
 
-        <!-- 7. Buscar contratos por DNI sin JavaScript -->
         <div class="card shadow-sm">
             <div class="card-body">
                 <h5 class="card-title"><i class="bi bi-file-earmark-text me-2"></i>Ver contratos de un usuario concreto</h5>
@@ -73,18 +72,18 @@
     </div>
 
     <div th:if="${user.role == 'oviuser'}" class="mt-4">
-        <h2 class="h3 mb-4 text-info">Mi Gestión de Asistencia</h2>
+        <h2 class="h3 mb-4 text-primary">Mi Gestión de Asistencia</h2>
 
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="card h-100 border-info shadow-sm">
+                <div class="card h-100 border-primary shadow-sm">
                     <div class="card-body text-center">
                         <div class="mb-3">
-                            <i class="bi bi-file-earmark-text" style="font-size: 2rem; color: #0dcaf0;"></i>
+                            <i class="bi bi-file-earmark-text" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
                         <h5 class="card-title">Mis Contratos</h5>
                         <p class="card-text small text-muted">Consulta tus contratos activos con los asistentes PAP/PATI.</p>
-                        <a th:href="@{'/contract/user/' + ${user.dni}}" class="btn btn-info text-white w-100">
+                        <a th:href="@{'/contract/user/' + ${user.dni}}" class="btn btn-primary text-white w-100">
                             Listar Contratos
                         </a>
                     </div>
@@ -92,14 +91,14 @@
             </div>
 
             <div class="col-md-4">
-                <div class="card h-100 border-info shadow-sm">
+                <div class="card h-100 border-primary shadow-sm">
                     <div class="card-body text-center">
                         <div class="mb-3">
-                            <i class="bi bi-person-plus" style="font-size: 2rem; color: #0dcaf0;"></i>
+                            <i class="bi bi-person-plus" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
                         <h5 class="card-title">Solicitudes de Asignación</h5>
                         <p class="card-text small text-muted">Mira el estado de tus peticiones de nuevos asistentes.</p>
-                        <a th:href="@{/assignmentRequest/list}" class="btn btn-info text-white w-100">
+                        <a th:href="@{/assignmentRequest/list}" class="btn btn-primary text-white w-100">
                             Listar Solicitudes
                         </a>
                     </div>

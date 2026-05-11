@@ -18,13 +18,20 @@ public class TutorValidator implements Validator {
     public void validate(Object obj, Errors errors) {
         Tutor tutor = (Tutor) obj;
         if (tutor.getDni() == null || tutor.getDni().trim().equals(""))
-            errors.rejectValue("id", "obligatori",
-                    "Cal introduir un valor");
+            errors.rejectValue("dni", "obligatori",
+                    "Debe introducir un DNI");
         //
-        List<String> valors = Arrays.asList("accepted", "refused", "in progress");
-        if (!valors.contains(tutor.getStatus()))
-            errors.rejectValue("status", "valor incorrecte",
-                    "Deu ser: accepted,refused o in progress");
 
+        if (tutor.getName() == null || tutor.getName().trim().equals(""))
+            errors.rejectValue("name", "obligatori",
+                    "Debe introducir un nombre");
+
+        if (tutor.getEmail() == null || tutor.getEmail().trim().equals(""))
+            errors.rejectValue("email", "obligatori",
+                    "Debe introducir un email");
+
+        if (tutor.getPassword() == null || tutor.getPassword().trim().equals(""))
+            errors.rejectValue("password", "obligatori",
+                    "Debe introducir una contraseña");
     }
 }

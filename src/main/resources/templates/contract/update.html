@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <title>Modificar Contrato</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="/css/proyecte.css"
           th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
-<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
-    <div th:replace="~{fragments/base :: navbar}"></div>
-</nav>
+
+<div th:replace="~{fragments/base :: navbar}"></div>
 
 <main class="container">
     <h1>Modificar Contrato</h1>
@@ -65,9 +65,8 @@
             <div th:if="${#fields.hasErrors('pappati_id')}" th:errors="*{pappati_id}" class="error"></div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Modificar Contrato</button>
-        <br><br>
-        <a th:href="@{'/contract/user/' + ${user.dni}}" class="btn btn-info text-white w-100">Volver</a>
+        <button type="submit" class="btn btn-primary mt-3">Finalizar Registro</button>
+        <a th:href="@{/contract/user/{dni}(dni=${user.dni})}" class="btn btn-secondary mt-3 ms-2">Volver</a>
     </form>
 </main>
 </body>

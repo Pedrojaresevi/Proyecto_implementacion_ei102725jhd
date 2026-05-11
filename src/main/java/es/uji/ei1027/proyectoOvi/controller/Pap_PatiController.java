@@ -31,7 +31,7 @@ public class Pap_PatiController {
     @RequestMapping(value="/add")
     public String addPapPati(Model model) {
         model.addAttribute("pap_pati", new Pap_Pati());
-        return "pap_pati/registrarPapPati";
+        return "pap_pati/add";
     }
 
     @RequestMapping(value="/add", method= RequestMethod.POST)
@@ -44,14 +44,14 @@ public class Pap_PatiController {
         pap_patiValidator.validate(papPati, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "pap_pati/registrarPapPati";
+            return "pap_pati/add";
         }
 
         try {
             pap_patiDao.addPap_Pati(papPati);
         } catch (DuplicateKeyException e) {
             bindingResult.rejectValue("dni", "duplicat", "Ya existe un Pap/Pati con este DNI");
-            return "pap_pati/registrarPapPati";
+            return "pap_pati/add";
         }
         return "redirect:/";
     }

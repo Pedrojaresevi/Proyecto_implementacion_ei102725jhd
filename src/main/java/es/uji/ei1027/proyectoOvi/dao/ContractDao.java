@@ -20,8 +20,8 @@ public class ContractDao {
 
     public void addContract(Contract contract) {
         jdbcTemplate.update("INSERT INTO Contract VALUES (?,?,?,?,?,?,?)",
-                contract.getContract_Id(), contract.getRequest_Id(), contract.getStartDate(), contract.getEndDate(),
-                contract.getStatus(), contract.getPlaceWhereThePDFIsGonnaBeSaved(), contract.getPappati_id());
+                contract.getContract_Id(), contract.getStartDate(), contract.getEndDate(),
+                contract.getStatus(), contract.getPlaceWhereThePDFIsGonnaBeSaved(), contract.getRequest_Id(), contract.getPappati_id());
     }
 
     public void deleteContract(Contract contract) {
@@ -62,12 +62,30 @@ public class ContractDao {
         try {
             // Unimos Contract con AssignmentRequest usando el request_Id
             String sql = "SELECT c.* FROM Contract c " +
-                    "JOIN AssignmentRequest r ON c.request_Id = r.request_Id " +
+                    "JOIN AssignmentRequest r ON r.request_id = c.request_id " +
                     "WHERE r.oviuser_id = ?";
-
             return jdbcTemplate.query(sql, new ContractRowMapper(), oviuserId);
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<>();
+        }
+    }
+
+    public String generateNextContractId() {
+        try {
+            String sql = "SELECT MAX(contract_Id) FROM Contract";
+            String maxId = jdbcTemplate.queryForObject(sql, String.class);
+
+            if (maxId == null) {
+                return "CTR001";
+            }
+
+            int num = Integer.parseInt(maxId.substring(3));
+            num++;
+
+            return String.format("CTR%03d", num);
+
+        } catch (Exception e) {
+            return "CTR001";
         }
     }
 

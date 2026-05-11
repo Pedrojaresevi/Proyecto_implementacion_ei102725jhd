@@ -9,18 +9,17 @@
           th:href="@{/css/proyecte.css}"/>
 </head>
 <body class="bg-light">
-<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
-    <div th:replace="~{fragments/base :: navbar}"></div>
-</nav>
+
+<div th:replace="~{fragments/base :: navbar}"></div>
 
 <main class="container mt-2" style="max-width: 800px;">
 
     <div class="card shadow">
-        <div class="card-header bg-success text-white d-flex align-items-center py-3">
+        <div class="card-header bg-primary text-white d-flex align-items-center py-3">
             <a th:href="@{'/negotiation/user/' + ${user.dni}}" class="text-white me-3 fs-4">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            <div class="rounded-circle bg-light text-success d-flex justify-content-center align-items-center me-3" style="width: 45px; height: 45px; font-size: 1.2rem;">
+            <div class="rounded-circle bg-light text-primary d-flex justify-content-center align-items-center me-3" style="width: 45px; height: 45px; font-size: 1.2rem;">
                 <span th:text="${#strings.substring(negotiation.negotiation_Id,0,1)}">N</span>
             </div>
 
@@ -33,7 +32,7 @@
         <div class="card-body chat-bg chat-window" id="chatBox">
 
             <div class="bubble bubble-system">
-                <small class="text-success fw-bold d-block mb-1">Sistema OVI</small>
+                <small class="text-primary fw-bold d-block mb-1">Sistema OVI</small>
                 Bienvenido al chat de negociación. Utiliza este espacio para acordar las condiciones del contrato (horarios, lugar, etc.).
                 <div class="time-stamp">Automático</div>
             </div>
@@ -57,7 +56,7 @@
                 <input type="text" th:field="*{recordOfComunications}" class="form-control rounded-pill px-4"
                        placeholder="Escribe tu propuesta o mensaje aquí..." required>
 
-                <button class="btn btn-success rounded-circle" type="submit" style="width: 45px; height: 45px;">
+                <button class="btn btn-primary rounded-circle" type="submit" style="width: 45px; height: 45px;">
                     <i class="bi bi-send-fill"></i>
                 </button>
             </form>

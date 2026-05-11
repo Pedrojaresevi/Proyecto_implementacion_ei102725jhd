@@ -557,7 +557,12 @@ public class AssignmentRequestController {
     @RequestMapping(value="/proposals/{id}", method = RequestMethod.GET)
     public String viewProposals(Model model, @PathVariable String id) {
         model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
-        model.addAttribute("proposals", listOfProposedCandidatesDao.getProposalsByRequestId(id));
+
+        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByRequestId(id);
+
+        proposals.sort((p1, p2) -> p1.getList_id().compareTo(p2.getList_id()));
+
+        model.addAttribute("proposals", proposals);
         return "assignmentRequest/proposals";
     }
     //

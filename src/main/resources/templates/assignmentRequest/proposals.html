@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <title>Propuesta de Candidatos</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
-<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
-  <div th:replace="~{fragments/base :: navbar}"></div>
-</nav>
+
+<div th:replace="~{fragments/base :: navbar}"></div>
 
 <main class="container mt-4">
   <header class="mb-4">
@@ -38,7 +38,7 @@
           <td>
             <!-- Barra de progreso visual para el score -->
             <div class="progress" style="min-width: 120px;">
-              <div class="progress-bar bg-success"
+              <div class="progress-bar bg-primary"
                    role="progressbar"
                    th:style="'width: ' + ${proposal.suitabilityScore} + '%'"
                    th:text="${proposal.suitabilityScore} + '%'">
@@ -49,7 +49,7 @@
             <form th:action="@{/assignmentRequest/selectCandidate}" method="post">
               <input type="hidden" name="requestId" th:value="${assignmentRequest.request_Id}" />
               <input type="hidden" name="candidateId" th:value="${proposal.pappati_id}" />
-              <button type="submit" class="btn btn-success btn-sm">Elegir Asistente</button>
+              <button type="submit" class="btn btn-primary btn-sm">Elegir Asistente</button>
             </form>
           </td>
         </tr>
@@ -64,7 +64,7 @@
   </section>
 
   <footer class="mt-4">
-    <a th:href="@{/assignmentRequest/list}" class="btn btn-secondary">Volver a mis solicitudes</a>
+    <a th:href="@{/assignmentRequest/list}" class="btn btn-secondary">Volver</a>
   </footer>
 </main>
 </body>

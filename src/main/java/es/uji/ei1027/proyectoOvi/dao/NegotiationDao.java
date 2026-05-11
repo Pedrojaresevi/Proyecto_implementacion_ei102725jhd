@@ -91,4 +91,14 @@ public class NegotiationDao {
             return new java.util.ArrayList<>();
         }
     }
+
+    public Negotiation getNegotiationByListId(String listId) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM Negotiation WHERE list_id = ?",
+                    new NegotiationRowMapper(), listId);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }

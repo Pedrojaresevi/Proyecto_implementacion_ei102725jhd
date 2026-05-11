@@ -72,7 +72,7 @@
     </div>
 
     <div th:if="${user.role == 'oviuser'}" class="mt-4">
-        <h2 class="h3 mb-4 text-primary">Mi Gestión de Asistencia</h2>
+        <h2 class="h3 mb-4 text-primary">Mi gestión como usuario</h2>
 
         <div class="row g-4">
             <div class="col-md-4">
@@ -123,7 +123,7 @@
     </div>
 
     <div th:if="${user.role == 'tutor'}" class="mt-4">
-        <h2 class="h3 mb-4 text-info">Mi Gestión como Tutor</h2>
+        <h2 class="h3 mb-4 text-info">Mi gestión como tutor</h2>
 
         <div class="row g-4">
             <div class="col-md-4">
@@ -173,6 +173,28 @@
         </div>
     </div>
 
-</div>
+    <div th:if="${user.role == 'pap_pati'}" class="mt-4">
+        <h2 class="h3 mb-4 text-primary">Mi Gestión como asistente</h2>
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-card-list" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Mis Asignaciones</h5>
+                        <p class="card-text small text-muted">Consulta las peticiones a las que has sido asignado.</p>
+                        <a th:href="@{/assignmentRequest/listpappati}" class="btn btn-primary text-white w-100">
+                            Ver asignaciones
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    </div>
 </body>
 </html>

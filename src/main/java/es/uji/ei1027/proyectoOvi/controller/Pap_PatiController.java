@@ -1,7 +1,11 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
-import es.uji.ei1027.proyectoOvi.dao.PapPatiDao;
+import es.uji.ei1027.proyectoOvi.dao.*;
+import es.uji.ei1027.proyectoOvi.models.AssignmentRequest;
+import es.uji.ei1027.proyectoOvi.models.Negotiation;
 import es.uji.ei1027.proyectoOvi.models.Pap_Pati;
+import es.uji.ei1027.proyectoOvi.models.UserDetails;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
@@ -16,10 +20,30 @@ import java.util.List;
 @RequestMapping("/pap_pati")
 public class Pap_PatiController {
     private PapPatiDao pap_patiDao;
+    private AssignmentRequestDao assignmentRequestDao;
+    private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
+    private OviUserDao oviUserDao;
+    private NegotiationDao negotiationDao;
 
     @Autowired
     public void setPap_patiDao(PapPatiDao pap_patiDao){
         this.pap_patiDao = pap_patiDao;
+    }
+    @Autowired
+    public void setAssignmentRequestDao(AssignmentRequestDao assignmentRequestDao){
+        this.assignmentRequestDao = assignmentRequestDao;
+    }
+    @Autowired
+    public void setListOfProposedCandidatesDao(ListOfProposedCandidatesDao ListOfProposedCandidatesDao){
+        this.listOfProposedCandidatesDao = ListOfProposedCandidatesDao;
+    }
+    @Autowired
+    public void setOviUserDao(OviUserDao OviUserDao){
+        this.oviUserDao = OviUserDao;
+    }
+    @Autowired
+    public void setNegotiationDao(NegotiationDao negotiationDao) {
+        this.negotiationDao = negotiationDao;
     }
 
     @RequestMapping("/list")
@@ -119,41 +143,37 @@ public class Pap_PatiController {
         );
     }
 
-//    // --- RUTAS DEL TÉCNICO ---
-//
-//    @RequestMapping(value="/accept/{dni}", method = RequestMethod.GET)
-//    public String confirmAccept(Model model, @PathVariable String dni) {
-//        model.addAttribute("pap_pati", pap_patiDao.getPap_Pati(dni));
-//        return "technician/pap_pati/accept";
-//    }
-//
-//    @RequestMapping(value="/accept/execute/{dni}")
-//    public String executeAccept(@PathVariable String dni) {
-//        Pap_Pati papPati = pap_patiDao.getPap_Pati(dni);
-//        if (papPati != null && "in progress".equals(papPati.getStatus())) {
-//            papPati.setStatus("accepted");
-//            pap_patiDao.updatePap_Pati(papPati);
-//        }
-//        return "redirect:/pap_pati/list";
-//    }
-//
-//    @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
-//    public String confirmReject(Model model, @PathVariable String dni) {
-//        model.addAttribute("pap_pati", pap_patiDao.getPap_Pati(dni));
-//        return "technician/pap_pati/reject";
-//    }
-//
-//    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
-//    public String executeReject(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason) {
-//        Pap_Pati papPati = pap_patiDao.getPap_Pati(dni);
-//        if (papPati != null && "in progress".equals(papPati.getStatus())) {
-//            papPati.setStatus("refused");
-//            pap_patiDao.updatePap_Pati(papPati);
-//            // Aquí podríais guardar el rejectReason en la BD si tuvierais un campo para ello
-//            System.out.println("Candidato " + dni + " rechazado. Motivo: " + rejectReason);
-//        }
-//        return "redirect:/pap_pati/list";
-//    }
+    @RequestMapping("/detallesasignacion/{id}")
+    public String viewDetail(Model model, @PathVariable String id, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+
+        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+        model.addAttribute("assignmentRequest", request);
+
+        // Cargamos el oviuser si la solicitud tiene oviuser_id
+        if (request.getOviuser_id() != null) {
+            model.addAttribute("oviuser", oviUserDao.getOviUser(request.getOviuser_id()));
+        }
+
+        // Si está aceptada y el usuario es pappati, buscamos su list_id para el botón de negociación
+        if ("accepted".equals(request.getStatus()) && "pappati".equals(user.getRole())) {
+            listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni())
+                    .stream()
+                    .filter(p -> p.getRequest_id().equals(id))
+                    .findFirst()
+                    .ifPresent(p -> {
+                        model.addAttribute("listId", p.getList_id());
+                        // Buscamos la negociación asociada
+                        Negotiation neg = negotiationDao.getNegotiationByListId(p.getList_id());
+                        if (neg != null) {
+                            model.addAttribute("negotiationId", neg.getNegotiation_Id());
+                        }
+                    });
+        }
+
+        return "pap_pati/detallesasignacion";
+    }
 
     @RequestMapping(value="/manage/{dni}", method = RequestMethod.GET)
     public String managePapPati(Model model, @PathVariable String dni) {

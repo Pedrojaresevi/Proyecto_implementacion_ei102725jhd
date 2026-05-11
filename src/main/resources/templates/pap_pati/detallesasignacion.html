@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Detalle de Solicitud</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body>
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<main class="container mt-4">
+    <h1 class="mb-4">Detalle de Solicitud</h1>
+
+    <!-- Datos de la solicitud -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Información de la Solicitud</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <strong>ID:</strong>
+                    <p th:text="${assignmentRequest.request_Id}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Fecha:</strong>
+                    <p th:text="${assignmentRequest.requestDate}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Estado:</strong>
+                    <p>
+                        <span th:text="${assignmentRequest.status}"
+                              th:class="${assignmentRequest.status == 'in progress' ?
+                                        'badge bg-warning text-dark' :
+                                        (assignmentRequest.status == 'accepted' ?
+                                        'badge bg-success' : 'badge bg-danger')}">
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Tipo de servicio:</strong>
+                    <p th:text="${assignmentRequest.typeOfService}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Localización:</strong>
+                    <p th:text="${assignmentRequest.serviceLocation}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Disponibilidad:</strong>
+                    <p th:text="${assignmentRequest.requiredStartAvailability} + ' - ' + ${assignmentRequest.requiredEndAvailability}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Formación requerida:</strong>
+                    <p th:text="${assignmentRequest.requiredTraining}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Experiencia requerida:</strong>
+                    <p th:text="${assignmentRequest.requiredExperience}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Habilidades requeridas:</strong>
+                    <p th:text="${assignmentRequest.requiredSkills}"></p>
+                </div>
+                <div th:if="${assignmentRequest.status == 'refused' and assignmentRequest.rejectReason != null}"
+                     class="col-12">
+                    <strong>Motivo de rechazo:</strong>
+                    <p class="text-danger" th:text="${assignmentRequest.rejectReason}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Datos del OviUser -->
+    <div class="card mb-4 shadow-sm" th:if="${oviuser != null}">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Datos del Solicitante</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <strong>DNI:</strong>
+                    <p th:text="${oviuser.dni}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Nombre:</strong>
+                    <p th:text="${oviuser.name}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Email:</strong>
+                    <p th:text="${oviuser.email}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Dirección:</strong>
+                    <p th:text="${oviuser.address}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Diversidad funcional:</strong>
+                    <p th:text="${oviuser.typeOfFunctionalDiversity}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Entidad implicada:</strong>
+                    <p th:text="${oviuser.entityThatIsInvolved}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones -->
+    <a th:href="@{/}" class="btn btn-secondary mt-3 ms-2">Volver</a>
+    <a th:if="${negotiationId != null}"
+       th:href="@{/negotiation/chat/{negotiationId}(negotiationId=${negotiationId})}" class="btn btn-primary">
+        Acceder a la negociación
+    </a>
+</main>
+</body>
+</html>

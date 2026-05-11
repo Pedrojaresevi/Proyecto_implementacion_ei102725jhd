@@ -74,4 +74,9 @@ public class ListOfProposedCandidatesDao {
             return new java.util.ArrayList<>();
         }
     }
+
+    public List<ListOfProposedCandidates> getProposalsByPapPati(String dni) {
+        String sql = "SELECT * FROM listofproposedcandidates WHERE pappati_id = ?";
+        return jdbcTemplate.query(sql, new ListOfProposedCandidatesRowMapper(), dni);
+    }
 }

@@ -1,6 +1,7 @@
 package es.uji.ei1027.proyectoOvi.dao;
 
 import es.uji.ei1027.proyectoOvi.models.AssignmentRequest;
+import es.uji.ei1027.proyectoOvi.models.ListOfProposedCandidates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -84,6 +85,30 @@ public class AssignmentRequestDao  {
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<AssignmentRequest>();
         }
+    }
+
+    public List<AssignmentRequest> getRequestsByPappati(String pappatiId) {
+        try {
+            String sql = "SELECT ar.* FROM assignmentrequest ar " +
+                    "JOIN listofproposedcandidates lp ON ar.request_id = lp.request_id " +
+                    "WHERE lp.pappati_id = ?";
+
+            return jdbcTemplate.query(sql, new AssignmentRequestRowMapper(), pappatiId);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<AssignmentRequest>();
+        }
+    }
+
+    public AssignmentRequest getAssignmentRequestWithOviUser(String id) {
+        String sql = """
+        SELECT ar.*, ou.name as oviuser_name, ou.email as oviuser_email, 
+               ou.address as oviuser_address, ou.typeoffunctionaldiversity,
+               ou.entitythatisinvolved
+        FROM assignmentrequest ar
+        LEFT JOIN oviuser ou ON ar.oviuser_id = ou.dni
+        WHERE ar.request_id = ?
+    """;
+        return jdbcTemplate.queryForObject(sql, new AssignmentRequestRowMapper(), id);
     }
 
     public String getLastRequestId() {

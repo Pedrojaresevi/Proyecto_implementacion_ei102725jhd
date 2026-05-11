@@ -585,4 +585,26 @@ public class AssignmentRequestController {
         return "technician/assignmentRequest/list";
     }
 
+    @RequestMapping("/listpappati")
+    public String listMyProposals(Model model, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+
+        // Seguridad: Solo permitimos acceso si es pappati
+        if (user == null || !"pap_pati".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        // 1. Obtenemos las solicitudes vinculadas a este Asistente
+        List<AssignmentRequest> myRequests = assignmentRequestDao.getRequestsByPappati(user.getDni());
+
+        // 2. Necesitamos pasar las propuestas para tener los list_id de las negociaciones
+        // Si prefieres, puedes crear un método en el DAO de ListOfProposedCandidates
+        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni());
+
+        model.addAttribute("assignmentRequests", myRequests);
+        model.addAttribute("proposals", proposals); //
+
+        return "assignmentRequest/listpappati";
+    }
+
 }

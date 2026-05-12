@@ -64,14 +64,6 @@
         </div>
 
         <div class="form-group row mb-3">
-            <label for="dateOfBirth" class="control-label col-sm-2">Fecha de nacimiento:</label>
-            <div class="col-sm-4">
-                <input type="date" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}" />
-                <div th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}" class="text-danger"></div>
-            </div>
-        </div>
-
-        <div class="form-group row mb-3">
             <label for="entityThatIsInvolved" class="control-label col-sm-2">Entidad vinculada:</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="entityThatIsInvolved" th:field="*{entityThatIsInvolved}" maxlength="150"/>
@@ -84,6 +76,14 @@
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="typeOfFunctionalDiversity" th:field="*{typeOfFunctionalDiversity}" maxlength="150"/>
                 <div th:if="${#fields.hasErrors('typeOfFunctionalDiversity')}" th:errors="*{typeOfFunctionalDiversity}" class="text-danger"></div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="dateOfBirth" class="control-label col-sm-2">Fecha de nacimiento:</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}" />
+                <div th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}" class="text-danger"></div>
             </div>
         </div>
 

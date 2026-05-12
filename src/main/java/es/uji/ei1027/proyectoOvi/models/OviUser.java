@@ -17,6 +17,8 @@ public class OviUser {
     private String status;
     private String lifePlan;
     private String tutor_id;
+    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    private Date dateOfBirth;
 
     public OviUser() {
     }
@@ -109,6 +111,14 @@ public class OviUser {
         this.tutor_id = tutor_id;
     }
 
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
     @Override
     public String toString() {
         return "OviUser{" +
@@ -123,6 +133,7 @@ public class OviUser {
                 ", status='" + status + '\'' +
                 ", lifePlan='" + lifePlan + '\'' +
                 ", tutor_id='" + tutor_id + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
                 '}';
     }
 

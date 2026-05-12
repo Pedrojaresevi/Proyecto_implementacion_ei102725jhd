@@ -20,13 +20,14 @@ public class OviUserDao {
     }
 
     public void addOviUser(OviUser oviUser) {
-        jdbcTemplate.update("INSERT INTO OviUser VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+        jdbcTemplate.update("INSERT INTO OviUser VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                 oviUser.getDni(), oviUser.getName(), oviUser.getAddress(), oviUser.getEmail(), oviUser.getEntityThatIsInvolved(),
                 oviUser.getTypeOfFunctionalDiversity(), oviUser.getDateOfAcceptance(),
                 oviUser.getPassword(),
                 oviUser.getStatus(),
                 oviUser.getLifePlan(),
-                oviUser.getTutor_id());
+                oviUser.getTutor_id(),
+                oviUser.getDateOfBirth());
     }
 
     public void deleteOviUser(OviUser oviUser) {
@@ -39,12 +40,12 @@ public class OviUserDao {
     }
 
     public void updateOviUser(OviUser oviUser) {
-        jdbcTemplate.update("UPDATE OviUser SET name=?, address=?, email=?, entityThatIsInvolved=?, typeOfFunctionalDiversity=?, dateOfAcceptance=?, userAndPassword=?, status=?,lifePlan=?, tutor_id=? WHERE dni=?",
+        jdbcTemplate.update("UPDATE OviUser SET name=?, address=?, email=?, entityThatIsInvolved=?, typeOfFunctionalDiversity=?, dateOfAcceptance=?, userAndPassword=?, status=?,lifePlan=?, tutor_id=?, dateOfBirth=? WHERE dni=?",
                 oviUser.getName(), oviUser.getAddress(), oviUser.getEmail(), oviUser.getEntityThatIsInvolved(),
                 oviUser.getTypeOfFunctionalDiversity(), oviUser.getDateOfAcceptance(),
                 oviUser.getPassword(), oviUser.getStatus(),
                 oviUser.getLifePlan(),
-                oviUser.getTutor_id(), oviUser.getDni());
+                oviUser.getTutor_id(), oviUser.getDni(), oviUser.getDateOfBirth());
     }
 
     public OviUser getOviUser(String dni) {

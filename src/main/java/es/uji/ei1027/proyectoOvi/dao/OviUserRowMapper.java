@@ -20,6 +20,7 @@ public final class OviUserRowMapper implements RowMapper<OviUser> {
         oviUser.setStatus(rs.getString("status"));
         oviUser.setLifePlan(rs.getString("lifePlan"));
         oviUser.setTutor_id(rs.getString("tutor_id"));
+        oviUser.setDateOfBirth(rs.getDate("dateOfBirth"));
         return oviUser;
     }
 }

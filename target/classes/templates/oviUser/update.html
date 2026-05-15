@@ -59,6 +59,14 @@
             </div>
         </div>
 
+        <div class="form-group row mb-3">
+            <label for="dateOfBirth" class="control-label col-sm-2">Fecha de nacimiento:</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}" />
+                <div th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}" class="text-danger"></div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12 mb-3">
                 <label for="lifePlan" class="form-label">Plan de Vida (Life Plan):</label>

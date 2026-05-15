@@ -20,6 +20,7 @@ public class OviUser {
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date dateOfBirth;
 
+
     public OviUser() {
     }
 

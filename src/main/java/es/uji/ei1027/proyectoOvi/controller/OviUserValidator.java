@@ -38,5 +38,31 @@ public class OviUserValidator implements Validator {
                 errors.rejectValue("tutor_id", "format_incorrecte", "El DNI del tutor debe tener 9 caracteres");
             }
         }
+
+        if (oviUser.getName() == null || oviUser.getName().trim().equals("")) {
+            errors.rejectValue("name", "obligatori", "Cal introduir un valor");
+        }
+
+        if (oviUser.getAddress() == null || oviUser.getAddress().trim().equals(""))
+            errors.rejectValue("address", "obligatori", "Cal introduir un valor");
+
+        if (oviUser.getEntityThatIsInvolved() == null || oviUser.getEntityThatIsInvolved().trim().equals(""))
+            errors.rejectValue("entityThatIsInvolved", "obligatori", "Cal introduir un valor");
+
+        if (oviUser.getTypeOfFunctionalDiversity() == null || oviUser.getTypeOfFunctionalDiversity().trim().equals(""))
+            errors.rejectValue("typeOfFunctionalDiversity", "obligatori", "Cal introduir un valor");
+
+        if (oviUser.getDateOfAcceptance() == null)
+            errors.rejectValue("dateOfAcceptance", "obligatori", "Cal introduir una data");
+
+        if (oviUser.getPassword() == null || oviUser.getPassword().trim().equals(""))
+            errors.rejectValue("password", "obligatori", "Cal introduir un valor");
+
+        if (oviUser.getLifePlan() == null || oviUser.getLifePlan().trim().equals(""))
+            errors.rejectValue("lifePlan", "obligatori", "Cal introduir un valor");
+
+        if (oviUser.getDateOfBirth() == null)
+            errors.rejectValue("dateOfBirth", "obligatori", "Cal introduir una data");
+
     }
 }

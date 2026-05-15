@@ -28,6 +28,17 @@ public class NegotiationValidator implements Validator {
         if (negotiation.getListId() == null || negotiation.getListId().trim().equals(""))
             errors.rejectValue("list_id","obligatori",
                     "Cal introduir un valor");
+
+        if (negotiation.getStartDate() == null)
+            errors.rejectValue("startDate", "obligatori", "Hay que introducir una fecha de inicio");
+
+        if (negotiation.getEndDate() == null)
+            errors.rejectValue("endDate", "obligatori", "Hay que introducir una fecha de fin");
+
+        if (negotiation.getRecordOfComunications() == null || negotiation.getRecordOfComunications().trim().equals(""))
+            errors.rejectValue("recordOfComunications","obligatori",
+                    "Hay que introducir el registro de comunicaciones");
+
     }
 }
 

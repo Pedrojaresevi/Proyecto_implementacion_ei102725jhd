@@ -32,5 +32,9 @@ public class ListOfProposedCandidatesValidator implements Validator {
             errors.rejectValue("request_id","obligatori",
                     "Cal introduir un valor");
 
+        if (listOfProposedCandidates.getProposalDate() == null)
+            errors.rejectValue("proposalDate", "obligatori", "Hay que introducir una fecha de propuesta");
+
+
     }
 }

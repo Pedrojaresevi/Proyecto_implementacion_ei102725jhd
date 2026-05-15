@@ -29,5 +29,15 @@ public class ContractValidator implements Validator {
         if (contract.getRequest_Id() == null || contract.getRequest_Id().trim().equals(""))
             errors.rejectValue("request_Id", "obligatori", "Cal introduir un valor");
 
+        //validación fecha inicio
+        if (contract.getStartDate() == null)
+            errors.rejectValue("startDate", "obligatori", "Hay que introducir una fecha de inicio");
+
+        if (contract.getEndDate() == null)
+            errors.rejectValue("endDate", "obligatori", "Hay que introducir una fecha de fin");
+
+        if (contract.getPlaceWhereThePDFIsGonnaBeSaved() == null || contract.getPlaceWhereThePDFIsGonnaBeSaved().trim().equals("")) {
+            errors.rejectValue("placeWhereThePDFIsGonnaBeSaved", "obligatori", "Hay que introducir el lugar donde el PDF será guardado");
+        }
     }
 }

@@ -1,10 +1,7 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
 import es.uji.ei1027.proyectoOvi.dao.*;
-import es.uji.ei1027.proyectoOvi.models.AssignmentRequest;
-import es.uji.ei1027.proyectoOvi.models.Negotiation;
-import es.uji.ei1027.proyectoOvi.models.Pap_Pati;
-import es.uji.ei1027.proyectoOvi.models.UserDetails;
+import es.uji.ei1027.proyectoOvi.models.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -222,5 +219,27 @@ public class Pap_PatiController {
             pap_patiDao.updatePap_Pati(papPati);
         }
         return "redirect:/pap_pati/pending";
+    }
+
+    @RequestMapping("/listpappati")
+    public String listMyProposals(Model model, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+
+        // Seguridad: Solo permitimos acceso si es pappati
+        if (user == null || !"pap_pati".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        // 1. Obtenemos las solicitudes vinculadas a este Asistente
+        List<AssignmentRequest> myRequests = assignmentRequestDao.getRequestsByPappati(user.getDni());
+
+        // 2. Necesitamos pasar las propuestas para tener los list_id de las negociaciones
+        // Si prefieres, puedes crear un método en el DAO de ListOfProposedCandidates
+        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni());
+
+        model.addAttribute("assignmentRequests", myRequests);
+        model.addAttribute("proposals", proposals); //
+
+        return "pap_pati/listpappati";
     }
 }

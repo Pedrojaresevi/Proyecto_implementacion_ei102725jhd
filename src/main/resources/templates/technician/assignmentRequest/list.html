@@ -78,6 +78,30 @@
   </tbody>
 </table>
 
+<nav th:if="${totalPages > 1}" aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+
+        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+            <a class="page-link" th:href="@{/assignmentRequest/pending(page=${currentPage - 1})}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+            class="page-item"
+            th:classappend="${currentPage == i} ? 'active'">
+            <a class="page-link" th:href="@{/assignmentRequest/pending(page=${i})}" th:text="${i}">1</a>
+        </li>
+
+        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+            <a class="page-link" th:href="@{/assignmentRequest/pending(page=${currentPage + 1})}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+
+    </ul>
+</nav>
+
 <a href="/dashboard" class="btn btn-secondary">Volver</a>
 </body>
 </html>

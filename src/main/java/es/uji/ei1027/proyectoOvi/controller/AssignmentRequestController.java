@@ -631,13 +631,30 @@ public class AssignmentRequestController {
         model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByTutor(dni));
         return "assignmentRequest/list";
     }
+
     @RequestMapping("/pending")
-    public String listPendingAssignmentRequests(Model model) {
-        model.addAttribute("assignmentRequests",
-                assignmentRequestDao.getAssignmentRequestsByStatus("in progress"));
+    public String listPendingAssignmentRequests(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6; // Tamaño de página
+        int offset = (page - 1) * pageSize;
+
+        // 1. Obtenemos solo los registros que corresponden a la página actual
+        List<AssignmentRequest> requests = assignmentRequestDao.getAssignmentRequestsByStatusPaginated("in progress", pageSize, offset);
+
+        // 2. Calculamos el total de páginas necesarias
+        int totalItems = assignmentRequestDao.countAssignmentRequestsByStatus("in progress");
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+
+        // Evitamos problemas de división o conteos vacíos asegurando un mínimo de 1 página
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
+
+        // 3. Pasamos todos los atributos a Thymeleaf
+        model.addAttribute("assignmentRequests", requests);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
         return "technician/assignmentRequest/list";
     }
-
-
 
 }

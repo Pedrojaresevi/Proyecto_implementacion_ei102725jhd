@@ -130,4 +130,22 @@ public class AssignmentRequestDao  {
             return new java.util.ArrayList<>();
         }
     }
+
+    public List<AssignmentRequest> getAssignmentRequestsByStatusPaginated(String status, int limit, int offset) {
+        String sql = "SELECT * FROM AssignmentRequest WHERE status=? LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new AssignmentRequestRowMapper(), status, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<AssignmentRequest>();
+        }
+    }
+
+    public int countAssignmentRequestsByStatus(String status) {
+        String sql = "SELECT COUNT(*) FROM AssignmentRequest WHERE status=?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, status);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
 }

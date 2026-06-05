@@ -18,51 +18,48 @@ public class OviUserValidator implements Validator {
         OviUser oviUser = (OviUser) obj;
 
         // Validación DNI del usuario (Obligatorio)
-        if (oviUser.getDni() == null || oviUser.getDni().trim().equals("")) {
-            errors.rejectValue("dni", "obligatori", "Cal introduir un valor");
+        if (oviUser.getDni() == null || oviUser.getDni().trim().isEmpty()) {
+            errors.rejectValue("dni", "obligatori", "Este campo es obligatorio.");
         } else if (oviUser.getDni().trim().length() != 9) {
             // Añadimos una pequeña validación de tamaño para que sea más robusto
-            errors.rejectValue("dni", "format_incorrecte", "El DNI/Id debe tener 9 caracteres");
+            errors.rejectValue("dni", "format_incorrecte", "Documento no válido.");
         }
 
-        // Validación del Estatus
-        List<String> valors = Arrays.asList("accepted", "refused", "in progress");
-        if (!valors.contains(oviUser.getStatus())) {
-            errors.rejectValue("status", "valor incorrecte", "Deu ser: accepted, refused o in progress");
+        if (oviUser.getName() == null || oviUser.getName().trim().isEmpty()) {
+            errors.rejectValue("name", "obligatori", "Este campo es obligatorio.");
         }
+
+        if (oviUser.getAddress() == null || oviUser.getAddress().trim().isEmpty())
+            errors.rejectValue("address", "obligatori", "Este campo es obligatorio.");
+
+        if(oviUser.getEmail() == null || oviUser.getEmail().trim().isEmpty())
+            errors.rejectValue("email","obligatori","Este campo es obligatorio.");
 
         // Validación del Tutor ID (AHORA ES OPCIONAL)
         // Solo validamos si el campo NO está vacío (es decir, el usuario es menor y ha puesto un DNI de tutor)
         if (oviUser.getTutor_id() != null && !oviUser.getTutor_id().trim().isEmpty()) {
             if (oviUser.getTutor_id().trim().length() != 9) {
-                errors.rejectValue("tutor_id", "format_incorrecte", "El DNI del tutor debe tener 9 caracteres");
+                errors.rejectValue("tutor_id", "format_incorrecte", "Documento no válido.");
             }
         }
 
-        if (oviUser.getName() == null || oviUser.getName().trim().equals("")) {
-            errors.rejectValue("name", "obligatori", "Cal introduir un valor");
-        }
+        if (oviUser.getEntityThatIsInvolved() == null || oviUser.getEntityThatIsInvolved().trim().isEmpty())
+            errors.rejectValue("entityThatIsInvolved", "obligatori", "Este campo es obligatorio.");
 
-        if (oviUser.getAddress() == null || oviUser.getAddress().trim().equals(""))
-            errors.rejectValue("address", "obligatori", "Cal introduir un valor");
-
-        if (oviUser.getEntityThatIsInvolved() == null || oviUser.getEntityThatIsInvolved().trim().equals(""))
-            errors.rejectValue("entityThatIsInvolved", "obligatori", "Cal introduir un valor");
-
-        if (oviUser.getTypeOfFunctionalDiversity() == null || oviUser.getTypeOfFunctionalDiversity().trim().equals(""))
-            errors.rejectValue("typeOfFunctionalDiversity", "obligatori", "Cal introduir un valor");
+        if (oviUser.getTypeOfFunctionalDiversity() == null || oviUser.getTypeOfFunctionalDiversity().trim().isEmpty())
+            errors.rejectValue("typeOfFunctionalDiversity", "obligatori", "Este campo es obligatorio.");
 
         if (oviUser.getDateOfAcceptance() == null)
-            errors.rejectValue("dateOfAcceptance", "obligatori", "Cal introduir una data");
+            errors.rejectValue("dateOfAcceptance", "obligatori", "Este campo es obligatorio.");
 
-        if (oviUser.getPassword() == null || oviUser.getPassword().trim().equals(""))
-            errors.rejectValue("password", "obligatori", "Cal introduir un valor");
+        if (oviUser.getPassword() == null || oviUser.getPassword().trim().isEmpty())
+            errors.rejectValue("password", "obligatori", "Este campo es obligatorio.");
 
-        if (oviUser.getLifePlan() == null || oviUser.getLifePlan().trim().equals(""))
-            errors.rejectValue("lifePlan", "obligatori", "Cal introduir un valor");
+        if (oviUser.getLifePlan() == null || oviUser.getLifePlan().trim().isEmpty())
+            errors.rejectValue("lifePlan", "obligatori", "Este campo es obligatorio.");
 
         if (oviUser.getDateOfBirth() == null)
-            errors.rejectValue("dateOfBirth", "obligatori", "Cal introduir una data");
+            errors.rejectValue("dateOfBirth", "obligatori", "Este campo es obligatorio.");
 
     }
 }

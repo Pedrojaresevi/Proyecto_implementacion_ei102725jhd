@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ca">
 <head>
     <meta charset="UTF-8" />
-    <title>Crear nuevo PAP/PATI</title>
+    <title>Registro PAP/PATI - OVI</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
@@ -11,7 +11,7 @@
 <div th:replace="~{fragments/base :: navbar}"></div>
 
 <main class="container">
-    <h1 class="mb-4">Nuevo PAP/PATI</h1>
+    <h1 class="mb-4">Registro como PAP/PATI</h1>
     <p class="text-muted mb-4">Por favor, rellene sus datos para solicitar el alta en el sistema.</p>
 
     <form class="form-horizontal" th:action="@{/pap_pati/add}" th:object="${pap_pati}" method="post">
@@ -174,6 +174,7 @@
 
         <button type="submit" class="btn btn-primary mt-3">Finalizar registro</button>
         <a th:href="@{/}" class="btn btn-secondary mt-3 ms-2">Volver</a>
+        <main class="container mb-5">  <!-- Esto es un para dejar hueco entre los botones y el final de la pag -->
     </form>
 </main>
 </body>

@@ -50,7 +50,8 @@ public class AssignmentRequestController {
 //    }
     //List depediendo del rol
     @RequestMapping("/list")
-    public String list(Model model, HttpSession session) {
+    public String list(@RequestParam(defaultValue = "0") int page, Model model, HttpSession session) {
+        /*
         // 1. Obtenemos el usuario de la sesión (ajusta el nombre del atributo "user" si es otro)
         // Suponiendo que tu objeto de sesión tiene un método getDni() y getRole()
         UserDetails user = (UserDetails) session.getAttribute("user");
@@ -72,6 +73,58 @@ public class AssignmentRequestController {
             }
 
             // Ambos van al mismo archivo HTML a mostrar su lista
+            return "assignmentRequest/list";
+        }
+
+         */
+
+        UserDetails user = (UserDetails) session.getAttribute("user");
+
+        if (user == null) {
+            return "redirect:/login"; // Si no hay sesión, al login
+        }
+
+        // Creamos una lista intermedia para guardar todas las solicitudes según el rol
+        List<AssignmentRequest> allRequests;
+
+        if (user.getRole().equals("technician")) {
+            // El técnico ve todo
+            allRequests = assignmentRequestDao.getAssignmentRequests();
+        } else if (user.getRole().equals("oviuser")) {
+            allRequests = assignmentRequestDao.getRequestsByOviUser(user.getDni());
+        } else if (user.getRole().equals("tutor")) {
+            allRequests = assignmentRequestDao.getRequestsByTutor(user.getDni());
+        } else {
+            allRequests = java.util.Collections.emptyList();
+        }
+
+        // 2. LÓGICA DE PAGINACIÓN (6 elementos por página)
+        int pageSize = 6;
+        int totalItems = allRequests.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+
+        // Control de seguridad por desbordamiento de páginas
+        if (page < 0) page = 0;
+        if (page >= totalPages && totalPages > 0) page = totalPages - 1;
+
+        // Calcular índices de corte de la sublista
+        int start = page * pageSize;
+        int end = Math.min(start + pageSize, totalItems);
+
+        List<AssignmentRequest> pagedRequests = java.util.Collections.emptyList();
+        if (start < totalItems) {
+            pagedRequests = allRequests.subList(start, end);
+        }
+
+        // 3. Pasamos los datos segmentados y variables de control a la vista
+        model.addAttribute("assignmentRequests", pagedRequests);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        // 4. Redirección al HTML correspondiente según rol
+        if (user.getRole().equals("technician")) {
+            return "technician/assignmentRequest/list";
+        } else {
             return "assignmentRequest/list";
         }
     }

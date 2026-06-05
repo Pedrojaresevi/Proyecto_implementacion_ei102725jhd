@@ -85,4 +85,23 @@ public class OviUserDao {
             return new java.util.ArrayList<>();
         }
     }
+
+    // Para la lista de tutorizados de un tutor (/users/{dni})
+    public List<OviUser> getOviUsersByTutorPaginated(String tutorDni, int limit, int offset) {
+        String sql = "SELECT * FROM OviUser WHERE tutor_id = ? LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new OviUserRowMapper(), tutorDni, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countOviUsersByTutor(String tutorDni) {
+        String sql = "SELECT COUNT(*) FROM OviUser WHERE tutor_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, tutorDni);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
 }

@@ -40,6 +40,21 @@
     </tr>
     </tbody>
 </table>
+
+<nav th:if="${totalPages > 1}" aria-label="Navegación de tutores" class="mt-4">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+            <a class="page-link" th:href="@{/tutor/list(page=${currentPage - 1})}">&laquo;</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
+            <a class="page-link" th:href="@{/tutor/list(page=${i})}" th:text="${i}">1</a>
+        </li>
+        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+            <a class="page-link" th:href="@{/tutor/list(page=${currentPage + 1})}">&raquo;</a>
+        </li>
+    </ul>
+</nav>
+
 <a href="add" class="btn btn-primary">Añadir Tutor</a>
 <br><br>
 <a href="/dashboard" class="btn btn-secondary">Volver</a>

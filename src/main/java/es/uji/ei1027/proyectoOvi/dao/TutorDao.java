@@ -63,4 +63,42 @@ public class TutorDao {
             return new java.util.ArrayList<>();
         }
     }
+
+    // Para la lista general de tutores (/list)
+    public List<Tutor> getTutorsPaginated(int limit, int offset) {
+        String sql = "SELECT * FROM Tutor LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new TutorRowMapper(), limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countTutors() {
+        String sql = "SELECT COUNT(*) FROM Tutor";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+    // Para la lista de tutores pendientes (/pending)
+    public List<Tutor> getTutorsByStatusPaginated(String status, int limit, int offset) {
+        String sql = "SELECT * FROM Tutor WHERE status=? LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new TutorRowMapper(), status, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countTutorsByStatus(String status) {
+        String sql = "SELECT COUNT(*) FROM Tutor WHERE status=?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, status);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
 }

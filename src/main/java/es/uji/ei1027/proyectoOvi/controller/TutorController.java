@@ -11,10 +11,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +33,18 @@ public class TutorController {
     }
 
     @RequestMapping("/list")
-    public String listTutors(Model model){
-        model.addAttribute("tutors", tutorDao.getTutors());
+    public String listTutors(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        model.addAttribute("tutors", tutorDao.getTutorsPaginated(pageSize, offset));
+
+        int totalItems = tutorDao.countTutors();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "tutor/list";
     }
     //
@@ -100,13 +107,20 @@ public class TutorController {
     }
 
     @RequestMapping("/users/{dni}")
-    public String listUsersByTutor(Model model, @PathVariable String dni) {
-        // Obtenemos el tutor para mostrar su nombre en el título
+    public String listMinors(Model model, @PathVariable String dni, @RequestParam(defaultValue = "1") int page) {
         model.addAttribute("tutor", tutorDao.getTutor(dni));
 
-        // Obtenemos la lista de personas a su cargo
-        model.addAttribute("oviUsers", oviUserDao.getOviUsersByTutor(dni));
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
 
+        model.addAttribute("oviUsers", oviUserDao.getOviUsersByTutorPaginated(dni, pageSize, offset));
+
+        int totalItems = oviUserDao.countOviUsersByTutor(dni);
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "tutor/list_minors";
     }
     // MÉTODOS PARA AÑADIR MENORES DESDE EL TUTOR
@@ -144,8 +158,18 @@ public class TutorController {
 
     //
     @RequestMapping("/pending")
-    public String listPendingTutors(Model model) {
-        model.addAttribute("tutors", tutorDao.getTutorsByStatus("in progress"));
+    public String listPendingTutors(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        model.addAttribute("tutors", tutorDao.getTutorsByStatusPaginated("in progress", pageSize, offset));
+
+        int totalItems = tutorDao.countTutorsByStatus("in progress");
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "technician/tutor/pending";
     }
 

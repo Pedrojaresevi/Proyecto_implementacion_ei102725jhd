@@ -24,10 +24,28 @@ public class ContractController {
         this.contractDao = contractDao;
     }
 
-    @RequestMapping("/list")
-    public String listContracts(Model model){
-        model.addAttribute("contracts", contractDao.getContracts());
-        return "contract/list";
+    @RequestMapping("/list") // Cambia la ruta si tu endpoint es diferente
+    public String listContracts(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        // 1. Obtener los contratos de la página actual
+        List<Contract> contracts = contractDao.getContractsPaginated(pageSize, offset);
+
+        // 2. Calcular el total de páginas
+        int totalItems = contractDao.countContracts();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
+
+        // 3. Pasar las variables a la vista
+        model.addAttribute("contracts", contracts); // Asegúrate de usar el mismo nombre que recorre tu th:each
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        return "contract/list"; // Cambia al nombre exacto de tu HTML
     }
 
     @RequestMapping(value="/add")

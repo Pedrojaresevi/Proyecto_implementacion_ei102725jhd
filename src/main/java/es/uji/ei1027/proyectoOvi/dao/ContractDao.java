@@ -89,4 +89,22 @@ public class ContractDao {
         }
     }
 
+    public List<Contract> getContractsPaginated(int limit, int offset) {
+        String sql = "SELECT * FROM Contract LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new ContractRowMapper(), limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<Contract>();
+        }
+    }
+
+    public int countContracts() {
+        String sql = "SELECT COUNT(*) FROM Contract";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
 }

@@ -17,21 +17,16 @@ public class TutorValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         Tutor tutor = (Tutor) obj;
-        if (tutor.getDni() == null || tutor.getDni().trim().equals(""))
-            errors.rejectValue("dni", "obligatori",
-                    "Debe introducir un DNI");
-        //
+        if (tutor.getDni() == null || tutor.getDni().trim().isEmpty())
+            errors.rejectValue("dni", "obligatori", "Este campo es obligatorio.");
 
-        if (tutor.getName() == null || tutor.getName().trim().equals(""))
-            errors.rejectValue("name", "obligatori",
-                    "Debe introducir un nombre");
+        if (tutor.getName() == null || tutor.getName().trim().isEmpty())
+            errors.rejectValue("name", "obligatori", "Este campo es obligatorio.");
 
-        if (tutor.getEmail() == null || tutor.getEmail().trim().equals(""))
-            errors.rejectValue("email", "obligatori",
-                    "Debe introducir un email");
+        if (tutor.getEmail() == null || tutor.getEmail().trim().isEmpty())
+            errors.rejectValue("email", "obligatori", "Este campo es obligatorio.");
 
-        if (tutor.getPassword() == null || tutor.getPassword().trim().equals(""))
-            errors.rejectValue("password", "obligatori",
-                    "Debe introducir una contraseña");
+        if (tutor.getPassword() == null || tutor.getPassword().trim().isEmpty())
+            errors.rejectValue("password", "obligatori", "Este campo es obligatorio.");
     }
 }

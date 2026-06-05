@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8" />
     <title>Registro PAP/PATI - OVI</title>
@@ -10,14 +10,16 @@
 
 <div th:replace="~{fragments/base :: navbar}"></div>
 
-<main class="container">
-    <h1 class="mb-4">Registro como PAP/PATI</h1>
+<main class="container pb-5">
+    <h1 class="mb-2 text-primary fw-bold">Registro como PAP/PATI</h1>
     <p class="text-muted mb-4">Por favor, rellene sus datos para solicitar el alta en el sistema.</p>
+    <hr class="mb-4 text-muted">
 
     <form class="form-horizontal" th:action="@{/pap_pati/add}" th:object="${pap_pati}" method="post">
 
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">1. Información Personal</h5>
         <div class="form-group row mb-3">
-            <label for="dni" class="control-label col-sm-2">DNI / NIE:</label>
+            <label for="dni" class="control-label col-sm-2">DNI / NIE / Pasaporte:</label>
             <div class="col-sm-4">
                 <input id="dni" type="text" th:field="*{dni}" class="form-control" maxlength="9">
                 <div th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}" class="text-danger"></div>
@@ -72,6 +74,9 @@
             </div>
         </div>
 
+        <hr class="mb-4 text-muted">
+
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">2. Perfil Profesional</h5>
         <div class="form-group row mb-3">
             <label for="specificTraining" class="control-label col-sm-2">Formación Específica:</label>
             <div class="col-sm-10">
@@ -107,14 +112,6 @@
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="curriculumVitae" th:field="*{curriculumVitae}" maxlength="150"/>
                 <div th:if="${#fields.hasErrors('curriculumVitae')}" th:errors="*{curriculumVitae}" class="text-danger"></div>
-            </div>
-        </div>
-
-        <div class="form-group row mb-3">
-            <label for="password" class="control-label col-sm-2">Contraseña:</label>
-            <div class="col-sm-10">
-                <input type="password" class="form-control" id="password" th:field="*{password}" maxlength="100" required />
-                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
             </div>
         </div>
 
@@ -164,17 +161,31 @@
         <div class="form-group row mb-3">
             <label class="control-label col-sm-2">Habilidades:</label>
             <div class="col-sm-10">
-                <div th:each="skill : ${skillsDisponibles}" class="form-check">
-                    <input class="form-check-input" type="checkbox" th:field="*{skills}" th:value="${skill}">
-                    <label class="form-check-label fw-normal" th:for="${#ids.prev('skills')}" th:text="${skill}"></label>
+                <div class="row">
+                    <div th:each="skill : ${skillsDisponibles}" class="col-12 col-md-4 mb-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" th:field="*{skills}" th:value="${skill}">
+                            <label class="form-check-label fw-normal" th:for="${#ids.prev('skills')}" th:text="${skill}"></label>
+                        </div>
+                    </div>
                 </div>
-                <div th:if="${#fields.hasErrors('skills')}" th:errors="*{skills}" class="text-danger"></div>
+                <div th:if="${#fields.hasErrors('skills')}" th:errors="*{skills}" class="text-danger mt-2"></div>
+            </div>
+        </div>
+
+        <hr class="mb-4 text-muted">
+
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">3. Contraseña</h5>
+        <div class="form-group row mb-3">
+            <label for="password" class="control-label col-sm-2">Contraseña:</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="password" th:field="*{password}" maxlength="20"/>
+                <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
             </div>
         </div>
 
         <button type="submit" class="btn btn-primary mt-3">Finalizar registro</button>
         <a th:href="@{/}" class="btn btn-secondary mt-3 ms-2">Volver</a>
-        <main class="container mb-5">  <!-- Esto es un para dejar hueco entre los botones y el final de la pag -->
     </form>
 </main>
 </body>

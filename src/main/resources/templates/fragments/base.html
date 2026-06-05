@@ -14,10 +14,10 @@
             <span class="fw-bold text-primary fs-5">OVI - Castellón</span>
         </a>
 
-        <div th:unless="${session.user != null}" class="d-flex align-items-center gap-2 user-select-none">
+        <a th:unless="${session.user != null}" th:href="@{/}" class="text-decoration-none d-flex align-items-center gap-2">
             <img th:src="@{/images/logo.png}" alt="Logo" style="height: 40px; object-fit: contain;">
             <span class="fw-bold text-primary fs-5">OVI - Castellón</span>
-        </div>
+        </a>
 
         <!-- Derecha: usuario + cerrar sesión -->
         <div class="d-flex align-items-center gap-4" th:if="${session.user != null}">

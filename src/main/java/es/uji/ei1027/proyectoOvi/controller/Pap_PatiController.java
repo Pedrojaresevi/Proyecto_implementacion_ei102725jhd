@@ -44,8 +44,18 @@ public class Pap_PatiController {
     }
 
     @RequestMapping("/list")
-    public String listAllPap_Pati(Model model){
-        model.addAttribute("allpap_pati", pap_patiDao.getAllPap_Pati());
+    public String listAllPap_Pati(Model model, @RequestParam(defaultValue = "1") int page){
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        model.addAttribute("allpap_pati", pap_patiDao.getAllPap_PatiPaginated(pageSize, offset));
+
+        int totalItems = pap_patiDao.countAllPap_Pati();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "pap_pati/list";
     }
 
@@ -178,14 +188,34 @@ public class Pap_PatiController {
         return "technician/pap_pati/manage";
     }
     @RequestMapping("/pending")
-    public String listPendingPapPati(Model model) {
-        model.addAttribute("allpap_pati", pap_patiDao.getPapPatiByStatus("in progress"));
+    public String listPendingPapPati(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        model.addAttribute("allpap_pati", pap_patiDao.getPapPatiByStatusPaginated("in progress", pageSize, offset));
+
+        int totalItems = pap_patiDao.countPapPatiByStatus("in progress");
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "technician/pap_pati/pending";
     }
 
     @RequestMapping("/accepted")
-    public String listAcceptedPapPati(Model model) {
-        model.addAttribute("allpap_pati", pap_patiDao.getPapPatiByStatus("accepted"));
+    public String listAcceptedPapPati(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        model.addAttribute("allpap_pati", pap_patiDao.getPapPatiByStatusPaginated("accepted", pageSize, offset));
+
+        int totalItems = pap_patiDao.countPapPatiByStatus("accepted");
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "technician/pap_pati/accepted";
     }
 

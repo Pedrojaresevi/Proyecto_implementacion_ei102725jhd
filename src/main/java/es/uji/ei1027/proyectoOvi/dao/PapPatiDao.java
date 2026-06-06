@@ -135,5 +135,43 @@ public class PapPatiDao {
         }
     }
 
+    // Para la lista general de asistentes
+    public List<Pap_Pati> getAllPap_PatiPaginated(int limit, int offset) {
+        String sql = "SELECT * FROM PapPati LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new Pap_PatiRowMapper(), limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countAllPap_Pati() {
+        String sql = "SELECT COUNT(*) FROM PapPati";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+    // Para las listas filtradas por estado (pending/accepted)
+    public List<Pap_Pati> getPapPatiByStatusPaginated(String status, int limit, int offset) {
+        String sql = "SELECT * FROM PapPati WHERE status=? LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new Pap_PatiRowMapper(), status, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countPapPatiByStatus(String status) {
+        String sql = "SELECT COUNT(*) FROM PapPati WHERE status=?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, status);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
 }
 

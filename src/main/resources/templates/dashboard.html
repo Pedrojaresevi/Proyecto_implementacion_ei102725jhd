@@ -123,18 +123,18 @@
     </div>
 
     <div th:if="${user.role == 'tutor'}" class="mt-4">
-        <h2 class="h3 mb-4 text-info">Mi gestión como tutor</h2>
+        <h2 class="h3 mb-4 text-primary">Mi gestión como tutor</h2>
 
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="card h-100 border-info shadow-sm">
+                <div class="card h-100 border-primary shadow-sm">
                     <div class="card-body text-center">
                         <div class="mb-3">
-                            <i class="bi bi-people" style="font-size: 2rem; color: #0dcaf0;"></i>
+                            <i class="bi bi-people" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
                         <h5 class="card-title">Mis Tutorizados</h5>
                         <p class="card-text small text-muted">Consulta las personas con diversidad funcional a tu cargo.</p>
-                        <a th:href="@{'/tutor/users/' + ${user.dni}}" class="btn btn-info text-white w-100">
+                        <a th:href="@{'/tutor/users/' + ${user.dni}}" class="btn btn-primary text-white w-100">
                             Ver Tutorizados
                         </a>
                     </div>
@@ -142,14 +142,14 @@
             </div>
 
             <div class="col-md-4">
-                <div class="card h-100 border-info shadow-sm">
+                <div class="card h-100 border-primary shadow-sm">
                     <div class="card-body text-center">
                         <div class="mb-3">
-                            <i class="bi bi-person-plus" style="font-size: 2rem; color: #0dcaf0;"></i>
+                            <i class="bi bi-person-plus" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
                         <h5 class="card-title">Solicitudes de Asignación</h5>
                         <p class="card-text small text-muted">Mira el estado de tus peticiones de nuevos asistentes.</p>
-                        <a th:href="@{/assignmentRequest/list}" class="btn btn-info text-white w-100">
+                        <a th:href="@{/assignmentRequest/list}" class="btn btn-primary text-white w-100">
                             Listar Solicitudes
                         </a>
                     </div>
@@ -164,7 +164,7 @@
                         </div>
                         <h5 class="card-title">Negociaciones</h5>
                         <p class="card-text small text-muted">Gestiona los acuerdos y chats con los PAP/PATI interesados.</p>
-                        <a th:href="@{'/negotiation/tutor/' + ${user.dni}}" class="btn btn-primary w-100">
+                        <a th:href="@{'/negotiation/user/' + ${user.dni}}" class="btn btn-primary w-100">
                             Gestionar Negociaciones
                         </a>
                     </div>

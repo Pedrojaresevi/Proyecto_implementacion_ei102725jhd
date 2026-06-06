@@ -608,14 +608,27 @@ public class AssignmentRequestController {
 
     // --- VER CANDIDATOS PROPUESTOS ---
     @RequestMapping(value="/proposals/{id}", method = RequestMethod.GET)
-    public String viewProposals(Model model, @PathVariable String id) {
+    public String viewProposals(Model model, @PathVariable String id, @RequestParam(defaultValue = "1") int page) {
+        // 1. Datos de la solicitud original
         model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
 
-        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByRequestId(id);
+        // 2. Lógica de paginación
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
 
-        proposals.sort((p1, p2) -> p1.getList_id().compareTo(p2.getList_id()));
+        // 3. Obtenemos solo los candidatos de la página actual
+        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByRequestIdPaginated(id, pageSize, offset);
 
+        // 4. Calculamos total de páginas
+        int totalItems = listOfProposedCandidatesDao.countProposalsByRequestId(id);
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        // 5. Mandamos todo a la vista
         model.addAttribute("proposals", proposals);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
         return "assignmentRequest/proposals";
     }
     //

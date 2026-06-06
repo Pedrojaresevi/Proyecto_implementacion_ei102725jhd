@@ -9,10 +9,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -108,15 +105,38 @@ public class NegotiationController {
     }
     //
     @RequestMapping("/user/{dni}")
-    public String listNegotiationsByUser(Model model, @PathVariable String dni) {
-        // Necesitas tener un método en negotiationDao que filtre por DNI
-        model.addAttribute("negotiations", negotiationDao.getNegotiationsByUser(dni));
-        return "negotiation/list"; // Deberás crear este HTML
+    public String listNegotiationsByUser(Model model, @PathVariable String dni, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        model.addAttribute("negotiations", negotiationDao.getNegotiationsByUserPaginated(dni, pageSize, offset));
+
+        int totalItems = negotiationDao.countNegotiationsByUser(dni);
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("dniOwner", dni); // Necesario para los enlaces de paginación
+
+        return "negotiation/list";
     }
 
     @RequestMapping("/tutor/{dni}")
-    public String listNegotiationsByTutor(Model model, @PathVariable String dni) {
-        model.addAttribute("negotiations", negotiationDao.getNegotiationsByTutor(dni));
+    public String listNegotiationsByTutor(Model model, @PathVariable String dni, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        model.addAttribute("negotiations", negotiationDao.getNegotiationsByTutorPaginated(dni, pageSize, offset));
+
+        int totalItems = negotiationDao.countNegotiationsByTutor(dni);
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("dniOwner", dni); // Necesario para los enlaces de paginación
+
         return "negotiation/tutor/list";
     }
 

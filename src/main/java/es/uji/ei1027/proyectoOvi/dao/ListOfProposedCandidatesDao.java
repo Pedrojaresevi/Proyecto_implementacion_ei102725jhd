@@ -79,4 +79,23 @@ public class ListOfProposedCandidatesDao {
         String sql = "SELECT * FROM listofproposedcandidates WHERE pappati_id = ?";
         return jdbcTemplate.query(sql, new ListOfProposedCandidatesRowMapper(), dni);
     }
+
+    public List<ListOfProposedCandidates> getProposalsByRequestIdPaginated(String requestId, int limit, int offset) {
+        try {
+            // Aprovechamos y ordenamos directamente por list_id en SQL (como hacías en el controller)
+            String sql = "SELECT * FROM ListOfProposedCandidates WHERE request_id = ? ORDER BY list_id LIMIT ? OFFSET ?";
+            return jdbcTemplate.query(sql, new ListOfProposedCandidatesRowMapper(), requestId, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countProposalsByRequestId(String requestId) {
+        String sql = "SELECT COUNT(*) FROM ListOfProposedCandidates WHERE request_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, requestId);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
 }

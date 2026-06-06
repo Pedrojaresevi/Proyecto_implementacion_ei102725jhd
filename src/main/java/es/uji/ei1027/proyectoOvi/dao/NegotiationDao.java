@@ -101,4 +101,54 @@ public class NegotiationDao {
             return null;
         }
     }
+
+    // ---- PARA OVIUSER ----
+    public List<Negotiation> getNegotiationsByUserPaginated(String oviuserId, int limit, int offset) {
+        try {
+            String sql = "SELECT n.* FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.oviuser_id = ? LIMIT ? OFFSET ?";
+            return jdbcTemplate.query(sql, new NegotiationRowMapper(), oviuserId, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countNegotiationsByUser(String oviuserId) {
+        try {
+            String sql = "SELECT COUNT(n.*) FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.oviuser_id = ?";
+            return jdbcTemplate.queryForObject(sql, Integer.class, oviuserId);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+    // ---- PARA TUTOR ----
+    public List<Negotiation> getNegotiationsByTutorPaginated(String tutorDni, int limit, int offset) {
+        try {
+            String sql = "SELECT n.* FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.tutor_id = ? LIMIT ? OFFSET ?";
+            return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countNegotiationsByTutor(String tutorDni) {
+        try {
+            String sql = "SELECT COUNT(n.*) FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.tutor_id = ?";
+            return jdbcTemplate.queryForObject(sql, Integer.class, tutorDni);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
 }

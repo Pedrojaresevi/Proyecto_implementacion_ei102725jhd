@@ -63,6 +63,28 @@
     <div class="mt-4">
         <a href="/dashboard" class="btn btn-secondary">Volver</a>
     </div>
+
+    <nav th:if="${totalPages > 1}" aria-label="Navegación de negociaciones" class="mt-5">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/negotiation/user/{dni}(dni=${dniOwner}, page=${currentPage - 1})}" aria-label="Anterior">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
+                <a class="page-link" th:href="@{/negotiation/user/{dni}(dni=${dniOwner}, page=${i})}" th:text="${i}">1</a>
+            </li>
+
+            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{/negotiation/user/{dni}(dni=${dniOwner}, page=${currentPage + 1})}" aria-label="Siguiente">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
 </main>
 </body>
 </html>

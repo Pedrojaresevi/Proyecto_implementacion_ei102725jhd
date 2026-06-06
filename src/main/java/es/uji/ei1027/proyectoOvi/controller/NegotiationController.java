@@ -106,7 +106,7 @@ public class NegotiationController {
     //
     @RequestMapping("/user/{dni}")
     public String listNegotiationsByUser(Model model, @PathVariable String dni, @RequestParam(defaultValue = "1") int page) {
-        int pageSize = 6;
+        int pageSize = 4;
         int offset = (page - 1) * pageSize;
 
         model.addAttribute("negotiations", negotiationDao.getNegotiationsByUserPaginated(dni, pageSize, offset));
@@ -124,7 +124,7 @@ public class NegotiationController {
 
     @RequestMapping("/tutor/{dni}")
     public String listNegotiationsByTutor(Model model, @PathVariable String dni, @RequestParam(defaultValue = "1") int page) {
-        int pageSize = 6;
+        int pageSize = 4;
         int offset = (page - 1) * pageSize;
 
         model.addAttribute("negotiations", negotiationDao.getNegotiationsByTutorPaginated(dni, pageSize, offset));

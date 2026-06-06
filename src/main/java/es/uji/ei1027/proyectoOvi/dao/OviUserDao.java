@@ -104,4 +104,42 @@ public class OviUserDao {
             return 0;
         }
     }
+
+    // Para la lista general (/list)
+    public List<OviUser> getOviUsersPaginated(int limit, int offset) {
+        String sql = "SELECT * FROM OviUser LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new OviUserRowMapper(), limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countOviUsers() {
+        String sql = "SELECT COUNT(*) FROM OviUser";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+    // Para las listas por estado (/pending y /accepted)
+    public List<OviUser> getOviUsersByStatusPaginated(String status, int limit, int offset) {
+        String sql = "SELECT * FROM OviUser WHERE status=? LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new OviUserRowMapper(), status, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countOviUsersByStatus(String status) {
+        String sql = "SELECT COUNT(*) FROM OviUser WHERE status=?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, status);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
 }

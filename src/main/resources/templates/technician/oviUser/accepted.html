@@ -55,6 +55,24 @@
         </table>
     </div>
 
+    <nav th:if="${totalPages > 1}" aria-label="Navegación de usuarios OVI" class="mt-4">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/oviUser/accepted(page=${currentPage - 1})}">&laquo;</a>
+            </li>
+
+            <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
+                <a class="page-link" th:href="@{/oviUser/accepted(page=${i})}" th:text="${i}">1</a>
+            </li>
+
+            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{/oviUser/accepted(page=${currentPage + 1})}">&raquo;</a>
+            </li>
+
+        </ul>
+    </nav>
+
     <a href="/dashboard" class="btn btn-secondary mt-3">Volver</a>
 </main>
 </body>

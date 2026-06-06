@@ -8,10 +8,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,8 +24,18 @@ public class OviUserController {
     }
 
     @RequestMapping("/list")
-    public String listOviUsers(Model model){
-        model.addAttribute("oviUsers", oviUserDao.getOviUsers());
+    public String listOviUsers(Model model, @RequestParam(defaultValue = "1") int page){
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        model.addAttribute("oviUsers", oviUserDao.getOviUsersPaginated(pageSize, offset));
+
+        int totalItems = oviUserDao.countOviUsers();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "oviUser/list";
     }
 
@@ -132,14 +139,34 @@ public class OviUserController {
     }
     //
     @RequestMapping("/pending")
-    public String listPendingOviUsers(Model model) {
-        model.addAttribute("oviUsers", oviUserDao.getOviUsersByStatus("in progress"));
+    public String listPendingOviUsers(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        model.addAttribute("oviUsers", oviUserDao.getOviUsersByStatusPaginated("in progress", pageSize, offset));
+
+        int totalItems = oviUserDao.countOviUsersByStatus("in progress");
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "technician/oviUser/pending";
     }
 
     @RequestMapping("/accepted")
-    public String listAcceptedOviUsers(Model model) {
-        model.addAttribute("oviUsers", oviUserDao.getOviUsersByStatus("accepted"));
+    public String listAcceptedOviUsers(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        model.addAttribute("oviUsers", oviUserDao.getOviUsersByStatusPaginated("accepted", pageSize, offset));
+
+        int totalItems = oviUserDao.countOviUsersByStatus("accepted");
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         return "technician/oviUser/accepted";
     }
 

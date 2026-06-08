@@ -40,12 +40,16 @@ public class OviUserDao {
     }
 
     public void updateOviUser(OviUser oviUser) {
-        jdbcTemplate.update("UPDATE OviUser SET name=?, address=?, email=?, entityThatIsInvolved=?, typeOfFunctionalDiversity=?, dateOfAcceptance=?, userAndPassword=?, status=?,lifePlan=?, tutor_id=?, dateOfBirth=? WHERE dni=?",
+        String sql = "UPDATE OviUser SET name=?, address=?, email=?, entityThatIsInvolved=?, "
+                + "typeOfFunctionalDiversity=?, dateOfAcceptance=?, password=?, "
+                + "status=?, lifePlan=?, tutor_id=?, dateOfBirth=? WHERE dni=?";
+
+        this.jdbcTemplate.update(sql,
                 oviUser.getName(), oviUser.getAddress(), oviUser.getEmail(), oviUser.getEntityThatIsInvolved(),
-                oviUser.getTypeOfFunctionalDiversity(), oviUser.getDateOfAcceptance(),
-                oviUser.getPassword(), oviUser.getStatus(),
-                oviUser.getLifePlan(),
-                oviUser.getTutor_id(), oviUser.getDni(), oviUser.getDateOfBirth());
+                oviUser.getTypeOfFunctionalDiversity(), oviUser.getDateOfAcceptance(), oviUser.getPassword(),
+                oviUser.getStatus(), oviUser.getLifePlan(), oviUser.getTutor_id(), oviUser.getDateOfBirth(),
+                oviUser.getDni()
+        );
     }
 
     public OviUser getOviUser(String dni) {

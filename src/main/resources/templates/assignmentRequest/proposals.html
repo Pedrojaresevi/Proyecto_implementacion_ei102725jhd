@@ -46,7 +46,8 @@
           <td th:text="${proposal.pappati_id}">DNI</td>
           <td th:text="${#dates.format(proposal.proposalDate, 'dd/MM/yyyy')}">01/01/2025</td>
           <td>
-            <div class="progress" style="min-width: 120px;">
+            <!-- MODIFICADO: Añadido borde y un fondo gris más oscuro para ganar contraste -->
+            <div class="progress border border-secondary-subtle" style="min-width: 120px; background-color: #ced4da;">
               <div class="progress-bar bg-primary"
                    role="progressbar"
                    th:style="'width: ' + ${proposal.suitabilityScore} + '%'"
@@ -73,23 +74,23 @@
         </tbody>
       </table>
 
-        <nav th:if="${totalPages > 1}" aria-label="Navegación de candidatos" class="mt-4">
-            <ul class="pagination justify-content-center">
+      <nav th:if="${totalPages > 1}" aria-label="Navegación de candidatos" class="mt-4">
+        <ul class="pagination justify-content-center">
 
-                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                    <a class="page-link" th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id}, page=${currentPage - 1})}">&laquo;</a>
-                </li>
+          <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+            <a class="page-link" th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id}, page=${currentPage - 1})}">&laquo;</a>
+          </li>
 
-                <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
-                    <a class="page-link" th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id}, page=${i})}" th:text="${i}">1</a>
-                </li>
+          <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
+            <a class="page-link" th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id}, page=${i})}" th:text="${i}">1</a>
+          </li>
 
-                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                    <a class="page-link" th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id}, page=${currentPage + 1})}">&raquo;</a>
-                </li>
+          <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+            <a class="page-link" th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id}, page=${currentPage + 1})}">&raquo;</a>
+          </li>
 
-            </ul>
-        </nav>
+        </ul>
+      </nav>
     </div>
   </section>
 

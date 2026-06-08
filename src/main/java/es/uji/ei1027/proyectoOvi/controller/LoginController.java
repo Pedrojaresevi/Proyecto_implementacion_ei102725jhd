@@ -90,6 +90,41 @@ public class LoginController {
         return "login";
     }
 
+    @RequestMapping("/migrar-contrasenas")
+    public String migrarContrasenas() {
+        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+
+        // 1. Encriptar todos los OviUsers
+        // (Asegúrate de tener el método getOviUsers() en tu OviUserDao)
+        for (OviUser u : oviUserDao.getOviUsers()) {
+            // Las contraseñas encriptadas de Jasypt miden unos 28 caracteres.
+            // Si mide menos de 20, asumimos que está en texto plano.
+            if (u.getPassword() != null && u.getPassword().length() < 20) {
+                u.setPassword(passwordEncryptor.encryptPassword(u.getPassword()));
+                oviUserDao.updateOviUser(u);
+            }
+        }
+
+        // 2. Encriptar todos los Tutores
+        for (Tutor t : tutorDao.getTutors()) { // Necesitas que exista getTutors() en TutorDao
+            if (t.getPassword() != null && t.getPassword().length() < 20) {
+                t.setPassword(passwordEncryptor.encryptPassword(t.getPassword()));
+                tutorDao.updateTutor(t);
+            }
+        }
+
+        // 3. Encriptar todos los Pap_Pati
+        for (Pap_Pati p : papPatiDao.getAllPap_Pati()) { // Según tu DAO se llama getAllPap_Pati()
+            if (p.getPassword() != null && p.getPassword().length() < 20) {
+                p.setPassword(passwordEncryptor.encryptPassword(p.getPassword()));
+                papPatiDao.updatePap_Pati(p);
+            }
+        }
+
+        return "redirect:/login"; // Te devuelve al login cuando acabe
+    }
+
+
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // Limpiamos la sesión al salir

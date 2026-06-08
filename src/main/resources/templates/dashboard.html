@@ -11,7 +11,7 @@
 
 <div th:replace="~{fragments/base :: navbar}"></div>
 
-<div class="container">
+<div class="container pb-5">
     <div class="row mb-4">
         <div class="col">
             <h1 class="display-5">Hola, <span th:text="${user.username}">Usuario</span></h1>
@@ -22,42 +22,103 @@
     <hr>
 
     <div th:if="${user.role == 'technician'}" class="mt-4">
-        <h2 class="h4 text-primary mb-3">Gestió Global de la OVI</h2>
+        <h2 class="h3 mb-4 text-primary">Gestió Global de la OVI</h2>
 
-        <div class="list-group shadow-sm mb-4">
-            <!-- 1. Listado con solicitudes de Tutores (in progress) -->
-            <a th:href="@{/tutor/pending}" class="list-group-item list-group-item-action">
-                <i class="bi bi-person-badge me-2"></i>Listado con solicitudes de Tutores
-            </a>
-            <!-- 2. Listado con solicitudes de OVI users (in progress) -->
-            <a th:href="@{/oviUser/pending}" class="list-group-item list-group-item-action">
-                <i class="bi bi-people me-2"></i>Listado con solicitudes de OVI users
-            </a>
-            <!-- 3. Listado con solicitudes de PAPs y PATIs (in progress) -->
-            <a th:href="@{/pap_pati/pending}" class="list-group-item list-group-item-action">
-                <i class="bi bi-person-lines-fill me-2"></i>Listado con solicitudes de PAPs y PATIs
-            </a>
-            <!-- 4. Listado con solicitudes de asignación (in progress) -->
-            <a th:href="@{/assignmentRequest/pending}" class="list-group-item list-group-item-action">
-                <i class="bi bi-clipboard-check me-2"></i>Listado con solicitudes de asignación
-            </a>
-            <!-- 5. Añadir OVI users menores a Tutores -->
-            <a th:href="@{/tutor/add-minor}" class="list-group-item list-group-item-action">
-                <i class="bi bi-person-plus me-2"></i>Añadir OVI users menores a Tutores
-            </a>
-            <!-- 6a. Listado de usuarios OVI registrados (accepted) -->
-            <a th:href="@{/oviUser/accepted}" class="list-group-item list-group-item-action">
-                <i class="bi bi-person-check me-2"></i>Listado con usuarios OVI registrados
-            </a>
-            <!-- 6b. Listado de PAP/PATI registrados (accepted) -->
-            <a th:href="@{/pap_pati/accepted}" class="list-group-item list-group-item-action">
-                <i class="bi bi-person-check me-2"></i>Listado con PAP/PATI registrados
-            </a>
+        <div class="row g-4 mb-5">
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-badge" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Solicitudes de Tutores</h5>
+                        <p class="card-text small text-muted">Revisa y gestiona las solicitudes de alta de nuevos tutores en revisión.</p>
+                        <a th:href="@{/tutor/pending}" class="btn btn-primary text-white w-100">Ver Solicitudes</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-people" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Solicitudes de OVI Users</h5>
+                        <p class="card-text small text-muted">Valida el alta de personas con diversidad funcional pendientes del sistema.</p>
+                        <a th:href="@{/oviUser/pending}" class="btn btn-primary text-white w-100">Ver Solicitudes</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-lines-fill" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Solicitudes PAPs y PATIs</h5>
+                        <p class="card-text small text-muted">Gestiona las solicitudes pendientes de los asistentes profesionales.</p>
+                        <a th:href="@{/pap_pati/pending}" class="btn btn-primary text-white w-100">Ver Solicitudes</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-clipboard-check" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Solicitudes de Asignación</h5>
+                        <p class="card-text small text-muted">Supervisa los emparejamientos solicitados entre usuarios y asistentes.</p>
+                        <a th:href="@{/assignmentRequest/pending}" class="btn btn-primary text-white w-100">Ver Peticiones</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-plus" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Asignar Menores a Tutor</h5>
+                        <p class="card-text small text-muted">Vincula de forma directa a usuarios menores bajo la guardia de un tutor legal.</p>
+                        <a th:href="@{/tutor/add-minor}" class="btn btn-primary text-white w-100">Añadir Menor</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-check" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">OVI Users Activos</h5>
+                        <p class="card-text small text-muted">Consulta la base de datos completa de usuarios aceptados en el sistema.</p>
+                        <a th:href="@{/oviUser/accepted}" class="btn btn-primary text-white w-100">Ver Registrados</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6 offset-md-4"> <div class="card h-100 border-primary shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-person-check" style="font-size: 2rem; color: #0d6efd;"></i>
+                    </div>
+                    <h5 class="card-title">PAP / PATI Activos</h5>
+                    <p class="card-text small text-muted">Consulta el llistado completo de asistentes profesionales validados.</p>
+                    <a th:href="@{/pap_pati/accepted}" class="btn btn-primary text-white w-100">Ver Registrados</a>
+                </div>
+            </div>
+            </div>
         </div>
 
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-secondary mb-4">
             <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-file-earmark-text me-2"></i>Ver contratos de un usuario concreto</h5>
+                <h5 class="card-title"><i class="bi bi-file-earmark-text me-2 text-primary"></i>Ver contratos de un usuario concreto</h5>
                 <p class="card-text text-muted small">Introduce el DNI del OVI user o PAP/PATI para consultar sus contratos.</p>
                 <form th:action="@{/contract/search}" method="get">
                     <div class="input-group">
@@ -176,7 +237,6 @@
     <div th:if="${user.role == 'pap_pati'}" class="mt-4">
         <h2 class="h3 mb-4 text-primary">Mi Gestión como asistente</h2>
         <div class="row g-4">
-
             <div class="col-md-4">
                 <div class="card h-100 border-primary shadow-sm">
                     <div class="card-body text-center">
@@ -191,10 +251,9 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-    </div>
+</div>
 </body>
 </html>

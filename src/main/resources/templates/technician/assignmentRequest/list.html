@@ -8,100 +8,98 @@
         th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
-<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
-  <div th:replace="~{fragments/base :: navbar}"></div>
-</nav>
-<h1>Lista de Solicitudes</h1>
-<table>
-  <thead>
-  <tr>
+    <div th:replace="~{fragments/base :: navbar}"></div>
+    <h1>Lista de Solicitudes</h1>
+    <table>
+      <thead>
+      <tr>
 
-    <th>Request Id</th>
-    <th>Request Date</th>
-    <th>Type Of Service</th>
-    <th>Required Start Availability</th>
-    <th>Required End Availability</th>
-    <th>Service Location</th>
-    <th>Required Training</th>
-    <th>Required Experience</th>
-    <th>Required Skills</th>
-    <th>DNI realizador</th>
-    <th>Status</th>
-    <th class="text-center">Acciones de Gestión</th>
-    <td></td> <!-- no usar <th> quan no hi ha capçalera -->
-    <td></td>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="assignmentRequest: ${assignmentRequests}">
-    <td th:text="${assignmentRequest.request_Id}"></td>
-    <td th:text="${assignmentRequest.requestDate}"></td>
-    <td th:text="${assignmentRequest.typeOfService}"></td>
-    <td th:text="${assignmentRequest.requiredStartAvailability}"></td>
-    <td th:text="${assignmentRequest.requiredEndAvailability}"></td>
-    <td th:text="${assignmentRequest.serviceLocation}"></td>
-    <td th:text="${assignmentRequest.requiredTraining}"></td>
-    <td th:text="${assignmentRequest.requiredExperience}"></td>
-    <td th:text="${assignmentRequest.requiredSkills}"></td>
-    <td th:text="${assignmentRequest.oviuser_id == null ? assignmentRequest.tutor_id : assignmentRequest.oviuser_id}"></td>
+        <th>Request Id</th>
+        <th>Request Date</th>
+        <th>Type Of Service</th>
+        <th>Required Start Availability</th>
+        <th>Required End Availability</th>
+        <th>Service Location</th>
+        <th>Required Training</th>
+        <th>Required Experience</th>
+        <th>Required Skills</th>
+        <th>DNI realizador</th>
+        <th>Status</th>
+        <th class="text-center">Acciones de Gestión</th>
+        <td></td> <!-- no usar <th> quan no hi ha capçalera -->
+        <td></td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="assignmentRequest: ${assignmentRequests}">
+        <td th:text="${assignmentRequest.request_Id}"></td>
+        <td th:text="${assignmentRequest.requestDate}"></td>
+        <td th:text="${assignmentRequest.typeOfService}"></td>
+        <td th:text="${assignmentRequest.requiredStartAvailability}"></td>
+        <td th:text="${assignmentRequest.requiredEndAvailability}"></td>
+        <td th:text="${assignmentRequest.serviceLocation}"></td>
+        <td th:text="${assignmentRequest.requiredTraining}"></td>
+        <td th:text="${assignmentRequest.requiredExperience}"></td>
+        <td th:text="${assignmentRequest.requiredSkills}"></td>
+        <td th:text="${assignmentRequest.oviuser_id == null ? assignmentRequest.tutor_id : assignmentRequest.oviuser_id}"></td>
 
-    <td>
-         <span th:text="${assignmentRequest.status}"
-               th:class="${assignmentRequest.status == 'in progress' ? 'badge bg-warning text-dark' : (assignmentRequest.status == 'accepted' ? 'badge bg-success' : 'badge bg-danger')}">
-    </span>
-      <div th:if="${assignmentRequest.status == 'refused' and assignmentRequest.rejectReason != null}"
-           class="text-muted small mt-1">
-        <strong>Motivo:</strong>
-        <em th:text="${assignmentRequest.rejectReason}"></em>
-      </div>
-    </td>
+        <td>
+             <span th:text="${assignmentRequest.status}"
+                   th:class="${assignmentRequest.status == 'in progress' ? 'badge bg-warning text-dark' : (assignmentRequest.status == 'accepted' ? 'badge bg-success' : 'badge bg-danger')}">
+        </span>
+          <div th:if="${assignmentRequest.status == 'refused' and assignmentRequest.rejectReason != null}"
+               class="text-muted small mt-1">
+            <strong>Motivo:</strong>
+            <em th:text="${assignmentRequest.rejectReason}"></em>
+          </div>
+        </td>
 
-    <td class="text-center">
-      <div th:if="${assignmentRequest.status == 'in progress'}">
-        <a th:href="@{/assignmentRequest/accept/{id}(id=${assignmentRequest.request_Id})}"
-           class="btn btn-success btn-sm">Aceptar</a>
+        <td class="text-center">
+          <div th:if="${assignmentRequest.status == 'in progress'}">
+            <a th:href="@{/assignmentRequest/accept/{id}(id=${assignmentRequest.request_Id})}"
+               class="btn btn-success btn-sm">Aceptar</a>
 
-        <a th:href="@{/assignmentRequest/reject/{id}(id=${assignmentRequest.request_Id})}"
-           class="btn btn-danger btn-sm">Rechazar</a>
-      </div>
+            <a th:href="@{/assignmentRequest/reject/{id}(id=${assignmentRequest.request_Id})}"
+               class="btn btn-danger btn-sm">Rechazar</a>
+          </div>
 
-      <div th:if="${assignmentRequest.status == 'accepted'}">
-        <a th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id})}"
-           class="btn btn-info btn-sm">Ver Candidatos</a>
-      </div>
+          <div th:if="${assignmentRequest.status == 'accepted'}">
+            <a th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id})}"
+               class="btn btn-info btn-sm">Ver Candidatos</a>
+          </div>
 
-      <div th:if="${assignmentRequest.status == 'refused'}">
-        <span class="text-muted small">Sin acciones</span>
-      </div>
-    </td>
-  </tr>
-  </tbody>
-</table>
+          <div th:if="${assignmentRequest.status == 'refused'}">
+            <span class="text-muted small">Sin acciones</span>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
 
-<nav th:if="${totalPages > 1}" aria-label="Page navigation" class="mt-4">
-    <ul class="pagination justify-content-center">
+    <nav th:if="${totalPages > 1}" aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
 
-        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-            <a class="page-link" th:href="@{/assignmentRequest/pending(page=${currentPage - 1})}" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
+            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/assignmentRequest/pending(page=${currentPage - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
 
-        <li th:each="i : ${#numbers.sequence(1, totalPages)}"
-            class="page-item"
-            th:classappend="${currentPage == i} ? 'active'">
-            <a class="page-link" th:href="@{/assignmentRequest/pending(page=${i})}" th:text="${i}">1</a>
-        </li>
+            <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                class="page-item"
+                th:classappend="${currentPage == i} ? 'active'">
+                <a class="page-link" th:href="@{/assignmentRequest/pending(page=${i})}" th:text="${i}">1</a>
+            </li>
 
-        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-            <a class="page-link" th:href="@{/assignmentRequest/pending(page=${currentPage + 1})}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{/assignmentRequest/pending(page=${currentPage + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
 
-    </ul>
-</nav>
+        </ul>
+    </nav>
 
-<a href="/dashboard" class="btn btn-secondary">Volver</a>
+    <a href="/dashboard" class="btn btn-secondary">Volver</a>
 </body>
 </html>

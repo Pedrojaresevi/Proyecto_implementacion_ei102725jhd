@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 
 @Controller
 public class LoginController {
@@ -49,16 +50,20 @@ public class LoginController {
                              @RequestParam("password") String password,
                              HttpSession session, Model model) {
 
-        // 1. COMPROBAR TÉCNICO OVI (Suele ser un admin estático o tener su propia tabla)
+        // Creamos la instancia del encriptador de Jasypt
+        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+
+        // 1. COMPROBAR TÉCNICO OVI (Se queda igual porque está estático en texto plano)
         if (username.equals("admin") && password.equals("admin")) {
             UserDetails user = new UserDetails("00000000T", "Administrador Técnico", "technician");
             session.setAttribute("user", user);
             return "redirect:/dashboard";
         }
 
-        // 2. COMPROBAR OVI USER EN BASE DE DATOS
+        // 2. COMPROBAR OVI USER EN BASE DE DATOS (MODIFICADO CON JASYPT)
         OviUser oviUser = oviUserDao.getOviUser(username);
-        if (oviUser != null && oviUser.getPassword().equals(password)) {
+        // Usamos passwordEncryptor.checkPassword para verificar la contraseña introducida contra el hash de la BD
+        if (oviUser != null && passwordEncryptor.checkPassword(password, oviUser.getPassword())) {
             UserDetails user = new UserDetails(oviUser.getDni(), oviUser.getName(), "oviuser");
             session.setAttribute("user", user);
             return "redirect:/dashboard";
@@ -66,7 +71,7 @@ public class LoginController {
 
         // 3. COMPROBAR TUTOR EN BASE DE DATOS
         Tutor tutor = tutorDao.getTutor(username);
-        if (tutor != null && tutor.getPassword().equals(password)) {
+        if (tutor != null && passwordEncryptor.checkPassword(password, tutor.getPassword())) {
             UserDetails user = new UserDetails(tutor.getDni(), tutor.getName(), "tutor");
             session.setAttribute("user", user);
             return "redirect:/dashboard";
@@ -74,8 +79,7 @@ public class LoginController {
 
         // 4. COMPROBAR PAP/PATI EN BASE DE DATOS
         Pap_Pati papPati = papPatiDao.getPap_Pati(username);
-        // Usamos getUserAndPassword() porque así se llama en tu modelo Pap_Pati
-        if (papPati != null && papPati.getPassword().equals(password)) {
+        if (papPati != null && passwordEncryptor.checkPassword(password, papPati.getPassword())) {
             UserDetails user = new UserDetails(papPati.getDni(), papPati.getName(), "pap_pati");
             session.setAttribute("user", user);
             return "redirect:/dashboard";

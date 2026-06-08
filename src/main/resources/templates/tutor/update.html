@@ -42,7 +42,7 @@
             <div th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="error"></div>
         </div>
 
-
+        <input type="hidden" th:field="*{password}" />
         <button type="submit" class="btn btn-primary">Actualizar tutor</button>
         <br><br>
         <a href="/tutor/list" class="btn btn-secondary">Volver</a>

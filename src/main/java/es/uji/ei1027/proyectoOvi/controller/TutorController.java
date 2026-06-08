@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import org.jasypt.util.password.BasicPasswordEncryptor;
 import java.util.Arrays;
 import java.util.List;
 
@@ -66,6 +66,10 @@ public class TutorController {
         if (bindingResult.hasErrors()) {
             return "tutor/add";
         }
+
+        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+        String contrasenaEncriptada = passwordEncryptor.encryptPassword(tutor.getPassword());
+        tutor.setPassword(contrasenaEncriptada);
 
         try {
             tutorDao.addTutor(tutor);

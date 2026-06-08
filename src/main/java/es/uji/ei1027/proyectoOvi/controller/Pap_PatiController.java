@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -77,6 +78,10 @@ public class Pap_PatiController {
         if (bindingResult.hasErrors()) {
             return "pap_pati/add";
         }
+
+        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+        String contrasenaEncriptada = passwordEncryptor.encryptPassword(papPati.getPassword());
+        papPati.setPassword(contrasenaEncriptada);
 
         try {
             pap_patiDao.addPap_Pati(papPati);

@@ -151,4 +151,24 @@ public class NegotiationDao {
             return 0;
         }
     }
+    // Obtener el ID de la negociación a partir del request_Id y el DNI del asistente
+    public Integer getNegotiationIdByRequestAndAssistant(int requestId, String papPatiDni) {
+        try {
+            String sql = "SELECT n.negotiation_Id FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "WHERE l.request_Id = ? AND l.pap_pati_id = ?";
+            return jdbcTemplate.queryForObject(sql, Integer.class, requestId, papPatiDni);
+        } catch (EmptyResultDataAccessException e) {
+            return null; // Retorna null si no existe, lo cual activará el Modal en el HTML
+        }
+    }
+    // Obtener el list_id asociado a la solicitud y al asistente
+    public Integer getListIdByRequestAndAssistant(int requestId, String papPatiDni) {
+        try {
+            String sql = "SELECT list_id FROM ListOfProposedCandidates WHERE request_Id = ? AND pap_pati_id = ?";
+            return jdbcTemplate.queryForObject(sql, Integer.class, requestId, papPatiDni);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }

@@ -176,6 +176,26 @@ public class TutorController {
         model.addAttribute("totalPages", totalPages);
         return "technician/tutor/pending";
     }
+    @RequestMapping("/accepted")
+    public String listAcceptedTutors(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        // Recuperamos solo los tutores que ya han sido aceptados
+        List<Tutor> acceptedTutors = tutorDao.getTutorsByStatusPaginated("accepted", pageSize, offset);
+        model.addAttribute("tutors", acceptedTutors);
+
+        // Lógica para calcular las páginas totales
+        int totalItems = tutorDao.countTutorsByStatus("accepted");
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        // Retorna el nuevo HTML que crearemos en el Paso 2
+        return "technician/tutor/accepted";
+    }
 
     @RequestMapping(value="/accept/{dni}", method = RequestMethod.GET)
     public String confirmAcceptTutor(Model model, @PathVariable String dni) {

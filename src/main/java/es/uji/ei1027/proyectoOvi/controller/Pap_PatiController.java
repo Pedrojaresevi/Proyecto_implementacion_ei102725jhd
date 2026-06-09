@@ -187,6 +187,7 @@ public class Pap_PatiController {
         return "pap_pati/detallesasignacion";
     }
 
+
     @RequestMapping(value="/manage/{dni}", method = RequestMethod.GET)
     public String managePapPati(Model model, @PathVariable String dni) {
         model.addAttribute("pap_pati", pap_patiDao.getPap_Pati(dni));

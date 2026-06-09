@@ -103,17 +103,32 @@
                 </div>
             </div>
 
-            <div class="col-md-4 col-sm-6 offset-md-4"> <div class="card h-100 border-primary shadow-sm">
-                <div class="card-body text-center">
-                    <div class="mb-3">
-                        <i class="bi bi-person-check" style="font-size: 2rem; color: #0d6efd;"></i>
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-check" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Tutores Activos</h5>
+                        <p class="card-text small text-muted">Consulta el listado completo de los tutores activos en el sistema.</p>
+                        <a th:href="@{/tutor/accepted}" class="btn btn-primary text-white w-100">Ver Registrados</a>
                     </div>
-                    <h5 class="card-title">PAP / PATI Activos</h5>
-                    <p class="card-text small text-muted">Consulta el llistado completo de asistentes profesionales validados.</p>
-                    <a th:href="@{/pap_pati/accepted}" class="btn btn-primary text-white w-100">Ver Registrados</a>
                 </div>
             </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-check" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">PAP / PATI Activos</h5>
+                        <p class="card-text small text-muted">Consulta el llistado completo de asistentes profesionales validados.</p>
+                        <a th:href="@{/pap_pati/accepted}" class="btn btn-primary text-white w-100">Ver Registrados</a>
+                    </div>
+                </div>
             </div>
+
         </div>
 
         <div class="card shadow-sm border-secondary mb-4">

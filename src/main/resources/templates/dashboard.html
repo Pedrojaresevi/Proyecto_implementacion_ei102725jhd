@@ -22,8 +22,11 @@
     <hr>
 
     <div th:if="${user.role == 'technician'}" class="mt-4">
-        <h2 class="h3 mb-4 text-primary">Gestió Global de la OVI</h2>
+        <h2 class="h3 mb-4 text-primary">Gestión Global de la OVI</h2>
 
+        <h4 class="h5 text-secondary border-bottom pb-2 mb-3">
+            <i class="bi bi-inbox-fill me-2 text-info"></i>Bandeja de Pendientes
+        </h4>
         <div class="row g-4 mb-5">
             <div class="col-md-4 col-sm-6">
                 <div class="card h-100 border-primary shadow-sm">
@@ -32,7 +35,8 @@
                             <i class="bi bi-person-badge" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
                         <h5 class="card-title">Solicitudes de Tutores</h5>
-                        <p class="card-text small text-muted">Revisa y gestiona las solicitudes de alta de nuevos tutores en revisión.</p>
+                        <p class="card-text small text-muted">Revisa y gestiona las solicitudes de alta de nuevos tutores.</p>
+                        <br>
                         <a th:href="@{/tutor/pending}" class="btn btn-primary text-white w-100">Ver Solicitudes</a>
                     </div>
                 </div>
@@ -44,8 +48,8 @@
                         <div class="mb-3">
                             <i class="bi bi-people" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
-                        <h5 class="card-title">Solicitudes de OVI Users</h5>
-                        <p class="card-text small text-muted">Valida el alta de personas con diversidad funcional pendientes del sistema.</p>
+                        <h5 class="card-title">Solicitudes de usuarios OVI</h5>
+                        <p class="card-text small text-muted">Revisa y gestiona las solicitudes de alta de nuevos usuarios OVI.</p>
                         <a th:href="@{/oviUser/pending}" class="btn btn-primary text-white w-100">Ver Solicitudes</a>
                     </div>
                 </div>
@@ -58,7 +62,7 @@
                             <i class="bi bi-person-lines-fill" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
                         <h5 class="card-title">Solicitudes PAPs y PATIs</h5>
-                        <p class="card-text small text-muted">Gestiona las solicitudes pendientes de los asistentes profesionales.</p>
+                        <p class="card-text small text-muted">Revisa y gestiona las solicitudes de alta de nuevos asistentes.</p>
                         <a th:href="@{/pap_pati/pending}" class="btn btn-primary text-white w-100">Ver Solicitudes</a>
                     </div>
                 </div>
@@ -84,7 +88,7 @@
                             <i class="bi bi-person-plus" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
                         <h5 class="card-title">Asignar Menores a Tutor</h5>
-                        <p class="card-text small text-muted">Vincula de forma directa a usuarios menores bajo la guardia de un tutor legal.</p>
+                        <p class="card-text small text-muted">Vincula y registra de forma directa a usuarios menores bajo la guardia de un tutor legal.</p>
                         <a th:href="@{/tutor/add-minor}" class="btn btn-primary text-white w-100">Añadir Menor</a>
                     </div>
                 </div>
@@ -96,8 +100,8 @@
                         <div class="mb-3">
                             <i class="bi bi-person-check" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
-                        <h5 class="card-title">OVI Users Activos</h5>
-                        <p class="card-text small text-muted">Consulta la base de datos completa de usuarios aceptados en el sistema.</p>
+                        <h5 class="card-title">OVI Users Aceptados</h5>
+                        <p class="card-text small text-muted">Consulta el listado completo de los usuarios OVI aceptados en el sistema.</p>
                         <a th:href="@{/oviUser/accepted}" class="btn btn-primary text-white w-100">Ver Registrados</a>
                     </div>
                 </div>
@@ -110,7 +114,7 @@
                             <i class="bi bi-person-check" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
                         <h5 class="card-title">Tutores Activos</h5>
-                        <p class="card-text small text-muted">Consulta el listado completo de los tutores activos en el sistema.</p>
+                        <p class="card-text small text-muted">Consulta el listado completo de los tutores aceptados en el sistema.</p>
                         <a th:href="@{/tutor/accepted}" class="btn btn-primary text-white w-100">Ver Registrados</a>
                     </div>
                 </div>
@@ -123,7 +127,7 @@
                             <i class="bi bi-person-check" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
                         <h5 class="card-title">PAP / PATI Activos</h5>
-                        <p class="card-text small text-muted">Consulta el llistado completo de asistentes profesionales validados.</p>
+                        <p class="card-text small text-muted">Consulta el listado completo de los tutores aceptados en el sistema.</p>
                         <a th:href="@{/pap_pati/accepted}" class="btn btn-primary text-white w-100">Ver Registrados</a>
                     </div>
                 </div>

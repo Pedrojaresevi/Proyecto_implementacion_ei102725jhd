@@ -123,7 +123,7 @@ public class AssignmentRequestController {
 
         // 4. Redirección al HTML correspondiente según rol
         if (user.getRole().equals("technician")) {
-            return "technician/assignmentRequest/list";
+            return "pending";
         } else {
             return "assignmentRequest/list";
         }
@@ -162,19 +162,23 @@ public class AssignmentRequestController {
 
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
-                                   BindingResult bindingResult, HttpSession session) {
+                                   BindingResult bindingResult, HttpSession session, Model model) {
 
         UserDetails user = (UserDetails) session.getAttribute("user");
-        if (user != null) {
-            if ("oviuser".equals(user.getRole())) {
-                assignmentRequest.setOviuser_id(user.getDni());
-                // Aseguramos que tutor_id esté nulo por la regla CHECK de la BD
-                assignmentRequest.setTutor_id(null);
-            } else if ("tutor".equals(user.getRole())) {
-                assignmentRequest.setTutor_id(user.getDni());
-                // Aseguramos que oviuser_id esté nulo
-                assignmentRequest.setOviuser_id(null);
-            }
+
+        // 1. COMPROBAR SESIÓN (Si se ha caducado, mandarlo al login en lugar de romper)
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        if ("oviuser".equals(user.getRole())) {
+            assignmentRequest.setOviuser_id(user.getDni());
+            // Aseguramos que tutor_id esté nulo por la regla CHECK de la BD
+            assignmentRequest.setTutor_id(null);
+        } else if ("tutor".equals(user.getRole())) {
+            assignmentRequest.setTutor_id(user.getDni());
+            // Aseguramos que oviuser_id esté nulo
+            assignmentRequest.setOviuser_id(null);
         }
 
         // 2. GENERACIÓN DEL ID SECUENCIAL
@@ -200,15 +204,18 @@ public class AssignmentRequestController {
         assignmentRequestValidator.validate(assignmentRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("user", user);
             return "assignmentRequest/add";
         }
 
         try {
             assignmentRequestDao.addAssignmentRequest(assignmentRequest);
         } catch (DuplicateKeyException e) {
+            model.addAttribute("user", user);
             bindingResult.rejectValue("request_Id", "duplicat", "Ya existe una solicitud con este ID");
             return "assignmentRequest/add";
         } catch (DataIntegrityViolationException e) {
+            model.addAttribute("user", user);
             bindingResult.rejectValue("oviuser_id", "no_existe", "El oviUser no es vàlid");
             return "assignmentRequest/add";
         }
@@ -667,7 +674,7 @@ public class AssignmentRequestController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
 
-        return "technician/assignmentRequest/list";
+        return "technician/assignmentRequest/pending";
     }
 
 }

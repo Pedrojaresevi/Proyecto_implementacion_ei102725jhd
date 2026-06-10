@@ -43,40 +43,10 @@ public class AssignmentRequestController {
         this.listOfProposedCandidatesDao = listOfProposedCandidatesDao;
     }
 
-//    @RequestMapping("/list")
-//    public String listAssignmentRequests(Model model){
-//        model.addAttribute("assignmentRequests", assignmentRequestDao.getAssignmentRequests());
-//        return "assignmentRequest/list";
-//    }
+    //List depediendo del rol
     //List depediendo del rol
     @RequestMapping("/list")
     public String list(@RequestParam(defaultValue = "0") int page, Model model, HttpSession session) {
-        /*
-        // 1. Obtenemos el usuario de la sesión (ajusta el nombre del atributo "user" si es otro)
-        // Suponiendo que tu objeto de sesión tiene un método getDni() y getRole()
-        UserDetails user = (UserDetails) session.getAttribute("user");
-
-        if (user == null) {
-            return "redirect:/login"; // Si no hay sesión, al login
-        }
-
-        if (user.getRole().equals("technician")) {
-            // El técnico ve tofo
-            model.addAttribute("assignmentRequests", assignmentRequestDao.getAssignmentRequests());
-            return "technician/assignmentRequest/list";
-        } else {
-            // Cargamos la lista correspondiente según quién sea
-            if (user.getRole().equals("oviuser")) {
-                model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByOviUser(user.getDni()));
-            } else if (user.getRole().equals("tutor")) {
-                model.addAttribute("assignmentRequests", assignmentRequestDao.getRequestsByTutor(user.getDni()));
-            }
-
-            // Ambos van al mismo archivo HTML a mostrar su lista
-            return "assignmentRequest/list";
-        }
-
-         */
 
         UserDetails user = (UserDetails) session.getAttribute("user");
 
@@ -123,25 +93,11 @@ public class AssignmentRequestController {
 
         // 4. Redirección al HTML correspondiente según rol
         if (user.getRole().equals("technician")) {
-            return "pending";
+            return "redirect:/assignmentRequest/pending";
         } else {
             return "assignmentRequest/list";
         }
     }
-
-//    @RequestMapping(value="/add")
-//    public String addAssignmentRequest(Model model, HttpSession session) {
-//        UserDetails user = (UserDetails) session.getAttribute("user");
-//
-//        if (user == null) {
-//            return "redirect:/login";
-//        }
-//
-//        model.addAttribute("assignmentRequest", new AssignmentRequest());
-//
-//        // Ambos roles van al mismo formulario
-//        return "assignmentRequest/add";
-//    }
 
     @RequestMapping(value="/add")
     public String addAssignmentRequest(Model model, HttpSession session) {
@@ -254,19 +210,6 @@ public class AssignmentRequestController {
         return "redirect:../list";
     }
 
-    //Nuevo metodo para reciba el ID de la solicitud y pase al modelo tanto los datos de la solicitud como la lista de candidatos propuestos.
-//    @RequestMapping("/proposals/{id}")
-//    public String listProposals(Model model, @PathVariable String id) {
-//        // 1. Recuperamos la solicitud para mostrar sus detalles arriba
-//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-//        model.addAttribute("assignmentRequest", request);
-//
-//        // 2. Busca los candidatos (PAP/PATI)
-//        List<Pap_Pati> listaCandidatos = papPatiDao.getProposalsForRequest(id);
-//        model.addAttribute("candidates", listaCandidatos);
-//
-//        return "assignmentRequest/proposals";
-//    }
     @RequestMapping("/proposals/{id}")
     public String listProposals(Model model, @PathVariable String id) {
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
@@ -278,92 +221,7 @@ public class AssignmentRequestController {
 
         return "assignmentRequest/proposals";
     }
-//    // 1. Solo muestra la pantalla de confirmación
-//    @RequestMapping(value="/accept/{id}", method = RequestMethod.GET)
-//    public String confirmAccept(Model model, @PathVariable String id) {
-//        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
-//        return "technician/assignmentRequest/accept";
-//    }
-//    @RequestMapping(value="/accept/execute/{id}")
-//    public String acceptAndMatch(@PathVariable String id) {
-//        // 1. Recuperamos la solicitud
-//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-//        // OPCIONAL: Solo ejecutamos si la solicitud NO estaba aceptada ya
-//        if (request != null && !"accepted".equals(request.getStatus())) {
-//            // 2. Cambiamos estado
-//            request.setStatus("accepted");
-//            assignmentRequestDao.updateAssignmentRequest(request);
-//            // 3. Ejecutamos el Match automático
-//            List<Pap_Pati> compatibles = papPatiDao.getProposalsForRequest(id);
-//            for (Pap_Pati pap : compatibles) {
-//                try {
-//                    ListOfProposedCandidates proposal = new ListOfProposedCandidates();
-//                    proposal.setList_id("L-" + id + "-" + pap.getDni());
-//                    proposal.setRequest_id(id);
-//                    proposal.setPappati_id(pap.getDni());
-//                    proposal.setProposalDate(new java.util.Date());
-//                    proposal.setSuitabilityScore(100.0f);
-//
-//                    listOfProposedCandidatesDao.addListOfProposedCandidates(proposal);
-//                } catch (DuplicateKeyException e) {
-//                    // Si ya existía esta propuesta, simplemente la saltamos y seguimos con el siguiente
-//                    continue;
-//                }
-//            }
-//        }
-//        return "redirect:/assignmentRequest/list";
-//    }
-//    @RequestMapping(value="/accept/execute/{id}")
-//    public String acceptAndMatch(@PathVariable String id) {
-//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-//
-//        if (request != null && !"accepted".equals(request.getStatus())) {
-//            request.setStatus("accepted");
-//            assignmentRequestDao.updateAssignmentRequest(request);
-//
-//            List<Pap_Pati> compatibles = papPatiDao.getProposalsForRequest(id);
-//            int counter = 1;
-//            for (Pap_Pati pap : compatibles) {
-//                try {
-//                    ListOfProposedCandidates proposal = new ListOfProposedCandidates();
-//
-//                    // list_id único usando contador
-//                    proposal.setList_id("L-" + id + "-" + counter);
-//                    proposal.setRequest_id(id);
-//                    proposal.setPappati_id(pap.getDni());
-//                    proposal.setProposalDate(new java.util.Date());
-//
-//                    // Calcular suitabilityScore dinámicamente (5 condiciones = 20% cada una)
-//                    float score = 0f;
-//                    if (pap.getStartDate() != null &&
-//                            !pap.getStartDate().after(request.getRequiredStartAvailability())) score += 20f;
-//                    if (pap.getEndDate() != null &&
-//                            !pap.getEndDate().before(request.getRequiredEndAvailability())) score += 20f;
-//                    if (pap.getAddress() != null && request.getServiceLocation() != null &&
-//                            (pap.getAddress().toLowerCase()
-//                                    .contains(request.getServiceLocation().toLowerCase()) ||
-//                                    (pap.getGeographicMobility() != null &&
-//                                            pap.getGeographicMobility().toLowerCase()
-//                                                    .contains(request.getServiceLocation().toLowerCase())))) score += 20f;
-//                    if (pap.getSkills() != null && request.getRequiredSkills() != null &&
-//                            pap.getSkills().toLowerCase()
-//                                    .contains(request.getRequiredSkills().toLowerCase())) score += 20f;
-//                    if (pap.getSpecificTraining() != null && request.getRequiredTraining() != null &&
-//                            pap.getSpecificTraining().toLowerCase()
-//                                    .contains(request.getRequiredTraining().toLowerCase())) score += 20f;
-//
-//                    proposal.setSuitabilityScore(score);
-//
-//                    listOfProposedCandidatesDao.addListOfProposedCandidates(proposal);
-//                    counter++;
-//                } catch (DuplicateKeyException e) {
-//                    counter++;
-//                    continue;
-//                }
-//            }
-//        }
-//        return "redirect:/assignmentRequest/list";
-//    }
+
     // Metodo auxiliar para convertir experiencia a número
     private int experienciaANumero(String exp) {
         if (exp == null) return 0;
@@ -449,33 +307,6 @@ public class AssignmentRequestController {
         }
         return "redirect:/assignmentRequest/list";
     }
-
-
-//    // Muestra la pantalla de confirmación de rechazo
-//    @RequestMapping(value="/reject/{id}", method = RequestMethod.GET)
-//    public String confirmReject(Model model, @PathVariable String id) {
-//        // Recupera la solicitud y la envía a la vista para que pueda mostrar el ID
-//        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
-//        return "technician/assignmentRequest/reject";
-//    }
-//
-//    // Ejecuta el rechazo real y vuelve a la lista
-//    @RequestMapping(value="/reject/execute/{id}", method = RequestMethod.POST)
-//    public String executeReject(@PathVariable String id, @RequestParam("rejectReason") String rejectReason) {
-//
-//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-//
-//        if (request != null && !"refused".equals(request.getStatus())) {
-//            request.setStatus("refused");
-//
-//            assignmentRequestDao.updateAssignmentRequest(request);
-//
-//            // Opcional: Podrías hacer un print para comprobar que llega bien el texto
-//            System.out.println("Solicitud " + id + " rechazada por: " + rejectReason);
-//        }
-//
-//        return "redirect:/assignmentRequest/list";
-//    }
 
     @ModelAttribute("provincias")
     public List<String> getProvincias() {

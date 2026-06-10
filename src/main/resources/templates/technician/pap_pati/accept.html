@@ -7,9 +7,8 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body class="bg-light">
-<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
-    <div th:replace="~{fragments/base :: navbar}"></div>
-</nav>
+
+<div th:replace="~{fragments/base :: navbar}"></div>
 
 <div class="container mt-5">
     <div class="card shadow-sm border-0">
@@ -20,8 +19,8 @@
             <p>Estás a punto de aceptar al PAP/PATI <strong th:text="${pap_pati.name} + ' ' + ${pap_pati.surname}"></strong> con DNI <strong th:text="${pap_pati.dni}"></strong>.</p>
 
             <div class="d-flex justify-content-end gap-2">
+                <a th:href="@{/pap_pati/accept/execute/{dni}(dni=${pap_pati.dni})}" class="btn btn-success">Confirmar Aceptación</a>
                 <a th:href="@{/pap_pati/pending}" class="btn btn-secondary">Cancelar</a>
-                <a th:href="@{/pap_pati/accept/execute/{dni}(dni=${pap_pati.dni})}" class="btn btn-success">Confirmar</a>
             </div>
         </div>
     </div>

@@ -156,7 +156,7 @@ public class PapPatiDao {
 
     // Para las listas filtradas por estado (pending/accepted)
     public List<Pap_Pati> getPapPatiByStatusPaginated(String status, int limit, int offset) {
-        String sql = "SELECT * FROM PapPati WHERE status=? LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM PapPati WHERE status=? ORDER BY dni LIMIT ? OFFSET ?";
         try {
             return jdbcTemplate.query(sql, new Pap_PatiRowMapper(), status, limit, offset);
         } catch (EmptyResultDataAccessException e) {

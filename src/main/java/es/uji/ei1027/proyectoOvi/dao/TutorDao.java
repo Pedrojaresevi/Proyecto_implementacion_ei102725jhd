@@ -85,7 +85,7 @@ public class TutorDao {
 
     // Para la lista de tutores pendientes (/pending)
     public List<Tutor> getTutorsByStatusPaginated(String status, int limit, int offset) {
-        String sql = "SELECT * FROM Tutor WHERE status=? LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM Tutor WHERE status=? ORDER BY dni LIMIT ? OFFSET ?";
         try {
             return jdbcTemplate.query(sql, new TutorRowMapper(), status, limit, offset);
         } catch (EmptyResultDataAccessException e) {

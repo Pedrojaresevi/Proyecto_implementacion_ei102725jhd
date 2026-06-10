@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Registro usuario OVI - OVI</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
@@ -11,14 +12,16 @@
 <div th:replace="~{fragments/base :: navbar}"></div>
 
 
-<main class="container">
+<main class="container pb-5">
     <h1 class="mb-2 text-primary fw-bold">Registro como usuario OVI</h1>
     <p class="text-muted mb-4">Por favor, rellene sus datos para solicitar el alta en el sistema.</p>
+
     <hr class="mb-4 text-muted">
 
     <form class="form-horizontal" th:action="@{/oviUser/add}" th:object="${oviUser}" method="post">
 
         <h5 class="text-primary text-opacity-75 mb-3 fw-bold">1. Información Personal</h5>
+
         <div class="form-group row mb-3">
             <label for="dni" class="control-label col-sm-2">DNI / NIE / Pasaporte:</label>
             <div class="col-sm-4">

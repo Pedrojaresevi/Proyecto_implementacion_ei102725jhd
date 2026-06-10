@@ -21,9 +21,9 @@
             </div>
 
             <div class="d-flex justify-content-end gap-2">
-                <a th:href="@{/assignmentRequest/list}" class="btn btn-secondary">Cancelar</a>
                 <a th:href="@{/assignmentRequest/accept/execute/{id}(id=${assignmentRequest.request_Id})}"
                    class="btn btn-success">Confirmar</a>
+                <a th:href="@{/assignmentRequest/list}" class="btn btn-secondary">Cancelar</a>
             </div>
         </div>
     </div>

@@ -47,7 +47,7 @@
                 <td th:text="${oviUser.typeOfFunctionalDiversity}"></td>
                 <td th:text="${oviUser.dateOfBirth}"></td>
                 <td th:text="${oviUser.tutor_id}"></td>
-                <td><span class="badge bg-warning text-dark">En progreso</span></td>
+                <td><span class="badge rounded-pill bg-warning text-dark px-3 py-2">En progreso</span></td>
                 <td class="text-center">
                     <div class="d-flex gap-1 justify-content-center">
                         <a th:href="@{/oviUser/accept/{dni}(dni=${oviUser.dni})}"

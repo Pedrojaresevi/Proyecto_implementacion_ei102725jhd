@@ -22,11 +22,12 @@
     <hr>
 
     <div th:if="${user.role == 'technician'}" class="mt-4">
-        <h2 class="h3 mb-4 text-primary">Gestión Global de la OVI</h2>
+        <h2 class="h3 mb-4 text-primary fw-bold">Gestión Global de la OVI</h2>
 
-        <h4 class="h5 text-secondary border-bottom pb-2 mb-3">
-            <i class="bi bi-inbox-fill me-2 text-info"></i>Bandeja de Pendientes
-        </h4>
+        <h3 class="h5 text-dark border-bottom pb-2 mb-4">
+            <i class="bi bi-inbox-fill me-2 text-black"></i>Bandeja de Pendientes
+        </h3>
+
         <div class="row g-4 mb-5">
             <div class="col-md-4 col-sm-6">
                 <div class="card h-100 border-primary shadow-sm">
@@ -76,22 +77,17 @@
                         </div>
                         <h5 class="card-title">Solicitudes de Asignación</h5>
                         <p class="card-text small text-muted">Supervisa los emparejamientos solicitados entre usuarios y asistentes.</p>
-                        <a th:href="@{/assignmentRequest/pending}" class="btn btn-primary text-white w-100">Ver Peticiones</a>
+                        <a th:href="@{/assignmentRequest/pending}" class="btn btn-primary text-white w-100">Ver Solicitudes</a>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-4 col-sm-6">
-                <div class="card h-100 border-primary shadow-sm">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="bi bi-person-plus" style="font-size: 2rem; color: #0d6efd;"></i>
-                        </div>
-                        <h5 class="card-title">Asignar Menores a Tutor</h5>
-                        <p class="card-text small text-muted">Vincula y registra de forma directa a usuarios menores bajo la guardia de un tutor legal.</p>
-                        <a th:href="@{/tutor/add-minor}" class="btn btn-primary text-white w-100">Añadir Menor</a>
-                    </div>
-                </div>
+        <div class="row g-4 mb-5">
+            <div class="col-12">
+                <h3 class="h5 text-dark border-bottom pb-2 mb-2">
+                    <i class="bi bi-database-fill me-2 text-black"></i>Datos registrados
+                </h3>
             </div>
 
             <div class="col-md-4 col-sm-6">
@@ -132,21 +128,46 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
-        <div class="card shadow-sm border-secondary mb-4">
-            <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-file-earmark-text me-2 text-primary"></i>Ver contratos de un usuario concreto</h5>
-                <p class="card-text text-muted small">Introduce el DNI del OVI user o PAP/PATI para consultar sus contratos.</p>
-                <form th:action="@{/contract/search}" method="get">
-                    <div class="input-group">
-                        <input type="text" name="dni" class="form-control" placeholder="Introduce el DNI (ej. 12345678A)" required />
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search me-1"></i>Buscar contratos
-                        </button>
+        <div class="row g-4 mb-4">
+            <div class="col-12">
+                <h4 class="h5 text-dark border-bottom pb-2 mb-2">
+                    <i class="bi bi-tools me-2 text-black"></i>Herramientas Administrativas
+                </h4>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-plus" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Asignar Menores a Tutor</h5>
+                        <p class="card-text small text-muted">Vincula y registra de forma directa a usuarios menores bajo la guardia de un tutor legal.</p>
+                        <a th:href="@{/tutor/add-minor}" class="btn btn-primary text-white w-100">Añadir Menor</a>
                     </div>
-                </form>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-12">
+                <div class="card h-100 shadow-sm border-primary">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-file-earmark-text me-2 text-primary"></i>Ver contratos de un usuario concreto</h5>
+                        <p class="card-text text-muted small">Introduce el DNI del OVI user o PAP/PATI para consultar sus contratos.</p>
+
+                        <form th:action="@{/contract/search}" method="get">
+                            <label for="dniSearchInput" class="visually-hidden">Documento de identidad (DNI o NIE)</label>
+
+                            <div class="input-group">
+                                <input type="text" id="dniSearchInput" name="dni" class="form-control" placeholder="Introduce el DNI (ej. 12345678A)" required />
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-search me-1"></i>Buscar contratos
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

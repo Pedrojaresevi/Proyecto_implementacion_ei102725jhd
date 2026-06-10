@@ -1,48 +1,88 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8" />
-    <title>Modificar PAP/PATI</title>
+    <title>Modificar PAP/PATI - OVI</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
-<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
-    <div th:replace="~{fragments/base :: navbar}"></div>
-</nav>
 
-<main class="container">
-    <h1>Modificar Perfil PAP/PATI</h1>
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<main class="container pb-5">
+    <h1 class="mb-2 text-primary fw-bold">Modificación de perfil PAP/PATI</h1>
+    <p class="text-muted mb-4">Actualice la información de su perfil profesional y personal. Algunos campos son administrativos y no pueden ser modificados.</p>
+
+    <hr class="mb-4 text-muted">
+
     <form class="form-horizontal" th:action="@{/pap_pati/update}" th:object="${pap_pati}" method="post">
 
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">1. Información Personal</h5>
+
         <div class="form-group row mb-3">
-            <label for="dni" class="control-label col-sm-2">DNI:</label>
+            <label for="name" class="control-label col-sm-2">Nombre:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" th:field="*{name}" maxlength="50" />
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="surname" class="control-label col-sm-2">Apellido/s:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="surname" th:field="*{surname}" maxlength="50" />
+                <div th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}" class="text-danger"></div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="phone" class="control-label col-sm-2">Teléfono:</label>
             <div class="col-sm-4">
-                <input id="dni" type="text" th:field="*{dni}" class="form-control bg-light" readonly>
+                <input id="phone" type="text" th:field="*{phone}" class="form-control" />
+                <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="text-danger"></div>
             </div>
         </div>
 
-        <hr>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="name" class="form-label">Nombre:</label>
-                <input type="text" class="form-control" id="name" th:field="*{name}" />
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="surname" class="form-label">Apellidos:</label>
-                <input type="text" class="form-control" id="surname" th:field="*{surname}" />
+        <div class="form-group row mb-3">
+            <label for="email" class="control-label col-sm-2">Email:</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" id="email" th:field="*{email}" maxlength="150"/>
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <label for="phone" class="form-label">Teléfono:</label>
-                <input type="text" class="form-control" id="phone" th:field="*{phone}" />
+        <hr class="mb-4 text-muted">
+
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">2. Perfil Profesional</h5>
+
+        <div class="form-group row mb-3">
+            <label for="specificTraining" class="control-label col-sm-2">Formación Específica:</label>
+            <div class="col-sm-10">
+                <select class="form-select" id="specificTraining" th:field="*{specificTraining}">
+                    <option value="">Seleccione la formación específica...</option>
+                    <option th:each="training : ${formacionesDisponibles}"
+                            th:value="${training}"
+                            th:text="${training}"
+                            th:selected="${training == pap_pati.specificTraining}">
+                    </option>
+                </select>
+                <div th:if="${#fields.hasErrors('specificTraining')}" th:errors="*{specificTraining}" class="text-danger"></div>
             </div>
-            <div class="col-md-8 mb-3">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" class="form-control" id="email" th:field="*{email}" />
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="typeOfExperience" class="control-label col-sm-2">Tipo de Experiencia:</label>
+            <div class="col-sm-10">
+                <select class="form-select" id="typeOfExperience" th:field="*{typeOfExperience}">
+                    <option value="">Seleccione cuántos años de experiencia...</option>
+                    <option th:each="anyo : ${anyosExperiencia}"
+                            th:value="${anyo}"
+                            th:text="${anyo}"
+                            th:selected="${anyo == pap_pati.typeOfExperience}">
+                    </option>
+                </select>
+                <div th:if="${#fields.hasErrors('typeOfExperience')}" th:errors="*{typeOfExperience}" class="text-danger"></div>
             </div>
         </div>
 
@@ -51,42 +91,41 @@
             <div class="col-sm-4">
                 <select class="form-select" id="assistant_type" th:field="*{assistant_type}">
                     <option value="">Selecciona un tipo...</option>
-                    <option value="PAP">PAP</option>
-                    <option value="PATI">PATI</option>
+                    <option value="PAP" th:selected="${pap_pati.assistant_type == 'PAP'}">PAP</option>
+                    <option value="PATI" th:selected="${pap_pati.assistant_type == 'PATI'}">PATI</option>
                 </select>
+                <div th:if="${#fields.hasErrors('assistant_type')}" th:errors="*{assistant_type}" class="text-danger"></div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="startDate" class="control-label col-sm-2">Fecha de inicio:</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" id="startDate" th:field="*{startDate}" />
+                <div th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class="text-danger"></div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="endDate" class="control-label col-sm-2">Fecha fin:</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" id="endDate" th:field="*{endDate}" />
+                <div th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" class="text-danger"></div>
             </div>
         </div>
 
         <div class="form-group row mb-3">
             <label for="geographicMobility" class="control-label col-sm-2">Movilidad Geográfica:</label>
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <select class="form-select" id="geographicMobility" th:field="*{geographicMobility}">
+                    <option value="">Seleccione una provincia...</option>
                     <option th:each="provincia : ${provincias}"
                             th:value="${provincia}"
-                            th:text="${provincia}"></option>
+                            th:text="${provincia}"
+                            th:selected="${provincia == pap_pati.geographicMobility}">
+                    </option>
                 </select>
-            </div>
-        </div>
-
-        <div class="form-group row mb-3">
-            <label for="specificTraining" class="control-label col-sm-2">Formación:</label>
-            <div class="col-sm-6">
-                <select class="form-select" id="specificTraining" th:field="*{specificTraining}">
-                    <option th:each="training : ${formacionesDisponibles}"
-                            th:value="${training}"
-                            th:text="${training}"></option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group row mb-3">
-            <label for="typeOfExperience" class="control-label col-sm-2">Experiencia:</label>
-            <div class="col-sm-6">
-                <select class="form-select" id="typeOfExperience" th:field="*{typeOfExperience}">
-                    <option th:each="anyo : ${anyosExperiencia}"
-                            th:value="${anyo}"
-                            th:text="${anyo}"></option>
-                </select>
+                <div th:if="${#fields.hasErrors('geographicMobility')}" th:errors="*{geographicMobility}" class="text-danger"></div>
             </div>
         </div>
 
@@ -94,25 +133,27 @@
             <label class="control-label col-sm-2">Habilidades:</label>
             <div class="col-sm-10">
                 <div class="row">
-                    <div th:each="skill : ${skillsDisponibles}" class="col-md-4">
+                    <div th:each="skill : ${skillsDisponibles}" class="col-12 col-md-4 mb-2">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" th:field="*{skills}" th:value="${skill}">
+                            <input class="form-check-input" type="checkbox" name="skills"
+                                   th:value="${skill}"
+                                   th:checked="${pap_pati.skills != null and #lists.contains(pap_pati.skills, skill)}">
                             <label class="form-check-label fw-normal" th:text="${skill}"></label>
                         </div>
                     </div>
                 </div>
-                <div th:if="${#fields.hasErrors('skills')}" th:errors="*{skills}" class="text-danger small"></div>
+                <div th:if="${#fields.hasErrors('skills')}" th:errors="*{skills}" class="text-danger mt-2"></div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="startDate" class="form-label">Disponible desde:</label>
-                <input type="date" class="form-control" id="startDate" th:field="*{startDate}" />
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="endDate" class="form-label">Disponible hasta:</label>
-                <input type="date" class="form-control" id="endDate" th:field="*{endDate}" />
+        <hr class="mb-4 text-muted">
+
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">3. Información Administrativa</h5>
+
+        <div class="form-group row mb-3">
+            <label for="dni" class="control-label col-sm-2">DNI / NIE / Pasaporte:</label>
+            <div class="col-sm-4">
+                <input id="dni" type="text" th:field="*{dni}" class="form-control bg-light" maxlength="9" readonly>
             </div>
         </div>
 
@@ -128,10 +169,8 @@
         <input type="hidden" th:field="*{address}" />
         <input type="hidden" th:field="*{dateOfBirth}" />
 
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">Actualizar Perfil</button>
-            <a th:href="@{/pap_pati/accepted}" class="btn btn-secondary">Volver</a>
-        </div>
+        <button type="submit" class="btn btn-primary mt-3">Actualizar Perfil</button>
+        <a th:href="@{/pap_pati/accepted}" class="btn btn-secondary mt-3 ms-2">Volver</a>
     </form>
 </main>
 </body>

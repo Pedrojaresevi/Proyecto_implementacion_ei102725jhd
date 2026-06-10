@@ -130,7 +130,7 @@ public class OviUserDao {
 
     // Para las listas por estado (/pending y /accepted)
     public List<OviUser> getOviUsersByStatusPaginated(String status, int limit, int offset) {
-        String sql = "SELECT * FROM OviUser WHERE status=? LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM OviUser WHERE status=? ORDER BY dni LIMIT ? OFFSET ?";
         try {
             return jdbcTemplate.query(sql, new OviUserRowMapper(), status, limit, offset);
         } catch (EmptyResultDataAccessException e) {

@@ -101,7 +101,7 @@ public class TutorController {
         }
         tutorDao.updateTutor(tutor);
 
-        return "redirect:list";
+        return "redirect:/tutor/accepted";
     }
     //
     @RequestMapping(value="/delete/{dni}")

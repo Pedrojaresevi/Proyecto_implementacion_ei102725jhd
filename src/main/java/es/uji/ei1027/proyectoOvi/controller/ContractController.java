@@ -70,18 +70,16 @@ public class ContractController {
 
     @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
     public String editContract(Model model, @PathVariable String id, jakarta.servlet.http.HttpSession session) {
-        // 1. Recuperamos el usuario de la sesión
         UserDetails user = (UserDetails) session.getAttribute("user");
-
-        // 2. Si no hay usuario logueado, lo mandamos al login por seguridad
         if (user == null) {
             return "redirect:/login";
         }
 
-        // 3. Pasamos el usuario al modelo (vital para que no dé error el HTML)
         model.addAttribute("user", user);
 
-        // 4. Pasamos los datos del contrato y la lista de estados
+        // PASAMOS EL DNI BUSCADO A LA VISTA (Para arreglar el botón "Volver")
+        model.addAttribute("searchedDni", session.getAttribute("searchedDni"));
+
         model.addAttribute("contract", contractDao.getContract(id));
         List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
         model.addAttribute("statusList", statusList);
@@ -89,44 +87,44 @@ public class ContractController {
         return "contract/update";
     }
 
-    @RequestMapping(value="/add", method= RequestMethod.POST)
-    public String processAddSubmit(@ModelAttribute("contract") Contract contract,
-                                   BindingResult bindingResult,
-                                   jakarta.servlet.http.HttpSession session,
-                                   Model model) {
+    @RequestMapping(value="/update", method = RequestMethod.POST)
+    public String processUpdateSubmit(@ModelAttribute("contract") Contract contract,
+                                      BindingResult bindingResult,
+                                      jakarta.servlet.http.HttpSession session,
+                                      Model model) {
 
         UserDetails user = (UserDetails) session.getAttribute("user");
-        if (user == null) return "redirect:/login";
+        if (user == null) {
+            return "redirect:/login";
+        }
 
-        // 1. GENERAR EL ID PRIMERO (Antes de validar)
-        String newContractId = contractDao.generateNextContractId();
-        contract.setContract_Id(newContractId);
-
-        // 2. GENERAR EL PDF (También antes por si el validador lo revisa)
-        int year = contract.getStartDate() != null ? contract.getStartDate().getYear() : java.time.LocalDate.now().getYear();
-        String userName = user.getUsername().replace(" ", "_");
-        String pdfPath = "/docs/contracts/" + year + "/" + newContractId + "_" + userName + ".pdf";
-        contract.setPlaceWhereThePDFIsGonnaBeSaved(pdfPath);
-
-        // 3. AHORA SÍ, VALIDAR
         ContractValidator contractValidator = new ContractValidator();
         contractValidator.validate(contract, bindingResult);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", user);
-            return "contract/add";
+            model.addAttribute("searchedDni", session.getAttribute("searchedDni"));
+            List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
+            model.addAttribute("statusList", statusList);
+            return "contract/update";
         }
 
-        // 4. GUARDAR
-        try {
-            contractDao.addContract(contract);
-        } catch (DuplicateKeyException e) {
-            model.addAttribute("user", user);
-            bindingResult.rejectValue("contract_Id", "duplicat", "Ya existe un contrato con este ID");
-            return "contract/add";
-        }
+        contractDao.updateContract(contract);
 
-        return "redirect:/contract/user/" + user.getDni();
+        // AQUÍ ESTÁ LA MAGIA DE LA REDIRECCIÓN
+        if ("technician".equals(user.getRole())) {
+            String searchedDni = (String) session.getAttribute("searchedDni");
+            // Si el admin hizo una búsqueda previa, le devolvemos a esa búsqueda
+            if (searchedDni != null) {
+                return "redirect:/contract/user/" + searchedDni;
+            } else {
+                // Por si acaso entra directamente sin buscar
+                return "redirect:/";
+            }
+        } else {
+            // Si es un usuario normal (OVI user o PAP/PATI), vuelve a sus propios contratos
+            return "redirect:/contract/user/" + user.getDni();
+        }
     }
 
     @RequestMapping(value="/delete/{id}")
@@ -143,8 +141,9 @@ public class ContractController {
     }
     //
     @RequestMapping("/user/{dni}")
-    public String listContractsByUser(Model model, @PathVariable String dni) {
+    public String listContractsByUser(Model model, @PathVariable String dni, jakarta.servlet.http.HttpSession session) {
         // Necesitas tener un método en contractDao que filtre por DNI
+        session.setAttribute("searchedDni", dni);
         model.addAttribute("contracts", contractDao.getContractsByUser(dni));
         return "contract/list";
     }

@@ -66,7 +66,7 @@ public class AssignmentRequestDao  {
     public List<AssignmentRequest> getRequestsByOviUser(String oviuserId) {
         try {
             return jdbcTemplate.query(
-                    "SELECT * FROM AssignmentRequest WHERE oviuser_id=?",
+                    "SELECT * FROM AssignmentRequest WHERE oviuser_id=? ORDER BY request_id",
                     new AssignmentRequestRowMapper(),
                     oviuserId
             );

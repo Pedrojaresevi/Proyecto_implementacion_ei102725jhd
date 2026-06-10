@@ -1,61 +1,67 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8" />
-    <title>Modificar OviUser</title>
+    <title>Modificar usuario OVI - OVI</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
-<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
-    <div th:replace="~{fragments/base :: navbar}"></div>
-</nav>
 
-<main class="container">
-    <h1 class="mb-4">Modificar Perfil OviUser</h1>
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<main class="container pb-5">
+    <h1 class="mb-2 text-primary fw-bold">Modificación usuario OVI</h1>
+    <p class="text-muted mb-4">Actualice la información de su perfil. Algunos campos son de solo lectura y no pueden ser modificados.</p>
+
+    <hr class="mb-4 text-muted">
+
     <form class="form-horizontal" th:action="@{/oviUser/update}" th:object="${oviUser}" method="post">
 
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">1. Información Personal</h5>
+
         <div class="form-group row mb-3">
-            <label for="dni" class="control-label col-sm-2">DNI:</label>
-            <div class="col-sm-4">
-                <input id="dni" type="text" th:field="*{dni}" class="form-control bg-light" maxlength="9" readonly>
-            </div>
-            <div th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}" class="text-danger small"></div>
-        </div>
-
-        <hr>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="name" class="form-label">Nombre:</label>
+            <label for="name" class="control-label col-sm-2">Nombre Completo:</label>
+            <div class="col-sm-10">
                 <input type="text" class="form-control" id="name" th:field="*{name}" maxlength="50" />
-                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger small"></div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="email" class="form-label">Email:</label>
-                <input type="email" class="form-control" id="email" th:field="*{email}" maxlength="150"/>
-                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger small"></div>
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-12 mb-3">
-                <label for="address" class="form-label">Dirección:</label>
+        <div class="form-group row mb-3">
+            <label for="address" class="control-label col-sm-2">Dirección:</label>
+            <div class="col-sm-10">
                 <input type="text" class="form-control" id="address" th:field="*{address}" maxlength="200"/>
-                <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="text-danger small"></div>
+                <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}" class="text-danger"></div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="entityThatIsInvolved" class="form-label">Entidad en la que está involucrado:</label>
-                <input type="text" class="form-control" id="entityThatIsInvolved" th:field="*{entityThatIsInvolved}" maxlength="150"/>
-                <div th:if="${#fields.hasErrors('entityThatIsInvolved')}" th:errors="*{entityThatIsInvolved}" class="text-danger small"></div>
+        <div class="form-group row mb-3">
+            <label for="email" class="control-label col-sm-2">Email:</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" id="email" th:field="*{email}" maxlength="150"/>
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="typeOfFunctionalDiversity" class="form-label">Tipo de diversidad funcional:</label>
+        </div>
+
+        <hr class="mb-4 text-muted">
+
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">2. Detalles del Perfil</h5>
+
+        <div class="form-group row mb-3">
+            <label for="entityThatIsInvolved" class="control-label col-sm-2">Entidad vinculada:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="entityThatIsInvolved" th:field="*{entityThatIsInvolved}" maxlength="150"/>
+                <div th:if="${#fields.hasErrors('entityThatIsInvolved')}" th:errors="*{entityThatIsInvolved}" class="text-danger"></div>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="typeOfFunctionalDiversity" class="control-label col-sm-2">Tipo diversidad funcional:</label>
+            <div class="col-sm-10">
                 <input type="text" class="form-control" id="typeOfFunctionalDiversity" th:field="*{typeOfFunctionalDiversity}" maxlength="150"/>
-                <div th:if="${#fields.hasErrors('typeOfFunctionalDiversity')}" th:errors="*{typeOfFunctionalDiversity}" class="text-danger small"></div>
+                <div th:if="${#fields.hasErrors('typeOfFunctionalDiversity')}" th:errors="*{typeOfFunctionalDiversity}" class="text-danger"></div>
             </div>
         </div>
 
@@ -67,41 +73,50 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-12 mb-3">
-                <label for="lifePlan" class="form-label">Plan de Vida (Life Plan):</label>
+        <div class="form-group row mb-3">
+            <label for="lifePlan" class="control-label col-sm-2">Plan de Vida:</label>
+            <div class="col-sm-10">
                 <input type="text" class="form-control" id="lifePlan" th:field="*{lifePlan}" maxlength="150"/>
-                <div th:if="${#fields.hasErrors('lifePlan')}" th:errors="*{lifePlan}" class="text-danger small"></div>
+                <div th:if="${#fields.hasErrors('lifePlan')}" th:errors="*{lifePlan}" class="text-danger"></div>
             </div>
         </div>
 
-        <hr>
-        <h5 class="mb-3 text-secondary">Información Administrativa (No modificable)</h5>
+        <hr class="mb-4 text-muted">
 
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <label for="tutor_id" class="form-label">ID Tutor:</label>
-                <input type="text" class="form-control bg-light" id="tutor_id" th:field="*{tutor_id}" readonly />
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">3. Información Administrativa</h5>
+
+        <div class="form-group row mb-3">
+            <label for="dni" class="control-label col-sm-2">DNI / NIE / Pasaporte:</label>
+            <div class="col-sm-4">
+                <input id="dni" type="text" th:field="*{dni}" class="form-control bg-light" maxlength="9" readonly>
             </div>
+        </div>
 
-            <div class="col-md-4 mb-3">
-                <label for="dateOfAcceptance" class="form-label">Fecha de aceptación:</label>
+        <div class="form-group row mb-3">
+            <label for="tutor_id" class="control-label col-sm-2">Documento del tutor:</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control bg-light" id="tutor_id" th:field="*{tutor_id}" maxlength="9" readonly/>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="dateOfAcceptance" class="control-label col-sm-2">Fecha de aceptación:</label>
+            <div class="col-sm-4">
                 <input type="date" class="form-control bg-light" id="dateOfAcceptance" th:field="*{dateOfAcceptance}" readonly />
             </div>
+        </div>
 
-            <div class="col-md-4 mb-3">
-                <label for="status" class="form-label">Estado:</label>
+        <div class="form-group row mb-3">
+            <label for="status" class="control-label col-sm-2">Estado:</label>
+            <div class="col-sm-4">
                 <input type="text" class="form-control bg-light" id="status" th:field="*{status}" readonly />
             </div>
         </div>
 
         <input type="hidden" th:field="*{password}" />
-        <input type="hidden" th:field="*{dateOfBirth}" />
 
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary">Actualizar Perfil</button>
-            <a th:href="@{/oviUser/accepted}" class="btn btn-secondary">Volver</a>
-        </div>
+        <button type="submit" class="btn btn-primary mt-3">Actualizar Perfil</button>
+        <a th:href="@{/oviUser/accepted}" class="btn btn-secondary mt-3 ms-2">Volver</a>
     </form>
 </main>
 </body>

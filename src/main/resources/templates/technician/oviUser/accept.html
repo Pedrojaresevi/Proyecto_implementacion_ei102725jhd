@@ -3,12 +3,12 @@
 <head>
     <title>Confirmar Aceptación de OVI User</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body class="bg-light">
-<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
-    <div th:replace="~{fragments/base :: navbar}"></div>
-</nav>
+
+<div th:replace="~{fragments/base :: navbar}"></div>
 
 <div class="container mt-5">
     <div class="card shadow-sm border-0">
@@ -19,8 +19,8 @@
             <p>Estás a punto de aceptar al OVI user <strong th:text="${oviUser.name}"></strong> con DNI <strong th:text="${oviUser.dni}"></strong>.</p>
 
             <div class="d-flex justify-content-end gap-2">
+                <a th:href="@{/oviUser/accept/execute/{dni}(dni=${oviUser.dni})}" class="btn btn-success">Confirmar Aceptación</a>
                 <a th:href="@{/oviUser/pending}" class="btn btn-secondary">Cancelar</a>
-                <a th:href="@{/oviUser/accept/{dni}(dni=${oviUser.dni})}" class="btn btn-success">Confirmar</a>
             </div>
         </div>
     </div>

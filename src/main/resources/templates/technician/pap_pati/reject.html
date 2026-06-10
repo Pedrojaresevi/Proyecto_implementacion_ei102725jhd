@@ -4,11 +4,13 @@
     <meta charset="UTF-8" />
     <title>Confirmar Rechazo de PAP/PATI</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body>
-<nav class="navbar navbar-light bg-light mb-4 shadow-sm">
-    <div th:replace="~{fragments/base :: navbar}"></div>
-</nav>
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
 <div class="container mt-5">
     <div class="card shadow-sm border-0">
         <div class="card-header bg-danger text-white">
@@ -22,8 +24,8 @@
             </div>
 
             <div class="d-flex justify-content-end gap-2">
-                <a th:href="@{/pap_pati/pending}" class="btn btn-secondary">Cancelar</a>
                 <a th:href="@{/pap_pati/reject/execute/{dni}(dni=${pap_pati.dni})}" class="btn btn-danger">Confirmar Rechazo</a>
+                <a th:href="@{/pap_pati/pending}" class="btn btn-secondary">Cancelar</a>
             </div>
         </div>
     </div>

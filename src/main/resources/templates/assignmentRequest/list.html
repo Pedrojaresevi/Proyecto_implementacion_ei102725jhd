@@ -93,24 +93,19 @@
         </table>
     </div>
 
-    <nav aria-label="Navegación de páginas" th:if="${totalPages > 1}" class="mt-4">
-        <ul class="pagination justify-content-center custom-pagination">
+    <nav th:if="${totalPages > 1}" aria-label="Navegación de solicitudes" class="mt-4">
+        <ul class="pagination justify-content-center">
 
             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                <a class="page-link" th:href="@{/assignmentRequest/list(page=${currentPage - 1})}" aria-label="Anterior">
-                    <i class="bi bi-chevron-left"></i>
-                </a>
+                <a class="page-link" th:href="@{/assignmentRequest/list(page=${currentPage - 1})}">&laquo;</a>
             </li>
 
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                th:classappend="${currentPage == i} ? 'active'">
-                <a class="page-link fw-semibold" th:href="@{/assignmentRequest/list(page=${i})}" th:text="${i + 1}">1</a>
+            <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
+                <a class="page-link" th:href="@{/assignmentRequest/list(page=${i})}" th:text="${i + 1}">1</a>
             </li>
 
             <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/assignmentRequest/list(page=${currentPage + 1})}" aria-label="Siguiente">
-                    <i class="bi bi-chevron-right"></i>
-                </a>
+                <a class="page-link" th:href="@{/assignmentRequest/list(page=${currentPage + 1})}">&raquo;</a>
             </li>
 
         </ul>

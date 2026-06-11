@@ -19,7 +19,7 @@
         <i class="bi bi-person-check-fill me-2" style="font-size: 2rem; color: #0d9488; vertical-align: middle;"></i>Propuesta de Candidatos
       </h1>
     </div>
-    <p class="lead">Candidatos seleccionados para la solicitud: <strong th:text="${assignmentRequest.request_Id}">ID</strong></p>
+    <p class="lead">Candidatos seleccionados para la solicitud: <strong class="fw-bold" th:text="${assignmentRequest.request_Id}">ID</strong></p>
   </header>
 
   <hr class="mb-4 text-muted">
@@ -30,13 +30,14 @@
     </div>
 
     <div class="table-responsive">
-      <table class="table table-striped table-hover align-middle">
+      <table class="table table-striped table-hover align-middle text-center">
         <thead class="table-dark">
         <tr>
           <th scope="col">ID Propuesta</th>
           <th scope="col">Candidato (DNI)</th>
           <th scope="col">Fecha Propuesta</th>
           <th scope="col">Compatibilidad</th>
+          <th scope="col" class="text-center">Detalles</th>
           <th scope="col" class="text-center">Acción</th>
         </tr>
         </thead>
@@ -46,7 +47,6 @@
           <td th:text="${proposal.pappati_id}">DNI</td>
           <td th:text="${#dates.format(proposal.proposalDate, 'dd/MM/yyyy')}">01/01/2025</td>
           <td>
-            <!-- MODIFICADO: Añadido borde y un fondo gris más oscuro para ganar contraste -->
             <div class="progress border border-secondary-subtle" style="min-width: 120px; background-color: #ced4da;">
               <div class="progress-bar bg-primary"
                    role="progressbar"
@@ -55,6 +55,14 @@
               </div>
             </div>
           </td>
+
+          <td class="text-center">
+            <a th:href="@{/pap_pati/masdetalle/{id}(id=${proposal.pappati_id}, requestId=${assignmentRequest.request_Id})}"
+               class="btn btn-secondary btn-sm px-4 py-2 shadow-sm fw-semibold">
+              <i class="bi bi-eye-fill me-1"></i> Ver perfil
+            </a>
+          </td>
+
           <td class="text-center">
             <form th:action="@{/assignmentRequest/selectCandidate}" method="post" class="m-0 d-flex justify-content-center">
               <input type="hidden" name="requestId" th:value="${assignmentRequest.request_Id}" />
@@ -66,8 +74,9 @@
             </form>
           </td>
         </tr>
+
         <tr th:if="${#lists.isEmpty(proposals)}">
-          <td colspan="5" class="text-center text-muted p-4">
+          <td colspan="6" class="text-center text-muted p-4">
             No hay candidatos disponibles que coincidan con los requisitos en este momento.
           </td>
         </tr>

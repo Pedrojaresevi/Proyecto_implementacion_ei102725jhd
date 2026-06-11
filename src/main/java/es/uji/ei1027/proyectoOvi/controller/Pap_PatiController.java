@@ -278,4 +278,30 @@ public class Pap_PatiController {
 
         return "pap_pati/listpappati";
     }
+
+    @RequestMapping(value="/masdetalle/{id}", method = RequestMethod.GET)
+    public String verMasDetalle(Model model,
+                                @PathVariable String id,
+                                @RequestParam(required = false) String requestId,
+                                HttpSession session) {
+
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        Pap_Pati candidato = pap_patiDao.getPap_Pati(id);
+
+        if (candidato == null) {
+            return "redirect:/pap_pati/list";
+        }
+
+        // Pasamos el candidato
+        model.addAttribute("pap_pati", candidato);
+        // Pasamos el ID de la solicitud (puede ser null si acceden por otra ruta)
+        model.addAttribute("requestId", requestId);
+
+        return "pap_pati/masdetalle";
+    }
+
 }

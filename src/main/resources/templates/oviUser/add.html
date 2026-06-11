@@ -109,7 +109,7 @@
         <div class="form-group row mb-3">
             <label for="password" class="control-label col-sm-2">Contraseña:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="password" th:field="*{password}" maxlength="20"/>
+                <input type="password" class="form-control" id="password" th:field="*{password}" maxlength="20"/>
                 <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
             </div>
         </div>

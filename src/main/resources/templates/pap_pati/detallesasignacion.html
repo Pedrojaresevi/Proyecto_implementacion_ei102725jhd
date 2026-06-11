@@ -11,13 +11,19 @@
 
 <div th:replace="~{fragments/base :: navbar}"></div>
 
-<main class="container mt-4">
-    <h1 class="mb-4">Detalle de Solicitud</h1>
+<main class="container pb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0 align-middle">
+            <i class="bi bi-list-ol me-2" style="font-size: 2rem; color: #0d9488; vertical-align: middle;"></i>Detalle de la solicitud
+        </h1>
+    </div>
+
+    <hr class="mb-4 text-muted">
 
     <!-- Datos de la solicitud -->
     <div class="card mb-4 shadow-sm">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Información de la Solicitud</h5>
+            <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Información de la Solicitud</h5>
         </div>
         <div class="card-body">
             <div class="row g-3">
@@ -26,19 +32,8 @@
                     <p th:text="${assignmentRequest.request_Id}"></p>
                 </div>
                 <div class="col-md-4">
-                    <strong>Fecha:</strong>
+                    <strong>Fecha realización:</strong>
                     <p th:text="${assignmentRequest.requestDate}"></p>
-                </div>
-                <div class="col-md-4">
-                    <strong>Estado:</strong>
-                    <p>
-                        <span th:text="${assignmentRequest.status}"
-                              th:class="${assignmentRequest.status == 'in progress' ?
-                                        'badge bg-warning text-dark' :
-                                        (assignmentRequest.status == 'accepted' ?
-                                        'badge bg-success' : 'badge bg-danger')}">
-                        </span>
-                    </p>
                 </div>
                 <div class="col-md-4">
                     <strong>Tipo de servicio:</strong>
@@ -64,11 +59,6 @@
                     <strong>Habilidades requeridas:</strong>
                     <p th:text="${assignmentRequest.requiredSkills}"></p>
                 </div>
-                <div th:if="${assignmentRequest.status == 'refused' and assignmentRequest.rejectReason != null}"
-                     class="col-12">
-                    <strong>Motivo de rechazo:</strong>
-                    <p class="text-danger" th:text="${assignmentRequest.rejectReason}"></p>
-                </div>
             </div>
         </div>
     </div>
@@ -76,7 +66,7 @@
     <!-- Datos del OviUser -->
     <div class="card mb-4 shadow-sm" th:if="${oviuser != null}">
         <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0">Datos del Solicitante</h5>
+            <h5 class="mb-0"> <i class="bi bi-person-badge me-2"></i>Datos del Solicitante</h5>
         </div>
         <div class="card-body">
             <div class="row g-3">
@@ -108,12 +98,8 @@
         </div>
     </div>
 
-    <!-- Botones -->
+    <a th:href="@{/negotiation/chat/{negotiationId}(negotiationId=${negotiationId})}" class="btn btn-primary mt-3">Ir a la negociación</a>
     <a th:href="@{/pap_pati/listpappati}" class="btn btn-secondary mt-3 ms-2">Volver</a>
-    <a th:if="${negotiationId != null}"
-       th:href="@{/negotiation/chat/{negotiationId}(negotiationId=${negotiationId})}" class="btn btn-primary">
-        Acceder a la negociación
-    </a>
 </main>
 </body>
 </html>

@@ -1,7 +1,13 @@
+/* ==========================================================================
+   1. ESTILOS BASE Y EXISTENTES (Tu archivo original)
+   ========================================================================== */
+
 /* Estil aplicat al cos de la pàgina */
 body {
     font-family: Helvetica, Arial, sans-serif;
     background-color: white;
+    margin: 0;
+    padding: 0;
 }
 /* Capçalera de nivell 1 */
 h1 {
@@ -33,6 +39,7 @@ label {
     padding-left: 20px;
     padding-right: 20px;
 }
+
 /* =========================================
    Estilos simulando WhatsApp para el Chat
    ========================================= */
@@ -78,7 +85,6 @@ label {
     margin-left: 10px;
 }
 
-
 .btn-gris-oscuro {
     background-color: #4a4a4a;
     color: #ffffff;
@@ -90,3 +96,139 @@ label {
     color: #ffffff;
 }
 
+
+/* ==========================================================================
+   2. ESTILOS PROCEDENTES DE index.html (Con correcciones de accesibilidad)
+   ========================================================================== */
+
+.hero-bg {
+    background-color: #f4f6f9;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    margin-top: -1px; /* Evita espacios en blanco con el navbar */
+}
+
+.card-profile {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.card-profile:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.08) !important;
+}
+
+.icon-box {
+    width: 3.5rem;
+    height: 3.5rem;
+    background-color: #e7f1ff;
+    color: #0d6efd;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* SOLUCIÓN AL ERROR CONTRASTE (Imagen 1): Cambiado de #495057 a #212529 (Más oscuro y accesible sobre fondo claro) */
+.text-accessible-tag {
+    color: #212529 !important;
+    font-weight: 700 !important;
+}
+
+/* SOLUCIÓN AL ERROR CONTRASTE (Imagen 3): Forzamos a que los textos descriptivos tengan un gris de alto contraste riguroso */
+.hero-bg p, main p, .card-profile p {
+    color: #212529 !important;
+}
+
+.text-footer-accessible {
+    color: #dee2e6 !important; /* Gris claro de alto contraste sobre fondo oscuro #212529 */
+}
+
+
+/* ==========================================================================
+   3. ESTILOS PROCEDENTES DE login.html (Protegidos y aislados)
+   ========================================================================== */
+
+/* Aseguramos la estructura base solo cuando estemos en el Login */
+html {
+    height: 100%;
+}
+
+body.login-page {
+    height: 100%;
+    background-color: #f4f6f9;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.login-card {
+    border: none;
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow: 0 1rem 3rem rgba(0,0,0,0.08) !important;
+}
+
+.brand-panel {
+    background-color: #f8f9fa;
+    border-right: 1px solid #eef0f3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    height: 100%;
+}
+
+.brand-logo {
+    max-width: 320px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 2rem;
+    object-fit: contain;
+}
+
+.form-control-custom {
+    border-radius: 0.75rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid #ced4da;
+    background-color: #f8f9fa;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-control-custom:focus {
+    background-color: #ffffff;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.btn-custom {
+    border-radius: 0.75rem;
+    padding: 0.7rem 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.2);
+}
+
+/* Evita scroll de pantalla únicamente en el login en pantallas de ordenador */
+@media (min-width: 992px) {
+    body.login-page {
+        overflow: hidden;
+    }
+    body.login-page .login-card {
+        height: 520px;
+    }
+}

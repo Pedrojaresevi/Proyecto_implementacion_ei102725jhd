@@ -1,33 +1,89 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-  <title>Login - Proyecto OVI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - OVI Castelló</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" th:href="@{/css/proyecte.css}">
 </head>
-<body class="bg-light">
+<body class="login-page min-vh-100">
+
 <div th:replace="~{fragments/base :: navbar}"></div>
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-4">
-      <div class="card shadow">
-        <div class="card-body">
-          <h2 class="text-center mb-4">Iniciar Sesión</h2>
-          <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-          <form th:action="@{/login}" method="post">
-            <div class="mb-3">
-              <label class="form-label fw-semibold text-dark small">DNI / NIE / Pasaporte</label>
-              <input type="text" name="username" class="col-12 form-control" placeholder="Ej: 12345678Z" required>
+
+<main class="login-wrapper">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-9 col-lg-10 col-md-10">
+        <div class="card login-card bg-white">
+          <div class="row g-0 h-100">
+
+            <div class="col-lg-5 d-none d-lg-block">
+              <div class="brand-panel">
+                <img src="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png"
+                     alt="Logotipo OVI Castelló"
+                     class="brand-logo">
+                <h3 class="h5 fw-bold text-dark mb-2">OVI Castelló</h3>
+                <p class="text-dark small px-3 mb-0" style="font-style: italic; line-height: 1.4;">
+                  "Reivindicamos el derecho a decidir sobre nuestra propia vida."
+                </p>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold text-dark small">Contraseña</label>
-              <input type="password" name="password" class="col-12 form-control" required>
+
+            <div class="col-lg-7 d-flex align-items-center">
+              <div class="card-body p-sm-5 p-4 w-100">
+
+                <div class="text-center mb-4">
+                  <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle mb-2" style="width: 55px; height: 55px; font-size: 24px;">
+                    🔐
+                  </div>
+                  <h2 class="fw-bold text-dark mb-1 h3">Acceso al Portal</h2>
+                  <p class="text-dark small mb-0" style="opacity: 0.75;">Introduce tus credenciales para acceder</p>
+                </div>
+
+                <div th:if="${error}" class="alert alert-danger d-flex align-items-center rounded-3 mb-3 border-0 shadow-sm p-2" role="alert" style="background-color: #f8d7da; color: #842029; font-size: 0.9rem;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                  </svg>
+                  <div class="fw-semibold" th:text="${error}"></div>
+                </div>
+
+                <form th:action="@{/login}" method="post">
+
+                  <div class="mb-3">
+                    <label for="username" class="form-label fw-bold text-dark small mb-1">DNI / NIE / Pasaporte</label>
+                    <input type="text" id="username" name="username" class="form-control form-control-custom" placeholder="Ej: 12345678Z" required autofocus>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="password" class="form-label fw-bold text-dark small mb-1">Contraseña</label>
+                    <input type="password" id="password" name="password" class="form-control form-control-custom" required>
+                  </div>
+
+                  <div class="d-grid mt-4 mb-2">
+                    <button type="submit" class="btn btn-primary btn-custom shadow-sm text-uppercase">
+                      Iniciar Sesión
+                    </button>
+                  </div>
+
+                </form>
+
+                <div class="text-center mt-3 pt-2 border-top">
+                  <p class="small text-dark mb-0" style="opacity: 0.85; font-size: 0.85rem;">
+                    ¿Aún no formas parte de la plataforma? <br>
+                    <a th:href="@{/}" class="text-decoration-none fw-bold text-primary">Regresar al inicio para registrarse</a>
+                  </p>
+                </div>
+
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Entrar</button>
-          </form>
+
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</main>
+
 </body>
 </html>

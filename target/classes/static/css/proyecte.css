@@ -115,7 +115,7 @@ label {
 
 .card-profile:hover {
     transform: translateY(-5px);
-    box-shadow: 0 1rem 3rem rgba(0,0,0,.08) !important;
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.08);
 }
 
 .icon-box {
@@ -132,17 +132,17 @@ label {
 
 /* SOLUCIÓN AL ERROR CONTRASTE (Imagen 1): Cambiado de #495057 a #212529 (Más oscuro y accesible sobre fondo claro) */
 .text-accessible-tag {
-    color: #212529 !important;
-    font-weight: 700 !important;
+    color: #212529;
+    font-weight: 700;
 }
 
 /* SOLUCIÓN AL ERROR CONTRASTE (Imagen 3): Forzamos a que los textos descriptivos tengan un gris de alto contraste riguroso */
 .hero-bg p, main p, .card-profile p {
-    color: #212529 !important;
+    color: #212529 ;
 }
 
 .text-footer-accessible {
-    color: #dee2e6 !important; /* Gris claro de alto contraste sobre fondo oscuro #212529 */
+    color: #dee2e6;
 }
 
 
@@ -173,7 +173,7 @@ body.login-page {
     border: none;
     border-radius: 1.25rem;
     overflow: hidden;
-    box-shadow: 0 1rem 3rem rgba(0,0,0,0.08) !important;
+    box-shadow: 0 1rem 3rem rgba(0,0,0,0.08);
 }
 
 .brand-panel {
@@ -231,4 +231,8 @@ body.login-page {
     body.login-page .login-card {
         height: 520px;
     }
+}
+
+nav.navbar {
+    margin-bottom: 0;
 }

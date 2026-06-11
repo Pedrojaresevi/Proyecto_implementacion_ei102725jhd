@@ -14,7 +14,7 @@
 <div class="container pb-5">
     <div class="row mb-4">
         <div class="col">
-            <h1 class="display-5">Hola, <span th:text="${user.username}">Usuario</span></h1>
+            <h1 class="display-5 fw-bold text-dark mb-1">¡Hola, <span th:text="${user.username}">Usuario</span>!</h1>
             <p class="lead">Panel de Control - Rol: <strong th:text="${user.role}">rol</strong></p>
         </div>
     </div>
@@ -173,7 +173,10 @@
     </div>
 
     <div th:if="${user.role == 'oviuser'}" class="mt-4">
-        <h2 class="h3 mb-4 text-primary">Mi gestión como usuario</h2>
+
+        <h2 class="h3 mb-4 text-primary">
+            <i class="bi bi-grid-1x2 fs-5 me-2 text-primary"></i>Mi gestión como usuario
+        </h2>
 
         <div class="row g-4">
             <div class="col-md-4">

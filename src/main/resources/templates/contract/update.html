@@ -81,8 +81,9 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3">Actualizar Contrato</button>
-        <a th:href="@{/contract/user/{dni}(dni=${user.dni})}" class="btn btn-secondary mt-3 ms-2">Volver</a>
+        <a th:href="@{/contract/user/{dni}(dni=${searchedDni != null ? searchedDni : user.dni})}" class="btn btn-secondary">
+            Volver
+        </a>
     </form>
 </main>
 </body>

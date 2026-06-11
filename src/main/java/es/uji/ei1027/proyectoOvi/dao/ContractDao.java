@@ -58,16 +58,15 @@ public class ContractDao {
         }
     }
     //
-    public List<Contract> getContractsByUser(String oviuserId) {
-        try {
-            // Unimos Contract con AssignmentRequest usando el request_Id
-            String sql = "SELECT c.* FROM Contract c " +
-                    "JOIN AssignmentRequest r ON r.request_id = c.request_id " +
-                    "WHERE r.oviuser_id = ?";
-            return jdbcTemplate.query(sql, new ContractRowMapper(), oviuserId);
-        } catch (EmptyResultDataAccessException e) {
-            return new java.util.ArrayList<>();
-        }
+    public List<Contract> getContractsByUser(String dni) {
+        // Hacemos un JOIN con assignmentrequest para poder comprobar los 3 tipos de DNI
+        String sql = "SELECT c.* " +
+                "FROM contract c " +
+                "JOIN assignmentrequest ar ON c.request_id = ar.request_id " +
+                "WHERE c.pappati_id = ? OR ar.oviuser_id = ? OR ar.tutor_id = ?";
+
+        // Pasamos el DNI 3 veces, una para cada interrogación (?)
+        return jdbcTemplate.query(sql, new ContractRowMapper(), dni, dni, dni);
     }
 
     public String generateNextContractId() {

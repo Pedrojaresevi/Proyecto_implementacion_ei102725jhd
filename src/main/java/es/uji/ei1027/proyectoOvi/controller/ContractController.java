@@ -132,12 +132,26 @@ public class ContractController {
 
         UserDetails user = (UserDetails) session.getAttribute("user");
 
-        if(user == null){
+        if (user == null) {
             return "redirect:/login";
         }
 
+        // 1. Eliminamos el contrato
         contractDao.deleteContract(id);
-        return "redirect:../user/" + user.getDni();
+
+        // 2. Redirección inteligente según el rol
+        if ("technician".equals(user.getRole())) {
+            String searchedDni = (String) session.getAttribute("searchedDni");
+            // Si el técnico estaba viendo la búsqueda de alguien, vuelve ahí
+            if (searchedDni != null) {
+                return "redirect:/contract/user/" + searchedDni;
+            } else {
+                return "redirect:/"; // Redirección segura por defecto
+            }
+        } else {
+            // Si es un OVI user o PAP/PATI, vuelve a su propia lista
+            return "redirect:/contract/user/" + user.getDni();
+        }
     }
     //
     @RequestMapping("/user/{dni}")

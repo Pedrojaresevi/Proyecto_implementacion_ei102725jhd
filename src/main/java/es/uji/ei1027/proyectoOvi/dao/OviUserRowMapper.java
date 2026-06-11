@@ -21,6 +21,8 @@ public final class OviUserRowMapper implements RowMapper<OviUser> {
         oviUser.setLifePlan(rs.getString("lifePlan"));
         oviUser.setTutor_id(rs.getString("tutor_id"));
         oviUser.setDateOfBirth(rs.getDate("dateOfBirth"));
+        oviUser.setRejectReason(rs.getString("rejectReason"));
+
         return oviUser;
     }
 }

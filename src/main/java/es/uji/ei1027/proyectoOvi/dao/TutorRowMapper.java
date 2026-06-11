@@ -14,6 +14,8 @@ public final class TutorRowMapper implements RowMapper<Tutor> {
         tutor.setEmail(rs.getString("email"));
         tutor.setStatus(rs.getString("status"));
         tutor.setPassword(rs.getString("password"));
+        tutor.setRejectReason(rs.getString("rejectReason"));
+
         return tutor;
     }
 }

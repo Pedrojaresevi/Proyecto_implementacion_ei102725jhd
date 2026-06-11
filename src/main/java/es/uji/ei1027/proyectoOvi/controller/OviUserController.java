@@ -197,14 +197,35 @@ public class OviUserController {
         return "technician/oviUser/reject";
     }
 
-    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.GET)
-    public String executeRejectOviUser(@PathVariable String dni) {
+    // 1. MODIFICAR: Cambiar a POST y recibir el 'rejectReason'
+    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
+    public String executeRejectOviUser(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason) {
         OviUser oviUser = oviUserDao.getOviUser(dni);
         if (oviUser != null) {
             oviUser.setStatus("refused");
+            oviUser.setRejectReason(rejectReason); // Asignamos el motivo
             oviUserDao.updateOviUser(oviUser);
         }
-        return "redirect:/oviUser/pending";
+        return "redirect:/oviUser/pending"; // Redirige a la lista de rechazados
+    }
+
+    // 2. AÑADIR: Endpoint para la nueva vista de rechazados
+    @RequestMapping("/refused")
+    public String listRefusedOviUsers(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        // Aprovechamos los métodos dinámicos que ya tienes en el Dao pasándole "refused"
+        List<OviUser> requests = oviUserDao.getOviUsersByStatusPaginated("refused", pageSize, offset);
+        int totalItems = oviUserDao.countOviUsersByStatus("refused");
+
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("oviUsers", requests);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        return "technician/oviUser/refused"; // Nombre del nuevo HTML
     }
 
 }

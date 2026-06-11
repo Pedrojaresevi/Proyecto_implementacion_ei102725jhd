@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
   <title>Confirmar Rechazo de Tutor</title>
+  <meta charset="UTF-8" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
@@ -18,14 +19,23 @@
     <div class="card-body">
       <p>Estás a punto de <strong>rechazar</strong> al tutor <strong th:text="${tutor.name}"></strong> con DNI <strong th:text="${tutor.dni}"></strong>.</p>
 
-      <div class="alert alert-warning">
-        <strong>Atención:</strong> Al rechazar, el estado cambiará a <em>"refused"</em>.
-      </div>
+      <form th:action="@{/tutor/reject/execute/{dni}(dni=${tutor.dni})}" method="post">
 
-      <div class="d-flex justify-content-end gap-2">
-        <a th:href="@{/tutor/reject/execute/{dni}(dni=${tutor.dni})}" class="btn btn-danger">Confirmar Rechazo</a>
-        <a th:href="@{/tutor/pending}" class="btn btn-secondary">Cancelar</a>
-      </div>
+        <div class="mb-3 mt-4">
+          <label for="rejectReason" class="form-label fw-bold text-danger">Motivo del rechazo (Obligatorio):</label>
+          <textarea class="form-control border-danger" id="rejectReason" name="rejectReason" rows="3"
+                    placeholder="Escribe aquí por qué se rechaza a este tutor..." required></textarea>
+        </div>
+
+        <div class="alert alert-warning">
+          <strong>Atención:</strong> Al rechazar, el estado cambiará a <em>"refused"</em>.
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button type="submit" class="btn btn-danger">Confirmar Rechazo</button>
+          <a th:href="@{/tutor/pending}" class="btn btn-secondary">Cancelar</a>
+        </div>
+      </form>
     </div>
   </div>
 </div>

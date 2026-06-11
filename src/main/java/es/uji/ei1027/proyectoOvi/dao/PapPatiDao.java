@@ -22,10 +22,10 @@ public class PapPatiDao {
 
 
     public void addPap_Pati(Pap_Pati pap_pati) {
-        jdbcTemplate.update("INSERT INTO PapPati VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        jdbcTemplate.update("INSERT INTO PapPati VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 pap_pati.getDni(),pap_pati.getName(), pap_pati.getSurname(), pap_pati.getDateOfBirth(), pap_pati.getAddress(), pap_pati.getPhone(), pap_pati.getEmail(),
                 pap_pati.getSpecificTraining(), pap_pati.getTypeOfExperience(), pap_pati.getCurriculumVitae(), pap_pati.getStatus(), pap_pati.getPassword(),
-                pap_pati.getStartDate(), pap_pati.getEndDate(), pap_pati.getGeographicMobility(),pap_pati.getSkills(),pap_pati.getAssistant_type());
+                pap_pati.getStartDate(), pap_pati.getEndDate(), pap_pati.getGeographicMobility(),pap_pati.getSkills(),pap_pati.getAssistant_type(),pap_pati.getRejectReason());
     }
     public void deletePap_Pati(String dni) {
         jdbcTemplate.update("DELETE FROM PapPati WHERE dni = ?", dni);
@@ -36,10 +36,10 @@ public class PapPatiDao {
     }
 
     public void updatePap_Pati(Pap_Pati pap_pati) {
-        jdbcTemplate.update("UPDATE PapPati SET name=?, surname=?, dateOfBirth=?, address=?, phone=?, email=?, specificTraining=?, typeOfExperience=?, curriculumVitae=?, status=?, password=?, startDate=?, endDate=?, geographicMobility=?, skills=?,assistant_type=? WHERE dni=?",
+        jdbcTemplate.update("UPDATE PapPati SET name=?, surname=?, dateOfBirth=?, address=?, phone=?, email=?, specificTraining=?, typeOfExperience=?, curriculumVitae=?, status=?, password=?, startDate=?, endDate=?, geographicMobility=?, skills=?,assistant_type=?,rejectReason=? WHERE dni=?",
                 pap_pati.getName(), pap_pati.getSurname(), pap_pati.getDateOfBirth(), pap_pati.getAddress(), pap_pati.getPhone(), pap_pati.getEmail(),
                 pap_pati.getSpecificTraining(), pap_pati.getTypeOfExperience(), pap_pati.getCurriculumVitae(), pap_pati.getStatus(), pap_pati.getPassword(),
-                pap_pati.getStartDate(), pap_pati.getEndDate(), pap_pati.getGeographicMobility(),pap_pati.getSkills(),pap_pati.getAssistant_type(), pap_pati.getDni());
+                pap_pati.getStartDate(), pap_pati.getEndDate(), pap_pati.getGeographicMobility(),pap_pati.getSkills(),pap_pati.getAssistant_type(),pap_pati.getRejectReason(), pap_pati.getDni());
     }
 
     public Pap_Pati getPap_Pati(String dni) {

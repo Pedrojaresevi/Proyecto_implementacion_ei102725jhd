@@ -6,6 +6,8 @@ public class Tutor {
     private String email;
     private String status;
     private String password;
+    private String rejectReason;
+
 
     public String getDni() {
         return dni;
@@ -47,6 +49,14 @@ public class Tutor {
         this.password = password;
     }
 
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
+
     @Override
     public String toString() {
         return "Tutor{" +
@@ -54,7 +64,8 @@ public class Tutor {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", status='" + status + '\'' +
-                ", userAndPassword='" + password + '\'' +
+                ", password='" + password + '\'' +
+                ", rejectReason='" + rejectReason + '\'' +
                 '}';
     }
 

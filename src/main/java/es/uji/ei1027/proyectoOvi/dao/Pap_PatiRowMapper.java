@@ -26,6 +26,8 @@ public final class Pap_PatiRowMapper implements RowMapper<Pap_Pati> {
         pap_pati.setGeographicMobility(rs.getString("geographicMobility"));
         pap_pati.setSkills(rs.getString("skills"));
         pap_pati.setAssistant_type(rs.getString("assistant_type"));
+        pap_pati.setRejectReason(rs.getString("rejectReason"));
+
         return pap_pati;
     }
 }

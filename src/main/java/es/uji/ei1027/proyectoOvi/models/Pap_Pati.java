@@ -25,6 +25,8 @@ public class Pap_Pati {
     private String geographicMobility;
     private String skills;
     private String assistant_type;
+    private String rejectReason;
+
 
     public Pap_Pati() {
     }
@@ -165,6 +167,14 @@ public class Pap_Pati {
         this.assistant_type = assistant_type;
     }
 
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
+
     @Override
     public String toString() {
         return "Pap_Pati{" +
@@ -185,6 +195,7 @@ public class Pap_Pati {
                 ", geographicMobility='" + geographicMobility + '\'' +
                 ", skills='" + skills + '\'' +
                 ", assistant_type='" + assistant_type + '\'' +
+                ", rejectReason='" + rejectReason + '\'' +
                 '}';
     }
 }

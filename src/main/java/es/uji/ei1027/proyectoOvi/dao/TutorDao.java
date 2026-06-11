@@ -19,8 +19,8 @@ public class TutorDao {
     }
 
     public void addTutor(Tutor tutor) {
-        jdbcTemplate.update("INSERT INTO Tutor VALUES (?,?,?,?,?)",
-                tutor.getDni(), tutor.getName(), tutor.getEmail(), tutor.getStatus(),tutor.getPassword());
+        jdbcTemplate.update("INSERT INTO Tutor VALUES (?,?,?,?,?,?)",
+                tutor.getDni(), tutor.getName(), tutor.getEmail(), tutor.getStatus(),tutor.getPassword(),tutor.getRejectReason());
     }
 
     public void deleteTutor(Tutor tutor) {
@@ -33,8 +33,8 @@ public class TutorDao {
     }
 
     public void updateTutor(Tutor tutor) {
-        jdbcTemplate.update("UPDATE Tutor SET name=?, email=?, status=?,password=? WHERE dni=?",
-                tutor.getName(), tutor.getEmail(), tutor.getStatus(),tutor.getPassword(), tutor.getDni());
+        jdbcTemplate.update("UPDATE Tutor SET name=?, email=?, status=?,password=?,rejectReason=? WHERE dni=?",
+                tutor.getName(), tutor.getEmail(), tutor.getStatus(),tutor.getPassword(),tutor.getRejectReason(), tutor.getDni());
     }
 
     public Tutor getTutor(String dni) {

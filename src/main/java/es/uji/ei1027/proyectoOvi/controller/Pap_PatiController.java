@@ -247,14 +247,39 @@ public class Pap_PatiController {
         return "technician/pap_pati/reject";
     }
 
-    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.GET)
-    public String executeRejectPapPati(@PathVariable String dni) {
-        Pap_Pati papPati = pap_patiDao.getPap_Pati(dni);
-        if (papPati != null) {
-            papPati.setStatus("refused");
-            pap_patiDao.updatePap_Pati(papPati);
+
+    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
+    public String executeRejectPapPati(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason) {
+
+        Pap_Pati pap_pati = pap_patiDao.getPap_Pati(dni);
+
+        if (pap_pati != null) {
+            pap_pati.setStatus("refused");
+            pap_pati.setRejectReason(rejectReason);
+
+            pap_patiDao.updatePap_Pati(pap_pati);
         }
         return "redirect:/pap_pati/pending";
+    }
+
+    @RequestMapping("/refused")
+    public String listRefusedPapPatis(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        List<Pap_Pati> refusedList = pap_patiDao.getPapPatiByStatusPaginated("refused", pageSize, offset);
+        int totalItems = pap_patiDao.countPapPatiByStatus("refused");
+
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
+
+        model.addAttribute("papPatis", refusedList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        return "technician/pap_pati/refused";
     }
 
     @RequestMapping("/listpappati")

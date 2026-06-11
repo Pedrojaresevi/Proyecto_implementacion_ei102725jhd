@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
 </head>
-<body>
+<body class="bg-light">
 
 <div th:replace="~{fragments/base :: navbar}"></div>
 
@@ -19,14 +19,23 @@
         <div class="card-body">
             <p>Estás a punto de <strong>rechazar</strong> al PAP/PATI <strong th:text="${pap_pati.name}"></strong> con DNI <strong th:text="${pap_pati.dni}"></strong>.</p>
 
-            <div class="alert alert-warning">
-                <strong>Atención:</strong> Al rechazar, el estado cambiará a <em>"refused"</em>.
-            </div>
+            <form th:action="@{/pap_pati/reject/execute/{dni}(dni=${pap_pati.dni})}" method="post">
 
-            <div class="d-flex justify-content-end gap-2">
-                <a th:href="@{/pap_pati/reject/execute/{dni}(dni=${pap_pati.dni})}" class="btn btn-danger">Confirmar Rechazo</a>
-                <a th:href="@{/pap_pati/pending}" class="btn btn-secondary">Cancelar</a>
-            </div>
+                <div class="mb-3 mt-4">
+                    <label for="rejectReason" class="form-label fw-bold text-danger">Motivo del rechazo (Obligatorio):</label>
+                    <textarea class="form-control border-danger" id="rejectReason" name="rejectReason" rows="3"
+                              placeholder="Escribe aquí los motivos detallados del rechazo..." required></textarea>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Atención:</strong> Al rechazar, el estado cambiará a <em>"refused"</em>.
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-danger">Confirmar Rechazo</button>
+                    <a th:href="@{/pap_pati/pending}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

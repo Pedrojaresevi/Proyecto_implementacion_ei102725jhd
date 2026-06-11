@@ -18,14 +18,23 @@
         <div class="card-body">
             <p>Estás a punto de <strong>rechazar</strong> al OVI user <strong th:text="${oviUser.name}"></strong> con DNI <strong th:text="${oviUser.dni}"></strong>.</p>
 
-            <div class="alert alert-warning">
-                <strong>Atención:</strong> Al rechazar, el estado cambiará a <em>"refused"</em>.
-            </div>
+            <form th:action="@{/oviUser/reject/execute/{dni}(dni=${oviUser.dni})}" method="post">
 
-            <div class="d-flex justify-content-end gap-2">
-                <a th:href="@{/oviUser/reject/execute/{dni}(dni=${oviUser.dni})}" class="btn btn-danger">Confirmar Rechazo</a>
-                <a th:href="@{/oviUser/pending}" class="btn btn-secondary">Cancelar</a>
-            </div>
+                <div class="mb-3 mt-4">
+                    <label for="rejectReason" class="form-label fw-bold text-danger">Motivo del rechazo (Obligatorio):</label>
+                    <textarea class="form-control border-danger" id="rejectReason" name="rejectReason" rows="3"
+                              placeholder="Escribe aquí los motivos detallados del rechazo..." required></textarea>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Atención:</strong> Al rechazar, el estado cambiará a <em>"refused"</em>.
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-danger">Confirmar Rechazo</button>
+                    <a th:href="@{/oviUser/pending}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

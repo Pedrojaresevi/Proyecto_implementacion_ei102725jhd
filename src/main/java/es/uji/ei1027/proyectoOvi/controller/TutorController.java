@@ -228,4 +228,31 @@ public class TutorController {
         }
         return "redirect:/tutor/pending";
     }
+    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
+    public String executeRejectTutor(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason) {
+        Tutor tutor = tutorDao.getTutor(dni);
+        if (tutor != null) {
+            tutor.setStatus("refused");
+            tutor.setRejectReason(rejectReason);
+            tutorDao.updateTutor(tutor);
+        }
+        return "redirect:/tutor/pending";
+    }
+    @RequestMapping("/refused")
+    public String listRefusedTutors(Model model, @RequestParam(defaultValue = "1") int page) {
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
+
+        List<Tutor> refusedList = tutorDao.getTutorsByStatusPaginated("refused", pageSize, offset);
+        int totalItems = tutorDao.countTutorsByStatus("refused");
+
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("tutors", refusedList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        return "technician/tutor/refused";
+    }
 }

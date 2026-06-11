@@ -19,7 +19,7 @@ public class OviUser {
     private String tutor_id;
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date dateOfBirth;
-
+    private String rejectReason;
 
     public OviUser() {
     }
@@ -120,6 +120,14 @@ public class OviUser {
         this.dateOfBirth = dateOfBirth;
     }
 
+    public String getRejectReason() {
+        return rejectReason;
+    }
+
+    public void setRejectReason(String rejectReason) {
+        this.rejectReason = rejectReason;
+    }
+
     @Override
     public String toString() {
         return "OviUser{" +
@@ -135,6 +143,7 @@ public class OviUser {
                 ", lifePlan='" + lifePlan + '\'' +
                 ", tutor_id='" + tutor_id + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
+                ", rejectReason='" + rejectReason + '\'' +
                 '}';
     }
 

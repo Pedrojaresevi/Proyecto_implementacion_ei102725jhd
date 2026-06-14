@@ -15,6 +15,10 @@ public final class NegotiationRowMapper implements RowMapper<Negotiation> {
         negotiation.setStartDate(rs.getDate("startDate"));
         negotiation.setEndDate(rs.getDate("endDate"));
         negotiation.setListId(rs.getString("list_id"));
+        java.sql.Time time = rs.getTime("hora");
+        if (time != null) {
+            negotiation.setHora(time.toLocalTime());
+        }
         return negotiation;
     }
 }

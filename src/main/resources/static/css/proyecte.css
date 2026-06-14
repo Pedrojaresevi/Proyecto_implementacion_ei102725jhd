@@ -223,15 +223,7 @@ body.login-page {
     box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.2);
 }
 
-/* Evita scroll de pantalla únicamente en el login en pantallas de ordenador */
-@media (min-width: 992px) {
-    body.login-page {
-        overflow: hidden;
-    }
-    body.login-page .login-card {
-        height: 520px;
-    }
-}
+
 
 nav.navbar {
     margin-bottom: 0;

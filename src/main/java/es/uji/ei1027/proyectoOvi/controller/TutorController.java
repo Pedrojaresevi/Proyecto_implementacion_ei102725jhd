@@ -153,7 +153,6 @@ public class TutorController {
             return "tutor/add-minor";
 
         oviUser.setStatus("accepted");
-        oviUser.setDateOfAcceptance(new java.util.Date());
 
         oviUserDao.addOviUser(oviUser);
 

@@ -4,10 +4,11 @@ import es.uji.ei1027.proyectoOvi.models.OviUser;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class OviUserValidator implements Validator {
+
+    // Definimos el patrón que acepta DNI, NIE o Pasaporte
+    private static final String ID_PATTERN = "^([0-9]{8}[a-zA-Z]|[a-zA-Z][0-9]{7}[a-zA-Z]|[a-zA-Z]{3}[0-9]{6})$";
+
     @Override
     public boolean supports(Class<?> cls) {
         return OviUser.class.equals(cls);
@@ -20,9 +21,8 @@ public class OviUserValidator implements Validator {
         // Validación DNI del usuario (Obligatorio)
         if (oviUser.getDni() == null || oviUser.getDni().trim().isEmpty()) {
             errors.rejectValue("dni", "obligatori", "Este campo es obligatorio.");
-        } else if (oviUser.getDni().trim().length() != 9) {
-            // Añadimos una pequeña validación de tamaño para que sea más robusto
-            errors.rejectValue("dni", "format_incorrecte", "Documento no válido.");
+        } else if (!oviUser.getDni().trim().matches(ID_PATTERN)) {
+            errors.rejectValue("dni", "format_incorrecte", "Formato incorrecto.");
         }
 
         if (oviUser.getName() == null || oviUser.getName().trim().isEmpty()) {
@@ -36,10 +36,10 @@ public class OviUserValidator implements Validator {
             errors.rejectValue("email","obligatori","Este campo es obligatorio.");
 
         // Validación del Tutor ID (AHORA ES OPCIONAL)
-        // Solo validamos si el campo NO está vacío (es decir, el usuario es menor y ha puesto un DNI de tutor)
+        // Validamos con el mismo patrón si el usuario ha introducido datos
         if (oviUser.getTutor_id() != null && !oviUser.getTutor_id().trim().isEmpty()) {
-            if (oviUser.getTutor_id().trim().length() != 9) {
-                errors.rejectValue("tutor_id", "format_incorrecte", "Documento no válido.");
+            if (!oviUser.getTutor_id().trim().matches(ID_PATTERN)) {
+                errors.rejectValue("tutor_id", "format_incorrecte", "Debe ser un DNI, NIE o Pasaporte válido.");
             }
         }
 
@@ -48,9 +48,6 @@ public class OviUserValidator implements Validator {
 
         if (oviUser.getTypeOfFunctionalDiversity() == null || oviUser.getTypeOfFunctionalDiversity().trim().isEmpty())
             errors.rejectValue("typeOfFunctionalDiversity", "obligatori", "Este campo es obligatorio.");
-
-        if (oviUser.getDateOfAcceptance() == null)
-            errors.rejectValue("dateOfAcceptance", "obligatori", "Este campo es obligatorio.");
 
         if (oviUser.getPassword() == null || oviUser.getPassword().trim().isEmpty())
             errors.rejectValue("password", "obligatori", "Este campo es obligatorio.");

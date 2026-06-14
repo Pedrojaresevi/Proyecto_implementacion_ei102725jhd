@@ -11,8 +11,7 @@ public class OviUser {
     private String email;
     private String entityThatIsInvolved;
     private String typeOfFunctionalDiversity;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateOfAcceptance;
+
     private String password;
     private String status;
     private String lifePlan;
@@ -72,14 +71,6 @@ public class OviUser {
         this.typeOfFunctionalDiversity = typeOfFunctionalDiversity;
     }
 
-    public Date getDateOfAcceptance() {
-        return dateOfAcceptance;
-    }
-
-    public void setDateOfAcceptance(Date dateOfAcceptance) {
-        this.dateOfAcceptance = dateOfAcceptance;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -137,7 +128,6 @@ public class OviUser {
                 ", email='" + email + '\'' +
                 ", entityThatIsInvolved='" + entityThatIsInvolved + '\'' +
                 ", typeOfFunctionalDiversity='" + typeOfFunctionalDiversity + '\'' +
-                ", dateOfAcceptance=" + dateOfAcceptance +
                 ", password='" + password + '\'' +
                 ", status='" + status + '\'' +
                 ", lifePlan='" + lifePlan + '\'' +

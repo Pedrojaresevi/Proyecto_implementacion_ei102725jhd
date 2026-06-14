@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -18,60 +19,79 @@ public class ContractDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    // 1. AÑADIR CONTRATO
     public void addContract(Contract contract) {
-        jdbcTemplate.update("INSERT INTO Contract VALUES (?,?,?,?,?,?,?)",
-                contract.getContract_Id(), contract.getStartDate(), contract.getEndDate(),
-                contract.getStatus(), contract.getPlaceWhereThePDFIsGonnaBeSaved(), contract.getRequest_Id(), contract.getPappati_id());
+        String sql = "INSERT INTO Contract (contract_id, startdate, enddate, status, placewherethepdfisgonnabesaved, request_id, pappati_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                contract.getContract_Id(),
+                contract.getStartDate(),
+                contract.getEndDate(),
+                contract.getStatus(),
+                contract.getPlaceWhereThePDFIsGonnaBeSaved(),
+                contract.getRequest_Id(),
+                contract.getPappati_id());
     }
 
+    // 2. BORRAR CONTRATO POR OBJETO
     public void deleteContract(Contract contract) {
-        jdbcTemplate.update("DELETE FROM Contract WHERE contract_Id=?",
+        jdbcTemplate.update("DELETE FROM Contract WHERE contract_id=?", contract.getContract_Id());
+    }
+
+    // 3. BORRAR CONTRATO POR ID
+    public void deleteContract(String contractId) {
+        jdbcTemplate.update("DELETE FROM Contract WHERE contract_id=?", contractId);
+    }
+
+    // 4. ACTUALIZAR CONTRATO
+    public void updateContract(Contract contract) {
+        String sql = "UPDATE Contract SET request_id=?, startdate=?, enddate=?, status=?, placewherethepdfisgonnabesaved=?, pappati_id=? WHERE contract_id=?";
+        jdbcTemplate.update(sql,
+                contract.getRequest_Id(),
+                contract.getStartDate(),
+                contract.getEndDate(),
+                contract.getStatus(),
+                contract.getPlaceWhereThePDFIsGonnaBeSaved(),
+                contract.getPappati_id(),
                 contract.getContract_Id());
     }
 
-    public void deleteContract(String contractId) {
-        jdbcTemplate.update("DELETE FROM Contract WHERE contract_Id=?",
-                contractId);
-    }
-
-    public void updateContract(Contract contract) {
-        jdbcTemplate.update("UPDATE Contract SET request_Id=?, startDate=?, endDate=?, status=?, PlaceWhereThePDFIsGonnaBeSaved=?, pappati_id=? WHERE contract_Id=?",
-                contract.getRequest_Id(), contract.getStartDate(), contract.getEndDate(),
-                contract.getStatus(), contract.getPlaceWhereThePDFIsGonnaBeSaved(), contract.getPappati_id(), contract.getContract_Id());
-    }
-
+    // 5. OBTENER UN CONTRATO POR ID
     public Contract getContract(String contractId) {
         try {
-            return jdbcTemplate.queryForObject("SELECT *  FROM Contract WHERE contract_Id=?",
-                    new ContractRowMapper(), contractId);
+            return jdbcTemplate.queryForObject("SELECT * FROM Contract WHERE contract_id=?",
+                    new ContractRowMapper(), contractId); // Usa tu archivo externo
         } catch (EmptyResultDataAccessException e)  {
             return null;
         }
     }
 
+    // 6. OBTENER TODOS LOS CONTRATOS
     public List<Contract> getContracts() {
         try {
-            return jdbcTemplate.query("SELECT * FROM Contract",
-                    new ContractRowMapper());
+            return jdbcTemplate.query("SELECT * FROM Contract", new ContractRowMapper()); // Usa tu archivo externo
         } catch (EmptyResultDataAccessException e)  {
-            return null;
+            return new ArrayList<>();
         }
     }
-    //
-    public List<Contract> getContractsByUser(String dni) {
-        // Hacemos un JOIN con assignmentrequest para poder comprobar los 3 tipos de DNI
-        String sql = "SELECT c.* " +
-                "FROM contract c " +
-                "JOIN assignmentrequest ar ON c.request_id = ar.request_id " +
-                "WHERE c.pappati_id = ? OR ar.oviuser_id = ? OR ar.tutor_id = ?";
 
-        // Pasamos el DNI 3 veces, una para cada interrogación (?)
-        return jdbcTemplate.query(sql, new ContractRowMapper(), dni, dni, dni);
+    // 7. OBTENER CONTRATOS POR USUARIO
+    public List<Contract> getContractsByUser(String dni) {
+        String sql = "SELECT c.* " +
+                "FROM Contract c " +
+                "JOIN AssignmentRequest ar ON c.request_id = ar.request_id " +
+                "WHERE c.pappati_id = ? OR ar.oviuser_id = ? OR ar.tutor_id = ?";
+        try {
+            return jdbcTemplate.query(sql, new ContractRowMapper(), dni, dni, dni); // Usa tu archivo externo
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
     }
 
+    // 8. GENERAR EL PRÓXIMO ID
     public String generateNextContractId() {
         try {
-            String sql = "SELECT MAX(contract_Id) FROM Contract";
+            String sql = "SELECT MAX(contract_id) FROM Contract";
             String maxId = jdbcTemplate.queryForObject(sql, String.class);
 
             if (maxId == null) {
@@ -88,15 +108,27 @@ public class ContractDao {
         }
     }
 
-    public List<Contract> getContractsPaginated(int limit, int offset) {
-        String sql = "SELECT * FROM Contract LIMIT ? OFFSET ?";
+    // 9. OBTENER EL ÚLTIMO ID DIRECTAMENTE
+    public String getLastContractId() {
         try {
-            return jdbcTemplate.query(sql, new ContractRowMapper(), limit, offset);
+            String sql = "SELECT contract_id FROM Contract ORDER BY contract_id DESC LIMIT 1";
+            return jdbcTemplate.queryForObject(sql, String.class);
         } catch (EmptyResultDataAccessException e) {
-            return new java.util.ArrayList<Contract>();
+            return null;
         }
     }
 
+    // 10. OBTENER CONTRATOS PAGINADOS
+    public List<Contract> getContractsPaginated(int limit, int offset) {
+        String sql = "SELECT * FROM Contract LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new ContractRowMapper(), limit, offset); // Usa tu archivo externo
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    // 11. CONTAR TOTAL DE CONTRATOS
     public int countContracts() {
         String sql = "SELECT COUNT(*) FROM Contract";
         try {
@@ -105,5 +137,4 @@ public class ContractDao {
             return 0;
         }
     }
-
 }

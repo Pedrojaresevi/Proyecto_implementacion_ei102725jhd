@@ -15,7 +15,6 @@ public final class OviUserRowMapper implements RowMapper<OviUser> {
         oviUser.setEmail(rs.getString("email"));
         oviUser.setEntityThatIsInvolved(rs.getString("entityThatIsInvolved"));
         oviUser.setTypeOfFunctionalDiversity(rs.getString("typeOfFunctionalDiversity"));
-        oviUser.setDateOfAcceptance(rs.getDate("dateOfAcceptance"));
         oviUser.setPassword(rs.getString("password"));
         oviUser.setStatus(rs.getString("status"));
         oviUser.setLifePlan(rs.getString("lifePlan"));

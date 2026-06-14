@@ -2,9 +2,11 @@ package es.uji.ei1027.proyectoOvi.controller;
 
 import es.uji.ei1027.proyectoOvi.dao.AssignmentRequestDao;
 import es.uji.ei1027.proyectoOvi.dao.ListOfProposedCandidatesDao;
+import es.uji.ei1027.proyectoOvi.dao.NegotiationDao;
 import es.uji.ei1027.proyectoOvi.dao.PapPatiDao;
 import es.uji.ei1027.proyectoOvi.models.AssignmentRequest;
 import es.uji.ei1027.proyectoOvi.models.ListOfProposedCandidates;
+import es.uji.ei1027.proyectoOvi.models.Negotiation;
 import es.uji.ei1027.proyectoOvi.models.Pap_Pati;
 import es.uji.ei1027.proyectoOvi.models.UserDetails;
 
@@ -27,10 +29,11 @@ public class AssignmentRequestController {
     private AssignmentRequestDao assignmentRequestDao;
     private PapPatiDao papPatiDao;
     private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
+    private NegotiationDao negotiationDao; // Inyectamos el DAO de Negociaciones
 
     @Autowired
     public void setAssignmentRequestDao(AssignmentRequestDao assignmentRequestDao){
-        this.assignmentRequestDao=assignmentRequestDao;
+        this.assignmentRequestDao = assignmentRequestDao;
     }
     //Setter para inyectar el DAO de asistentes
     @Autowired
@@ -42,23 +45,24 @@ public class AssignmentRequestController {
     public void setListOfProposedCandidatesDao(ListOfProposedCandidatesDao listOfProposedCandidatesDao){
         this.listOfProposedCandidatesDao = listOfProposedCandidatesDao;
     }
+    //Setter para inyectar el DAO de Negociación
+    @Autowired
+    public void setNegotiationDao(NegotiationDao negotiationDao){
+        this.negotiationDao = negotiationDao;
+    }
 
-    //List depediendo del rol
     //List depediendo del rol
     @RequestMapping("/list")
     public String list(@RequestParam(defaultValue = "0") int page, Model model, HttpSession session) {
-
         UserDetails user = (UserDetails) session.getAttribute("user");
 
         if (user == null) {
-            return "redirect:/login"; // Si no hay sesión, al login
+            return "redirect:/login";
         }
 
-        // Creamos una lista intermedia para guardar todas las solicitudes según el rol
         List<AssignmentRequest> allRequests;
 
         if (user.getRole().equals("technician")) {
-            // El técnico ve todo
             allRequests = assignmentRequestDao.getAssignmentRequests();
         } else if (user.getRole().equals("oviuser")) {
             allRequests = assignmentRequestDao.getRequestsByOviUser(user.getDni());
@@ -68,35 +72,87 @@ public class AssignmentRequestController {
             allRequests = java.util.Collections.emptyList();
         }
 
-        // 2. LÓGICA DE PAGINACIÓN (6 elementos por página)
+        // --- FILTRO: EXCLUIR LAS COMPLETADAS ---
+        List<AssignmentRequest> activeRequests = allRequests.stream()
+                .filter(req -> !"completed".equals(req.getStatus()))
+                .collect(java.util.stream.Collectors.toList());
+
+        // 2. LÓGICA DE PAGINACIÓN SOBRE LAS ACTIVAS
         int pageSize = 6;
-        int totalItems = allRequests.size();
+        int totalItems = activeRequests.size();
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1; // Evitar que totalPages sea 0
 
-        // Control de seguridad por desbordamiento de páginas
         if (page < 0) page = 0;
-        if (page >= totalPages && totalPages > 0) page = totalPages - 1;
+        if (page >= totalPages) page = totalPages - 1;
 
-        // Calcular índices de corte de la sublista
         int start = page * pageSize;
         int end = Math.min(start + pageSize, totalItems);
 
         List<AssignmentRequest> pagedRequests = java.util.Collections.emptyList();
         if (start < totalItems) {
-            pagedRequests = allRequests.subList(start, end);
+            pagedRequests = activeRequests.subList(start, end);
         }
 
-        // 3. Pasamos los datos segmentados y variables de control a la vista
         model.addAttribute("assignmentRequests", pagedRequests);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
 
-        // 4. Redirección al HTML correspondiente según rol
         if (user.getRole().equals("technician")) {
             return "redirect:/assignmentRequest/pending";
         } else {
             return "assignmentRequest/list";
         }
+    }
+
+    // --- NUEVO MÉTODO PARA EL HISTORIAL ---
+    @RequestMapping("/history")
+    public String history(@RequestParam(defaultValue = "0") int page, Model model, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        List<AssignmentRequest> allRequests;
+
+        if (user.getRole().equals("technician")) {
+            allRequests = assignmentRequestDao.getAssignmentRequests();
+        } else if (user.getRole().equals("oviuser")) {
+            allRequests = assignmentRequestDao.getRequestsByOviUser(user.getDni());
+        } else if (user.getRole().equals("tutor")) {
+            allRequests = assignmentRequestDao.getRequestsByTutor(user.getDni());
+        } else {
+            allRequests = java.util.Collections.emptyList();
+        }
+
+        // --- FILTRO: INCLUIR SOLO LAS COMPLETADAS ---
+        List<AssignmentRequest> completedRequests = allRequests.stream()
+                .filter(req -> "completed".equals(req.getStatus()))
+                .collect(java.util.stream.Collectors.toList());
+
+        // LÓGICA DE PAGINACIÓN SOBRE LAS COMPLETADAS
+        int pageSize = 6;
+        int totalItems = completedRequests.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        if (page < 0) page = 0;
+        if (page >= totalPages) page = totalPages - 1;
+
+        int start = page * pageSize;
+        int end = Math.min(start + pageSize, totalItems);
+
+        List<AssignmentRequest> pagedRequests = java.util.Collections.emptyList();
+        if (start < totalItems) {
+            pagedRequests = completedRequests.subList(start, end);
+        }
+
+        model.addAttribute("assignmentRequests", pagedRequests);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        return "assignmentRequest/history"; // Redirige a la nueva vista
     }
 
     @RequestMapping(value="/add")
@@ -506,6 +562,36 @@ public class AssignmentRequestController {
         model.addAttribute("totalPages", totalPages);
 
         return "technician/assignmentRequest/pending";
+    }
+
+    // --- NUEVA LÓGICA DE NEGOCIACIÓN ---
+    @RequestMapping(value="/startNegotiation", method = RequestMethod.POST)
+    public String startNegotiation(@RequestParam("list_id") String listId,
+                                   @RequestParam("requestId") String requestId,
+                                   @RequestParam("candidateId") String candidateId) {
+
+        Negotiation negotiation = new Negotiation();
+
+        // 1. Crear la negociación inicial
+        String negotiationId = "NEG-" + listId;
+        negotiation.setNegotiation_Id(negotiationId);
+        negotiation.setListId(listId);
+        negotiation.setStatus("In progress");
+        negotiation.setStartDate(new java.util.Date());
+        negotiation.setHora(java.time.LocalTime.now());
+        negotiation.setRecordOfComunications("Inicio de negociaciones con el candidato " + candidateId);
+
+        negotiationDao.addNegotiation(negotiation);
+
+        // 2. NUEVO: Pasar la solicitud a estado 'completed'
+        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(requestId);
+        if (request != null) {
+            request.setStatus("completed");
+            assignmentRequestDao.updateAssignmentRequest(request);
+        }
+
+        // 3. NUEVO: Redirigir a la vista de la conversación (al NegotiationController)
+        return "redirect:/negotiation/chat/" + negotiationId;
     }
 
 }

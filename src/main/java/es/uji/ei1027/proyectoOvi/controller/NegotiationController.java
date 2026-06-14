@@ -140,23 +140,35 @@ public class NegotiationController {
         return "negotiation/tutor/list";
     }
 
-    //
-    @RequestMapping("/chat/{id}")
-    public String openChat(@PathVariable("id") String id, Model model, jakarta.servlet.http.HttpSession session) {
-        // 1. Recuperamos el usuario de la sesión
-        UserDetails user = (UserDetails) session.getAttribute("user");
+    @RequestMapping("/chat/{negotiationId}")
+    public String openChat(@PathVariable("negotiationId") String negotiationId,
+                           Model model,
+                           HttpSession session) {
 
-        // 2. Si no hay usuario, lo mandamos al login por seguridad
-        if (user == null) {
-            return "redirect:/login";
+        // 1. Validar si el usuario está logeado (opcional, pero recomendado si usas session)
+        // User user = (User) session.getAttribute("user");
+        // if (user == null) return "redirect:/login";
+
+        // 2. Obtenemos el registro base (el último mensaje) para los metadatos del chat
+        Negotiation negotiationBase = negotiationDao.getNegotiation(negotiationId);
+
+        if (negotiationBase == null) {
+            return "redirect:/assignmentRequest/list";
         }
 
-        // 3. Pasamos el usuario al modelo (vital para el botón de volver)
-        model.addAttribute("user", user);
+        // 3. Recuperamos la LISTA completa de mensajes ordenados para el th:each
+        List<Negotiation> historialMensajes = negotiationDao.getMessagesByNegotiationId(negotiationId);
 
-        // 4. Pasamos los datos de la negociación
-        model.addAttribute("negotiation", negotiationDao.getNegotiation(id));
+        // 4. Enviamos TODO al modelo para alimentar al HTML
+        model.addAttribute("negotiationId", negotiationId);
+        model.addAttribute("status", negotiationBase.getStatus());
+        model.addAttribute("listId", negotiationBase.getListId());
+        model.addAttribute("messages", historialMensajes);
 
-        return "negotiation/chat";
+        // Nota: Asegúrate de que tu sesión guarda el usuario con la clave "user"
+        // para que el th:href del botón "Volver" de tu HTML no falle.
+        // model.addAttribute("user", user);
+
+        return "negotiation/chat"; // Asegúrate de poner la ruta exacta a tu archivo HTML
     }
 }

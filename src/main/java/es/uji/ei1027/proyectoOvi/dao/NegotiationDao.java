@@ -20,11 +20,15 @@ public class NegotiationDao {
     }
 
     public void addNegotiation(Negotiation negotiation) {
-        jdbcTemplate.update("INSERT INTO Negotiation VALUES (?,?,?,?,?,?)",
-                negotiation.getNegotiation_Id(), negotiation.getStatus(),
-                negotiation.getRecordOfComunications(), negotiation.getStartDate(),
+        String sql = "INSERT INTO negotiation (negotiation_id, status, recordofcommunications, startdate, enddate, list_id, hora) VALUES (?, ?, ?, ?, ?, ?, ?)";        jdbcTemplate.update(sql,
+                negotiation.getNegotiation_Id(),
+                negotiation.getStatus(),
+                negotiation.getRecordOfComunications(),
+                negotiation.getStartDate(),
                 negotiation.getEndDate(),
-                negotiation.getListId());
+                negotiation.getListId(),
+                negotiation.getHora()
+        );
     }
 
     public void deleteNegotiation(Negotiation negotiation) {
@@ -50,10 +54,22 @@ public class NegotiationDao {
 
     public Negotiation getNegotiation(String negotiation_Id) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM Negotiation WHERE negotiation_Id=?",
+            // Añadimos "ORDER BY hora DESC LIMIT 1" para que devuelva solo una fila (la última) y no falle
+            return jdbcTemplate.queryForObject("SELECT * FROM Negotiation WHERE negotiation_Id=? ORDER BY hora DESC LIMIT 1",
                     new NegotiationRowMapper(), negotiation_Id);
         } catch (EmptyResultDataAccessException e)  {
             return null;
+        }
+    }
+
+    // NUEVO MÉTODO: Para recuperar todo el historial de mensajes del chat
+    public List<Negotiation> getMessagesByNegotiationId(String negotiation_Id) {
+        try {
+            // Trae todos los mensajes ordenados del más antiguo al más nuevo
+            return jdbcTemplate.query("SELECT * FROM Negotiation WHERE negotiation_Id=? ORDER BY hora ASC",
+                    new NegotiationRowMapper(), negotiation_Id);
+        } catch (EmptyResultDataAccessException e)  {
+            return new java.util.ArrayList<>();
         }
     }
 
@@ -171,4 +187,6 @@ public class NegotiationDao {
             return null;
         }
     }
+
+
 }

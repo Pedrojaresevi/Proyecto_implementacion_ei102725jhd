@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <title>Registro Completado</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<main class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white text-center py-4">
+          <i class="bi bi-check-circle-fill display-1"></i>
+          <h2 class="mt-3 mb-0">¡Registro Completado!</h2>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          <p class="lead text-center text-secondary mb-4">
+            Tu solicitud de registro ha sido recibida correctamente y se encuentra en estado <strong>Pendiente de revisión</strong>.
+          </p>
+
+          <div class="alert alert-info border-info bg-white shadow-sm" role="alert">
+            <div class="d-flex align-items-center mb-3 border-bottom pb-2">
+              <i class="bi bi-envelope-paper-fill fs-4 text-info me-2"></i>
+              <h5 class="mb-0 text-dark">Simulación de Correo Enviado</h5>
+            </div>
+            <p class="mb-2"><strong>Asunto:</strong> Información sobre tu proceso de alta en OVI</p>
+            <p>Hola,</p>
+            <p>Hemos recibido tus datos correctamente. A partir de este momento, el procedimiento a seguir es el siguiente:</p>
+            <ol class="mb-3">
+              <li>Un técnico de nuestra plataforma revisará tu documentación y tu Plan de Vida Independiente.</li>
+              <li>En un plazo máximo de 48 horas, se evaluará tu solicitud.</li>
+              <li>Recibirás una notificación informándote si tu perfil ha sido <strong>aceptado</strong> o si necesitamos información adicional.</li>
+            </ol>
+            <p class="mb-0 text-muted small"><em>Este es un correo automático, por favor no respondas a esta dirección.</em></p>
+          </div>
+
+          <div class="text-center mt-5">
+            <a href="/login" class="btn btn-primary btn-lg px-4">
+              </i>Ir a Iniciar Sesión
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

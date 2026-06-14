@@ -58,6 +58,13 @@ public class OviUserController {
     @RequestMapping(value="/add", method=RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("oviUser") OviUser oviUser,
                                    BindingResult bindingResult) {
+
+        // 1. PRIMERO: Limpiamos los datos conflictivos (transformamos "" en null)
+        if (oviUser.getTutor_id() != null && oviUser.getTutor_id().trim().isEmpty()) {
+            oviUser.setTutor_id(null);
+        }
+
+        // 2. SEGUNDO: Validamos el objeto ya limpio
         OviUserValidator oviUserValidator = new OviUserValidator();
         oviUserValidator.validate(oviUser, bindingResult);
 
@@ -65,13 +72,12 @@ public class OviUserController {
             return "oviUser/add";
         }
 
-        if (oviUser.getTutor_id() != null && oviUser.getTutor_id().trim().isEmpty()) {
-            oviUser.setTutor_id(null);
-        }
-
+        // 3. TERCERO: Lógica de negocio (Contraseña y guardado en BD)
         BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
-        String contraseñaEncriptada = passwordEncryptor.encryptPassword(oviUser.getPassword());
-        oviUser.setPassword(contraseñaEncriptada);
+        String contrasenyaEncriptada = passwordEncryptor.encryptPassword(oviUser.getPassword());
+        oviUser.setPassword(contrasenyaEncriptada);
+
+        oviUser.setStatus("in progress");
 
         try {
             oviUserDao.addOviUser(oviUser);
@@ -80,12 +86,21 @@ public class OviUserController {
                     "Ya existe un usuario con este DNI");
             return "oviUser/add";
         } catch (DataIntegrityViolationException e) {
-            bindingResult.rejectValue("tutor_id", "no_existe",
-                    "El tutor introducido no existe en el sistema");
-            return "oviUser/add";
-        }
+        // AÑADE ESTA LÍNEA PARA VER EL ERROR REAL EN LA CONSOLA DE SPRING BOOT
+        System.out.println("ERROR REAL EN LA BD: " + e.getMessage());
+        e.printStackTrace();
 
-        return "redirect:list";
+        bindingResult.rejectValue("tutor_id", "no_existe",
+                "El tutor introducido no existe en el sistema");
+        return "oviUser/add";
+    }
+
+        return "redirect:/oviUser/success";
+    }
+
+    @RequestMapping("/success")
+    public String registrationSuccess() {
+        return "oviUser/success";
     }
 
 //    @RequestMapping(value="/update/{id}", method = RequestMethod.GET)

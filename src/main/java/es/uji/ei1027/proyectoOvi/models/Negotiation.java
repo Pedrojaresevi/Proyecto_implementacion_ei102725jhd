@@ -1,6 +1,7 @@
 package es.uji.ei1027.proyectoOvi.models;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import java.time.LocalTime;
 
 import java.util.Date;
 
@@ -13,6 +14,7 @@ public class Negotiation {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
     private String list_id;
+    private LocalTime hora;
 
     public String getNegotiation_Id() {
         return negotiation_Id;
@@ -62,6 +64,10 @@ public class Negotiation {
         this.list_id = listId;
     }
 
+    public LocalTime getHora() { return hora; }
+
+    public void setHora(LocalTime hora) { this.hora = hora; }
+
     @Override
     public String toString() {
         return "Negotiation{" +
@@ -70,6 +76,7 @@ public class Negotiation {
                 ", recordOfComunications='" + recordofcommunications + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", hora=" + hora +
                 '}';
     }
 }

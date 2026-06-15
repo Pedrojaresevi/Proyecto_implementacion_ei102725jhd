@@ -22,6 +22,7 @@ public class Pap_PatiController {
     private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
     private OviUserDao oviUserDao;
     private NegotiationDao negotiationDao;
+    private TutorDao tutorDao;
 
     @Autowired
     public void setPap_patiDao(PapPatiDao pap_patiDao){
@@ -43,7 +44,10 @@ public class Pap_PatiController {
     public void setNegotiationDao(NegotiationDao negotiationDao) {
         this.negotiationDao = negotiationDao;
     }
-
+    @Autowired
+    public void setTutorDao(TutorDao tutorDao) {
+        this.tutorDao = tutorDao;
+    }
     @RequestMapping("/list")
     public String listAllPap_Pati(Model model, @RequestParam(defaultValue = "1") int page){
         int pageSize = 6;
@@ -161,15 +165,21 @@ public class Pap_PatiController {
         if (user == null) return "redirect:/login";
 
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-        model.addAttribute("assignmentRequest", request);
+        model.addAttribute("request", request);
 
-        // Cargamos el oviuser si la solicitud tiene oviuser_id
-        if (request.getOviuser_id() != null) {
-            model.addAttribute("oviuser", oviUserDao.getOviUser(request.getOviuser_id()));
+        //Cargamos el solicitante dinámicamente (OviUser o Tutor)
+        if (request.getOviuser_id() != null && !request.getOviuser_id().trim().isEmpty()) {
+            OviUser oviUser = oviUserDao.getOviUser(request.getOviuser_id());
+            model.addAttribute("solicitante", oviUser);
+            model.addAttribute("tipoSolicitante", "oviuser");
+
+        } else if (request.getTutor_id() != null && !request.getTutor_id().trim().isEmpty()) {
+            Tutor tutor = tutorDao.getTutor(request.getTutor_id());
+            model.addAttribute("solicitante", tutor);
+            model.addAttribute("tipoSolicitante", "tutor");
         }
-
-        // Si está aceptada y el usuario es pappati, buscamos su list_id para el botón de negociación
-        if ("accepted".equals(request.getStatus()) && "pap_pati".equals(user.getRole())) {
+        // Lógica para cargar el chat si está completada
+        if ("completed".equals(request.getStatus()) && "pap_pati".equals(user.getRole())) {
             listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni())
                     .stream()
                     .filter(p -> p.getRequest_id().equals(id))
@@ -183,7 +193,6 @@ public class Pap_PatiController {
                         }
                     });
         }
-
         return "pap_pati/detallesasignacion";
     }
 

@@ -20,90 +20,108 @@
 
     <hr class="mb-4 text-muted">
 
-    <!-- Datos de la solicitud -->
-    <div class="card mb-4 shadow-sm">
+    <div class="card mb-4 shadow-sm" th:if="${request != null}">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Información de la Solicitud</h5>
+            <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Datos de la Solicitud</h5>
         </div>
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-4">
-                    <strong>ID:</strong>
-                    <p th:text="${assignmentRequest.request_Id}"></p>
+                    <strong>ID Solicitud:</strong>
+                    <p th:text="${request.request_Id}"></p>
                 </div>
                 <div class="col-md-4">
-                    <strong>Fecha realización:</strong>
-                    <p th:text="${assignmentRequest.requestDate}"></p>
+                    <strong>Fecha Solicitud:</strong>
+                    <p th:text="${#temporals.format(request.requestDate, 'dd/MM/yyyy')}"></p>                </div>
+                <div class="col-md-4">
+                    <strong>Tipo de Servicio:</strong>
+                    <p th:text="${request.typeOfService}"></p>
                 </div>
                 <div class="col-md-4">
-                    <strong>Tipo de servicio:</strong>
-                    <p th:text="${assignmentRequest.typeOfService}"></p>
+                    <strong>Inicio Disponibilidad:</strong>
+                    <p th:text="${request.requiredStartAvailability}"></p>
                 </div>
                 <div class="col-md-4">
-                    <strong>Localización:</strong>
-                    <p th:text="${assignmentRequest.serviceLocation}"></p>
+                    <strong>Fin Disponibilidad:</strong>
+                    <p th:text="${request.requiredEndAvailability}"></p>
                 </div>
                 <div class="col-md-4">
-                    <strong>Disponibilidad:</strong>
-                    <p th:text="${assignmentRequest.requiredStartAvailability} + ' - ' + ${assignmentRequest.requiredEndAvailability}"></p>
+                    <strong>Lugar del Servicio:</strong>
+                    <p th:text="${request.serviceLocation}"></p>
                 </div>
                 <div class="col-md-4">
-                    <strong>Formación requerida:</strong>
-                    <p th:text="${assignmentRequest.requiredTraining}"></p>
+                    <strong>Formación Requerida:</strong>
+                    <p th:text="${request.requiredTraining}"></p>
                 </div>
                 <div class="col-md-4">
-                    <strong>Experiencia requerida:</strong>
-                    <p th:text="${assignmentRequest.requiredExperience}"></p>
+                    <strong>Experiencia Requerida:</strong>
+                    <p th:text="${request.requiredExperience}"></p>
                 </div>
                 <div class="col-md-4">
-                    <strong>Habilidades requeridas:</strong>
-                    <p th:text="${assignmentRequest.requiredSkills}"></p>
+                    <strong>Habilidades Requeridas:</strong>
+                    <p th:text="${request.requiredSkills}"></p>
+                </div>
+                <div class="col-md-4">
+                    <strong>Estado de la Solicitud:</strong>
+                    <p>
+                        <span th:text="${request.status}"
+                              class="badge"
+                              th:classappend="${request.status == 'completed' ? 'bg-success' : 'bg-warning text-dark'}">
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Datos del OviUser -->
-    <div class="card mb-4 shadow-sm" th:if="${oviuser != null}">
-        <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0"> <i class="bi bi-person-badge me-2"></i>Datos del Solicitante</h5>
+    <div class="card mb-4 shadow-sm" th:if="${solicitante != null}">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-person-badge me-2"></i>
+                <span th:text="${tipoSolicitante == 'tutor' ? 'Datos del Tutor Solicitante' : 'Datos del Solicitante'}">Datos del Solicitante</span>
+            </h5>
         </div>
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-4">
                     <strong>DNI:</strong>
-                    <p th:text="${oviuser.dni}"></p>
+                    <p th:text="${solicitante.dni}"></p>
                 </div>
                 <div class="col-md-4">
                     <strong>Nombre:</strong>
-                    <p th:text="${oviuser.name}"></p>
+                    <p th:text="${solicitante.name}"></p>
                 </div>
                 <div class="col-md-4">
                     <strong>Email:</strong>
-                    <p th:text="${oviuser.email}"></p>
+                    <p th:text="${solicitante.email}"></p>
                 </div>
-                <div class="col-md-4">
+
+                <div class="col-md-4" th:if="${tipoSolicitante == 'oviuser'}">
                     <strong>Dirección:</strong>
-                    <p th:text="${oviuser.address}"></p>
+                    <p th:text="${solicitante.address}"></p>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" th:if="${tipoSolicitante == 'oviuser'}">
                     <strong>Diversidad funcional:</strong>
-                    <p th:text="${oviuser.typeOfFunctionalDiversity}"></p>
+                    <p th:text="${solicitante.typeOfFunctionalDiversity}"></p>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" th:if="${tipoSolicitante == 'oviuser'}">
                     <strong>Entidad implicada:</strong>
-                    <p th:text="${oviuser.entityThatIsInvolved}"></p>
+                    <p th:text="${solicitante.entityThatIsInvolved}"></p>
                 </div>
             </div>
         </div>
     </div>
 
-    <a th:if="${negotiationId != null}"
-       th:href="@{/negotiation/chat/{negotiationId}(negotiationId=${negotiationId})}"
-       class="btn btn-primary mt-3">
-        <i class="bi bi-chat-dots me-2"></i>Ir a la negociación
-    </a>
-    <a th:href="@{/pap_pati/listpappati}" class="btn btn-secondary mt-3 ms-2">Volver</a>
+    <div class="d-flex gap-2 mt-4">
+        <a th:if="${negotiationId != null}"
+           th:href="@{/negotiation/chat/{negotiationId}(negotiationId=${negotiationId})}"
+           class="btn btn-primary">
+            <i class="bi bi-chat-dots me-2"></i>Ir a la negociación
+        </a>
+
+        <a th:href="@{/pap_pati/listpappati}" class="btn btn-secondary">Volver </a>
+    </div>
 </main>
+
 </body>
 </html>

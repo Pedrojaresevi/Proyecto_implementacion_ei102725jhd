@@ -294,6 +294,20 @@
                 <div class="card h-100 border-primary shadow-sm">
                     <div class="card-body text-center">
                         <div class="mb-3">
+                            <i class="bi bi-file-earmark-text" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Mis Contratos</h5>
+                        <p class="card-text small text-muted">Consulta tus contratos activos con los asistentes PAP/PATI.</p>
+                        <a th:href="@{'/contract/user/' + ${user.dni}}" class="btn btn-primary text-white w-100">
+                            Listar Contratos
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
                             <i class="bi bi-people" style="font-size: 2rem; color: #0d6efd;"></i>
                         </div>
                         <h5 class="card-title">Mis Tutorizados</h5>

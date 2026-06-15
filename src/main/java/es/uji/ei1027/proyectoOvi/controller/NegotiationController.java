@@ -1,7 +1,11 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
 import es.uji.ei1027.proyectoOvi.dao.NegotiationDao;
+import es.uji.ei1027.proyectoOvi.dao.OviUserDao;
+import es.uji.ei1027.proyectoOvi.dao.PapPatiDao;
 import es.uji.ei1027.proyectoOvi.models.Negotiation;
+import es.uji.ei1027.proyectoOvi.models.OviUser;
+import es.uji.ei1027.proyectoOvi.models.Pap_Pati;
 import es.uji.ei1027.proyectoOvi.models.UserDetails;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,18 @@ import java.util.List;
 @RequestMapping("/negotiation")
 public class NegotiationController {
     private NegotiationDao negotiationDao;
+    private OviUserDao oviUserDao;
+    private PapPatiDao papPatiDao;
 
+    @Autowired
+    public void setOviUserDao(OviUserDao oviUserDao){
+        this.oviUserDao = oviUserDao;
+    }
+
+    @Autowired
+    public void setPapPatiDao(PapPatiDao papPatiDao){
+        this.papPatiDao = papPatiDao;
+    }
     @Autowired
     public void setNegotiationDao(NegotiationDao negotiationDao){
         this.negotiationDao = negotiationDao;
@@ -145,9 +160,11 @@ public class NegotiationController {
                            Model model,
                            HttpSession session) {
 
-        // 1. Validar si el usuario está logeado (opcional, pero recomendado si usas session)
-        // User user = (User) session.getAttribute("user");
-        // if (user == null) return "redirect:/login";
+        // 1. Validar si el usuario está logeado por seguridad
+        UserDetails userLogeado = (UserDetails) session.getAttribute("user");
+        if (userLogeado == null) {
+            return "redirect:/login";
+        }
 
         // 2. Obtenemos el registro base (el último mensaje) para los metadatos del chat
         Negotiation negotiationBase = negotiationDao.getNegotiation(negotiationId);
@@ -159,16 +176,81 @@ public class NegotiationController {
         // 3. Recuperamos la LISTA completa de mensajes ordenados para el th:each
         List<Negotiation> historialMensajes = negotiationDao.getMessagesByNegotiationId(negotiationId);
 
-        // 4. Enviamos TODO al modelo para alimentar al HTML
+        // 4. Bucle para buscar y rellenar el nombre real de cada emisor en base a su DNI
+        for (Negotiation msg : historialMensajes) {
+            if (msg.getEmisorDni() != null) {
+
+                // Primero intentamos buscar si el DNI pertenece a un OviUser
+                OviUser oviUser = oviUserDao.getOviUser(msg.getEmisorDni());
+                if (oviUser != null) {
+                    msg.setEmisorNombre(oviUser.getName());
+                    continue; // Si lo encuentra, pasa al siguiente mensaje del historial
+                }
+
+                // Si no era un OviUser, miramos si el DNI pertenece a un Asistente (Pap_Pati)
+                Pap_Pati papPati = papPatiDao.getPap_Pati(msg.getEmisorDni());
+                if (papPati != null) {
+                    // Concatenamos nombre y apellido si lo prefieres, o solo el nombre
+                    String nombreCompleto = papPati.getName() + " " + (papPati.getSurname() != null ? papPati.getSurname() : "");
+                    msg.setEmisorNombre(nombreCompleto.trim());
+                    continue;
+                }
+
+                // (Opcional) Si en tu sistema un Tutor también puede escribir en el chat,
+                // descomenta estas líneas e inyecta tutorDao:
+                /*
+                Tutor tutor = tutorDao.getTutor(msg.getEmisorDni());
+                if (tutor != null) {
+                    msg.setEmisorNombre(tutor.getName());
+                    continue;
+                }
+                */
+
+                // Por si acaso hubiera un DNI que no se encuentra en el sistema (antiguo o erróneo),
+                // dejamos un salvavidas para que no se quede en blanco ni rompa la vista
+                if (msg.getEmisorNombre() == null) {
+                    msg.setEmisorNombre("Usuario (" + msg.getEmisorDni() + ")");
+                }
+            }
+        }
+
+        // 5. Enviamos todo al modelo para alimentar las etiquetas de Thymeleaf en el HTML
         model.addAttribute("negotiationId", negotiationId);
         model.addAttribute("status", negotiationBase.getStatus());
         model.addAttribute("listId", negotiationBase.getListId());
         model.addAttribute("messages", historialMensajes);
 
-        // Nota: Asegúrate de que tu sesión guarda el usuario con la clave "user"
-        // para que el th:href del botón "Volver" de tu HTML no falle.
-        // model.addAttribute("user", user);
+        return "negotiation/chat";
+    }
 
-        return "negotiation/chat"; // Asegúrate de poner la ruta exacta a tu archivo HTML
+    @RequestMapping(value="/sendMessage", method=RequestMethod.POST)
+    public String sendMessage(@RequestParam("negotiationId") String negotiationId,
+                              @RequestParam("listId") String listId,
+                              @RequestParam("messageText") String messageText,
+                              HttpSession session) { // <-- IMPORTANTE: Añadir HttpSession aquí
+
+        // 1. Recuperar el usuario de la sesión
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login"; // Por seguridad
+        }
+
+        Negotiation baseNegotiation = negotiationDao.getNegotiation(negotiationId);
+        Negotiation newMessage = new Negotiation();
+
+        newMessage.setNegotiation_Id(negotiationId);
+        newMessage.setListId(listId);
+        newMessage.setRecordOfComunications(messageText);
+        newMessage.setStatus("in progress");
+        newMessage.setStartDate(baseNegotiation.getStartDate());
+        newMessage.setEndDate(null);
+        newMessage.setHora(java.time.LocalTime.now());
+
+        // --- NUEVO: Guardamos el DNI de quien lo envía ---
+        newMessage.setEmisorDni(user.getDni());
+
+        negotiationDao.addNegotiation(newMessage);
+
+        return "redirect:/negotiation/chat/" + negotiationId;
     }
 }

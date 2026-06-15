@@ -20,14 +20,17 @@ public class NegotiationDao {
     }
 
     public void addNegotiation(Negotiation negotiation) {
-        String sql = "INSERT INTO negotiation (negotiation_id, status, recordofcommunications, startdate, enddate, list_id, hora) VALUES (?, ?, ?, ?, ?, ?, ?)";        jdbcTemplate.update(sql,
+        // AÑADIDO: emisor_dni al INSERT y el octavo parámetro (?)
+        String sql = "INSERT INTO negotiation (negotiation_id, status, recordofcommunications, startdate, enddate, list_id, hora, emisor_dni) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
                 negotiation.getNegotiation_Id(),
                 negotiation.getStatus(),
                 negotiation.getRecordOfComunications(),
                 negotiation.getStartDate(),
                 negotiation.getEndDate(),
                 negotiation.getListId(),
-                negotiation.getHora()
+                negotiation.getHora(),
+                negotiation.getEmisorDni() // AÑADIDO: Pasamos el DNI del emisor a la BBDD
         );
     }
 
@@ -54,7 +57,6 @@ public class NegotiationDao {
 
     public Negotiation getNegotiation(String negotiation_Id) {
         try {
-            // Añadimos "ORDER BY hora DESC LIMIT 1" para que devuelva solo una fila (la última) y no falle
             return jdbcTemplate.queryForObject("SELECT * FROM Negotiation WHERE negotiation_Id=? ORDER BY hora DESC LIMIT 1",
                     new NegotiationRowMapper(), negotiation_Id);
         } catch (EmptyResultDataAccessException e)  {
@@ -62,10 +64,8 @@ public class NegotiationDao {
         }
     }
 
-    // NUEVO MÉTODO: Para recuperar todo el historial de mensajes del chat
     public List<Negotiation> getMessagesByNegotiationId(String negotiation_Id) {
         try {
-            // Trae todos los mensajes ordenados del más antiguo al más nuevo
             return jdbcTemplate.query("SELECT * FROM Negotiation WHERE negotiation_Id=? ORDER BY hora ASC",
                     new NegotiationRowMapper(), negotiation_Id);
         } catch (EmptyResultDataAccessException e)  {
@@ -81,9 +81,9 @@ public class NegotiationDao {
             return null;
         }
     }
+
     public List<Negotiation> getNegotiationsByUser(String oviuserId) {
         try {
-            // Unimos Negotiation -> ListOfProposedCandidates -> AssignmentRequest
             String sql = "SELECT n.* FROM Negotiation n " +
                     "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
                     "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
@@ -118,7 +118,6 @@ public class NegotiationDao {
         }
     }
 
-    // ---- PARA OVIUSER ----
     public List<Negotiation> getNegotiationsByUserPaginated(String oviuserId, int limit, int offset) {
         try {
             String sql = "SELECT n.* FROM Negotiation n " +
@@ -143,7 +142,6 @@ public class NegotiationDao {
         }
     }
 
-    // ---- PARA TUTOR ----
     public List<Negotiation> getNegotiationsByTutorPaginated(String tutorDni, int limit, int offset) {
         try {
             String sql = "SELECT n.* FROM Negotiation n " +
@@ -167,7 +165,7 @@ public class NegotiationDao {
             return 0;
         }
     }
-    // Obtener el ID de la negociación a partir del request_Id y el DNI del asistente
+
     public Integer getNegotiationIdByRequestAndAssistant(int requestId, String papPatiDni) {
         try {
             String sql = "SELECT n.negotiation_Id FROM Negotiation n " +
@@ -175,10 +173,10 @@ public class NegotiationDao {
                     "WHERE l.request_Id = ? AND l.pap_pati_id = ?";
             return jdbcTemplate.queryForObject(sql, Integer.class, requestId, papPatiDni);
         } catch (EmptyResultDataAccessException e) {
-            return null; // Retorna null si no existe, lo cual activará el Modal en el HTML
+            return null;
         }
     }
-    // Obtener el list_id asociado a la solicitud y al asistente
+
     public Integer getListIdByRequestAndAssistant(int requestId, String papPatiDni) {
         try {
             String sql = "SELECT list_id FROM ListOfProposedCandidates WHERE request_Id = ? AND pap_pati_id = ?";
@@ -187,6 +185,4 @@ public class NegotiationDao {
             return null;
         }
     }
-
-
 }

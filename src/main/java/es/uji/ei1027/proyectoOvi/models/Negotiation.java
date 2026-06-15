@@ -15,6 +15,27 @@ public class Negotiation {
     private Date endDate;
     private String list_id;
     private LocalTime hora;
+    // Campo que va a la Base de Datos
+    private String emisorDni;
+
+    // Campo que NO va a la Base de datos, solo para enseñar el nombre en HTML
+    private String emisorNombre;
+
+    public String getEmisorDni() {
+        return emisorDni;
+    }
+
+    public void setEmisorDni(String emisorDni) {
+        this.emisorDni = emisorDni;
+    }
+
+    public String getEmisorNombre() {
+        return emisorNombre;
+    }
+
+    public void setEmisorNombre(String emisorNombre) {
+        this.emisorNombre = emisorNombre;
+    }
 
     public String getNegotiation_Id() {
         return negotiation_Id;
@@ -77,6 +98,8 @@ public class Negotiation {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", hora=" + hora +
+                ", emisorDNI=" + emisorDni +
+                ", emisorNombre=" + emisorNombre +
                 '}';
     }
 }

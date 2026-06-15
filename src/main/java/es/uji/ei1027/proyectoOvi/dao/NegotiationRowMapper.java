@@ -19,6 +19,7 @@ public final class NegotiationRowMapper implements RowMapper<Negotiation> {
         if (time != null) {
             negotiation.setHora(time.toLocalTime());
         }
+        negotiation.setEmisorDni(rs.getString("emisor_dni"));
         return negotiation;
     }
 }

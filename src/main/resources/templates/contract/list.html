@@ -67,26 +67,24 @@
     </div>
 
     <!-- Componente de Paginación para Contratos -->
-    <nav th:if="${totalPages > 1}" aria-label="Navegación de contratos" class="mt-4">
+    <nav th:if="${totalPages > 1}" aria-label="Navegación de negociaciones" class="mt-5">
         <ul class="pagination justify-content-center">
 
             <!-- Botón Anterior -->
             <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/contract/list(page=${currentPage - 1})}" aria-label="Anterior">
+                <a class="page-link" th:href="@{/negotiation/{role}/{dni}(role=${rolePath}, dni=${dniOwner}, page=${currentPage - 1})}" aria-label="Anterior">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
             <!-- Números de Página -->
-            <li th:each="i : ${#numbers.sequence(1, totalPages)}"
-                class="page-item"
-                th:classappend="${currentPage == i} ? 'active'">
-                <a class="page-link" th:href="@{/contract/list(page=${i})}" th:text="${i}">1</a>
+            <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
+                <a class="page-link" th:href="@{/negotiation/{role}/{dni}(role=${rolePath}, dni=${dniOwner}, page=${i})}" th:text="${i}">1</a>
             </li>
 
             <!-- Botón Siguiente -->
             <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/contract/list(page=${currentPage + 1})}" aria-label="Siguiente">
+                <a class="page-link" th:href="@{/negotiation/{role}/{dni}(role=${rolePath}, dni=${dniOwner}, page=${currentPage + 1})}" aria-label="Siguiente">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

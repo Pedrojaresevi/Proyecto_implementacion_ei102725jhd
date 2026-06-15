@@ -137,7 +137,8 @@ public class NegotiationController {
 
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("dniOwner", dni); // Necesario para los enlaces de paginación
+        model.addAttribute("dniOwner", dni);
+        model.addAttribute("rolePath", "user"); // <- AÑADIDO: Identifica que es un usuario normal
 
         return "negotiation/list";
     }
@@ -155,9 +156,10 @@ public class NegotiationController {
 
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("dniOwner", dni); // Necesario para los enlaces de paginación
+        model.addAttribute("dniOwner", dni);
+        model.addAttribute("rolePath", "tutor"); // <- AÑADIDO: Identifica que es un tutor
 
-        return "negotiation/tutor/list";
+        return "negotiation/list"; // <- CAMBIADO: Ahora el tutor usa el HTML de la bandeja de entrada de chats
     }
 
     @RequestMapping("/chat/{negotiationId}")

@@ -4,6 +4,8 @@ import es.uji.ei1027.proyectoOvi.models.OviUser;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.time.LocalDate;
+
 public class OviUserValidator implements Validator {
 
     // Definimos el patrón que acepta DNI, NIE o Pasaporte
@@ -55,8 +57,20 @@ public class OviUserValidator implements Validator {
         if (oviUser.getLifePlan() == null || oviUser.getLifePlan().trim().isEmpty())
             errors.rejectValue("lifePlan", "obligatori", "Este campo es obligatorio.");
 
-        if (oviUser.getDateOfBirth() == null)
+        if (oviUser.getDateOfBirth() == null) {
             errors.rejectValue("dateOfBirth", "obligatori", "Este campo es obligatorio.");
+        } else {
+            LocalDate today = LocalDate.now();
+            LocalDate minDate = today.minusYears(3);
+            LocalDate maxDate = today.minusYears(130);
 
+            if (oviUser.getDateOfBirth().isAfter(today)) {
+                errors.rejectValue("dateOfBirth", "data_futura", "La fecha no puede ser posterior al día de hoy.");
+            } else if (oviUser.getDateOfBirth().isAfter(minDate)) {
+                errors.rejectValue("dateOfBirth", "edat_minima", "El usuario debe tener al menos 3 años.");
+            } else if (oviUser.getDateOfBirth().isBefore(maxDate)) {
+                errors.rejectValue("dateOfBirth", "edat_maxima", "La edad máxima permitida es de 130 años.");
+            }
+        }
     }
 }

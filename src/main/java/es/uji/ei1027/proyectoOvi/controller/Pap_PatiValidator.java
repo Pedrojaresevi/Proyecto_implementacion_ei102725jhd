@@ -4,6 +4,7 @@ import es.uji.ei1027.proyectoOvi.models.Pap_Pati;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,8 +64,16 @@ public class Pap_PatiValidator implements Validator {
             errors.rejectValue("surname", "obligatori", "Este campo es obligatorio.");
 
         // CORRECCIÓN: "fecha_nacimiento" -> "dateOfBirth"
-        if (papPati.getDateOfBirth() == null)
+        if (papPati.getDateOfBirth() == null) {
             errors.rejectValue("dateOfBirth", "obligatori", "Este campo es obligatorio.");
+        } else {
+            LocalDate today = LocalDate.now();
+            if (papPati.getDateOfBirth().isAfter(today.minusYears(18))) {
+                errors.rejectValue("dateOfBirth", "menor_edad", "Debe tener al menos 18 años para registrarse.");
+            } else if (papPati.getDateOfBirth().isBefore(today.minusYears(130))) {
+                errors.rejectValue("dateOfBirth", "edad_maxima", "La edad máxima permitida es de 130 años.");
+            }
+        }
 
         // CORRECCIÓN: "dirección" -> "address"
         if (papPati.getAddress() == null || papPati.getAddress().trim().isEmpty())
@@ -107,12 +116,23 @@ public class Pap_PatiValidator implements Validator {
         }
 
         // CORRECCIÓN: "fecha_inicio" -> "startDate"
-        if (papPati.getStartDate() == null)
+        if (papPati.getStartDate() == null) {
             errors.rejectValue("startDate", "obligatori", "Este campo es obligatorio.");
+        } else if (papPati.getStartDate().isBefore(LocalDate.now())) {
+            errors.rejectValue("startDate", "fecha_pasada", "La fecha de inicio no puede ser anterior a hoy.");
+        }
 
         // CORRECCIÓN: "fecha_fin" -> "endDate"
-        if (papPati.getEndDate() == null)
+        if (papPati.getEndDate() == null) {
             errors.rejectValue("endDate", "obligatori", "Este campo es obligatorio.");
+        } else {
+            LocalDate tomorrow = LocalDate.now().plusDays(1);
+            if (papPati.getEndDate().isBefore(tomorrow)) {
+                errors.rejectValue("endDate", "fecha_invalida", "La fecha de fin debe ser al menos el día de mañana.");
+            } else if (papPati.getStartDate() != null && papPati.getEndDate().isBefore(papPati.getStartDate())) {
+                errors.rejectValue("endDate", "incoherencia", "La fecha de fin no puede ser anterior a la fecha de inicio.");
+            }
+        }
 
         // Movilidad geográfica
         if (papPati.getGeographicMobility() == null || papPati.getGeographicMobility().trim().isEmpty()) {

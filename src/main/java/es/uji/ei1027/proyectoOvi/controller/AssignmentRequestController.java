@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -209,7 +210,7 @@ public class AssignmentRequestController {
         // 3. ASIGNAR VALORES AUTOMÁTICOS
         assignmentRequest.setRequest_Id(nuevoId);
         assignmentRequest.setStatus("in progress");
-        assignmentRequest.setRequestDate(new java.util.Date());
+        assignmentRequest.setRequestDate(LocalDate.now());
 
         // 4. VALIDAR Y GUARDAR
         AssignmentRequestValidator assignmentRequestValidator = new AssignmentRequestValidator();
@@ -426,8 +427,8 @@ public class AssignmentRequestController {
         // Disponibilidad (condición base, 20 puntos)
         if (candidate.getStartDate() != null && candidate.getEndDate() != null
                 && req.getRequiredStartAvailability() != null && req.getRequiredEndAvailability() != null
-                && !candidate.getStartDate().after(req.getRequiredStartAvailability())
-                && !candidate.getEndDate().before(req.getRequiredEndAvailability())) {
+                && !candidate.getStartDate().isAfter(req.getRequiredStartAvailability())
+                && !candidate.getEndDate().isBefore(req.getRequiredEndAvailability())) {
             score += 20;
         }
 

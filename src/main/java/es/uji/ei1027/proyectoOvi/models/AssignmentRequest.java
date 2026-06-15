@@ -2,17 +2,18 @@ package es.uji.ei1027.proyectoOvi.models;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class AssignmentRequest {
     private String request_Id;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date requestDate;
+    private LocalDate requestDate;
     private String typeOfService;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date requiredStartAvailability;
+    private LocalDate requiredStartAvailability;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date requiredEndAvailability;
+    private LocalDate requiredEndAvailability;
     private String serviceLocation;
     private String requiredTraining;
     private String requiredExperience;
@@ -35,11 +36,11 @@ public class AssignmentRequest {
         this.request_Id = request_Id;
     }
 
-    public Date getRequestDate() {
+    public LocalDate getRequestDate() {
         return requestDate;
     }
 
-    public void setRequestDate(Date requestDate) {
+    public void setRequestDate(LocalDate requestDate) {
         this.requestDate = requestDate;
     }
 
@@ -51,19 +52,19 @@ public class AssignmentRequest {
         this.typeOfService = typeOfService;
     }
 
-    public Date getRequiredStartAvailability() {
+    public LocalDate getRequiredStartAvailability() {
         return requiredStartAvailability;
     }
 
-    public void setRequiredStartAvailability(Date requiredStartAvailability) {
+    public void setRequiredStartAvailability(LocalDate requiredStartAvailability) {
         this.requiredStartAvailability = requiredStartAvailability;
     }
 
-    public Date getRequiredEndAvailability() {
+    public LocalDate getRequiredEndAvailability() {
         return requiredEndAvailability;
     }
 
-    public void setRequiredEndAvailability(Date requiredEndAvailability) {
+    public void setRequiredEndAvailability(LocalDate requiredEndAvailability) {
         this.requiredEndAvailability = requiredEndAvailability;
     }
 

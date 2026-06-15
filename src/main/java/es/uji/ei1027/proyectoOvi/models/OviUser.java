@@ -2,7 +2,7 @@ package es.uji.ei1027.proyectoOvi.models;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class OviUser {
     private String dni;
@@ -16,8 +16,8 @@ public class OviUser {
     private String status;
     private String lifePlan;
     private String tutor_id;
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
-    private Date dateOfBirth;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
     private String rejectReason;
 
     public OviUser() {
@@ -103,11 +103,11 @@ public class OviUser {
         this.tutor_id = tutor_id;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

@@ -62,7 +62,7 @@ public class AssignmentRequestValidator implements Validator {
 
         // Validación de que la fecha de fin sea posterior a la de inicio
         if (assignmentRequest.getRequiredStartAvailability() != null && assignmentRequest.getRequiredEndAvailability() != null) {
-            if (assignmentRequest.getRequiredEndAvailability().before(assignmentRequest.getRequiredStartAvailability())) {
+            if (assignmentRequest.getRequiredEndAvailability().isBefore(assignmentRequest.getRequiredStartAvailability())) {
                 errors.rejectValue("requiredEndAvailability", "dataInvalida", "La data de fi ha de ser posterior a la data d'inici");
             }
         }

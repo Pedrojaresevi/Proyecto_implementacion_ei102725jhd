@@ -45,7 +45,9 @@
         <div class="form-group row mb-3">
             <label for="dateOfBirth" class="control-label col-sm-2">Fecha de nacimiento:</label>
             <div class="col-sm-4">
-                <input type="date" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}" />
+                <input type="date" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}"
+                       th:max="${#temporals.format(#temporals.createNow().minusYears(18), 'yyyy-MM-dd')}"
+                       th:min="${#temporals.format(#temporals.createNow().minusYears(130), 'yyyy-MM-dd')}"/>
                 <div th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}" class="text-danger"></div>
             </div>
         </div>
@@ -130,7 +132,8 @@
         <div class="form-group row mb-3">
             <label for="startDate" class="control-label col-sm-2">Fecha de inicio:</label>
             <div class="col-sm-4">
-                <input type="date" class="form-control" id="startDate" th:field="*{startDate}" />
+                <input type="date" class="form-control" id="startDate" th:field="*{startDate}"
+                       th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"/>
                 <div th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class="text-danger"></div>
             </div>
         </div>
@@ -138,7 +141,8 @@
         <div class="form-group row mb-3">
             <label for="endDate" class="control-label col-sm-2">Fecha fin:</label>
             <div class="col-sm-4">
-                <input type="date" class="form-control" id="endDate" th:field="*{endDate}" />
+                <input type="date" class="form-control" id="endDate" th:field="*{endDate}"
+                       th:min="${#temporals.format(#temporals.createNow().plusDays(1), 'yyyy-MM-dd')}"/>
                 <div th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" class="text-danger"></div>
             </div>
         </div>

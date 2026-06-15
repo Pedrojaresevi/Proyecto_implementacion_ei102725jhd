@@ -20,6 +20,12 @@ public final class NegotiationRowMapper implements RowMapper<Negotiation> {
             negotiation.setHora(time.toLocalTime());
         }
         negotiation.setEmisorDni(rs.getString("emisor_dni"));
+        try {
+            negotiation.setInterlocutorName(rs.getString("interlocutorName"));
+        } catch (SQLException e) {
+            // Si la consulta no tiene la columna 'interlocutorName' (ej: al abrir el chat),
+            // saltará esta excepción y simplemente la ignoramos. ¡No pasa nada!
+        }
         return negotiation;
     }
 }

@@ -21,6 +21,16 @@ public class Negotiation {
     // Campo que NO va a la Base de datos, solo para enseñar el nombre en HTML
     private String emisorNombre;
 
+    private String interlocutorName;
+
+    public String getInterlocutorName() {
+        return interlocutorName;
+    }
+
+    public void setInterlocutorName(String interlocutorName) {
+        this.interlocutorName = interlocutorName;
+    }
+
     public String getEmisorDni() {
         return emisorDni;
     }

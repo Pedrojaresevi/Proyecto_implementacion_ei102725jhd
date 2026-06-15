@@ -315,4 +315,6 @@ public class NegotiationController {
         model.addAttribute("negotiations", chatsUnificados);
         return "negotiation/list";
     }
+
+
 }

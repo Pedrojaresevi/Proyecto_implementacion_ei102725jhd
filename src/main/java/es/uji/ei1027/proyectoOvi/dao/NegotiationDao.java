@@ -205,9 +205,12 @@ public class NegotiationDao {
     // ---------------------------------------------------------
     public List<Negotiation> getNegotiationsByUserPaginated(String oviuserId, int limit, int offset) {
         try {
-            String sql = "SELECT n.* FROM Negotiation n " +
+            // Añadimos el JOIN con PapPati y extraemos el nombre completo como interlocutorName
+            String sql = "SELECT n.*, (p.name || ' ' || p.surname) AS interlocutorName " +
+                    "FROM Negotiation n " +
                     "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
                     "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "JOIN PapPati p ON l.pappati_id = p.dni " +
                     "WHERE r.oviuser_id = ? " +
                     "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
                     "ORDER BY n.hora DESC LIMIT ? OFFSET ?";
@@ -231,13 +234,16 @@ public class NegotiationDao {
     }
 
     // ---------------------------------------------------------
-    // MÉTODOS PARA EL TUTOR (Paginado y Conteo)
+    // MÉTODOS PARA EL TUTOR (Paginado)
     // ---------------------------------------------------------
     public List<Negotiation> getNegotiationsByTutorPaginated(String tutorDni, int limit, int offset) {
         try {
-            String sql = "SELECT n.* FROM Negotiation n " +
+            // Igual que en OviUser, el interlocutor es el PapPati
+            String sql = "SELECT n.*, (p.name || ' ' || p.surname) AS interlocutorName " +
+                    "FROM Negotiation n " +
                     "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
                     "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "JOIN PapPati p ON l.pappati_id = p.dni " +
                     "WHERE r.tutor_id = ? " +
                     "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
                     "ORDER BY n.hora DESC LIMIT ? OFFSET ?";

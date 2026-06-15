@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Cancelar Negociación</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<div class="container mt-5" style="max-width: 700px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-danger text-white py-3">
+            <h4 class="mb-0 d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Cancelación de Negociación
+            </h4>
+        </div>
+        <div class="card-body p-4">
+            <p class="fs-5">Estás a punto de <strong>cancelar definitivamente</strong> la negociación con ID:
+                <strong class="text-danger" th:text="${negotiationId}">ID_NEG</strong>.
+            </p>
+
+            <form th:action="@{/negotiation/cancel/execute/{id}(id=${negotiationId})}" method="post">
+                <input type="hidden" name="listId" th:value="${listId}">
+
+                <div class="alert alert-warning my-4">
+                    <h5 class="alert-heading fw-bold"><i class="bi bi-info-circle-fill"></i> ¿Qué pasará al confirmar?</h5>
+                    <ul class="mb-0 navigation-list">
+                        <li>El estado de esta negociación pasará a ser rechazado (<em>"refused"</em>).</li>
+                        <li>La solicitud de asignación asociada volverá al estado <em>"accepted"</em>.</li>
+                        <li>Serás redirigido a la propuesta de candidatos para que puedas seleccionar otra opción.</li>
+                    </ul>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="submit" class="btn btn-danger px-4 fw-bold rounded-pill shadow-sm">
+                        Confirmar Cancelación
+                    </button>
+                    <a th:href="@{/negotiation/chat/{id}(id=${negotiationId})}" class="btn btn-secondary px-4 rounded-pill">
+                        Volver al Chat
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

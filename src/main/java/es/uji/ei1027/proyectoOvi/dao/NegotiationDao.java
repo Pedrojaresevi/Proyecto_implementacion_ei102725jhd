@@ -73,40 +73,40 @@ public class NegotiationDao {
         }
     }
 
-    public List<Negotiation> getNegotiations() {
-        try {
-            return jdbcTemplate.query("SELECT * FROM Negotiation",
-                    new NegotiationRowMapper());
-        } catch (EmptyResultDataAccessException e)  {
-            return null;
-        }
-    }
+//    public List<Negotiation> getNegotiations() {
+//        try {
+//            return jdbcTemplate.query("SELECT * FROM Negotiation",
+//                    new NegotiationRowMapper());
+//        } catch (EmptyResultDataAccessException e)  {
+//            return null;
+//        }
+//    }
 
-    public List<Negotiation> getNegotiationsByUser(String oviuserId) {
-        try {
-            String sql = "SELECT n.* FROM Negotiation n " +
-                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
-                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
-                    "WHERE r.oviuser_id = ?";
+//    public List<Negotiation> getNegotiationsByUser(String oviuserId) {
+//        try {
+//            String sql = "SELECT n.* FROM Negotiation n " +
+//                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+//                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+//                    "WHERE r.oviuser_id = ?";
+//
+//            return jdbcTemplate.query(sql, new NegotiationRowMapper(), oviuserId);
+//        } catch (EmptyResultDataAccessException e) {
+//            return new java.util.ArrayList<>();
+//        }
+//    }
 
-            return jdbcTemplate.query(sql, new NegotiationRowMapper(), oviuserId);
-        } catch (EmptyResultDataAccessException e) {
-            return new java.util.ArrayList<>();
-        }
-    }
-
-    public List<Negotiation> getNegotiationsByTutor(String tutorDni) {
-        try {
-            String sql = "SELECT n.* FROM Negotiation n " +
-                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
-                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
-                    "WHERE r.tutor_id = ?";
-
-            return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni);
-        } catch (EmptyResultDataAccessException e) {
-            return new java.util.ArrayList<>();
-        }
-    }
+//    public List<Negotiation> getNegotiationsByTutor(String tutorDni) {
+//        try {
+//            String sql = "SELECT n.* FROM Negotiation n " +
+//                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+//                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+//                    "WHERE r.tutor_id = ?";
+//
+//            return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni);
+//        } catch (EmptyResultDataAccessException e) {
+//            return new java.util.ArrayList<>();
+//        }
+//    }
 
     public Negotiation getNegotiationByListId(String listId) {
         try {
@@ -118,53 +118,53 @@ public class NegotiationDao {
         }
     }
 
-    public List<Negotiation> getNegotiationsByUserPaginated(String oviuserId, int limit, int offset) {
-        try {
-            String sql = "SELECT n.* FROM Negotiation n " +
-                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
-                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
-                    "WHERE r.oviuser_id = ? LIMIT ? OFFSET ?";
-            return jdbcTemplate.query(sql, new NegotiationRowMapper(), oviuserId, limit, offset);
-        } catch (EmptyResultDataAccessException e) {
-            return new java.util.ArrayList<>();
-        }
-    }
-
-    public int countNegotiationsByUser(String oviuserId) {
-        try {
-            String sql = "SELECT COUNT(n.*) FROM Negotiation n " +
-                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
-                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
-                    "WHERE r.oviuser_id = ?";
-            return jdbcTemplate.queryForObject(sql, Integer.class, oviuserId);
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
-        }
-    }
-
-    public List<Negotiation> getNegotiationsByTutorPaginated(String tutorDni, int limit, int offset) {
-        try {
-            String sql = "SELECT n.* FROM Negotiation n " +
-                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
-                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
-                    "WHERE r.tutor_id = ? LIMIT ? OFFSET ?";
-            return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni, limit, offset);
-        } catch (EmptyResultDataAccessException e) {
-            return new java.util.ArrayList<>();
-        }
-    }
-
-    public int countNegotiationsByTutor(String tutorDni) {
-        try {
-            String sql = "SELECT COUNT(n.*) FROM Negotiation n " +
-                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
-                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
-                    "WHERE r.tutor_id = ?";
-            return jdbcTemplate.queryForObject(sql, Integer.class, tutorDni);
-        } catch (EmptyResultDataAccessException e) {
-            return 0;
-        }
-    }
+//    public List<Negotiation> getNegotiationsByUserPaginated(String oviuserId, int limit, int offset) {
+//        try {
+//            String sql = "SELECT n.* FROM Negotiation n " +
+//                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+//                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+//                    "WHERE r.oviuser_id = ? LIMIT ? OFFSET ?";
+//            return jdbcTemplate.query(sql, new NegotiationRowMapper(), oviuserId, limit, offset);
+//        } catch (EmptyResultDataAccessException e) {
+//            return new java.util.ArrayList<>();
+//        }
+//    }
+//
+//    public int countNegotiationsByUser(String oviuserId) {
+//        try {
+//            String sql = "SELECT COUNT(n.*) FROM Negotiation n " +
+//                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+//                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+//                    "WHERE r.oviuser_id = ?";
+//            return jdbcTemplate.queryForObject(sql, Integer.class, oviuserId);
+//        } catch (EmptyResultDataAccessException e) {
+//            return 0;
+//        }
+//    }
+//
+//    public List<Negotiation> getNegotiationsByTutorPaginated(String tutorDni, int limit, int offset) {
+//        try {
+//            String sql = "SELECT n.* FROM Negotiation n " +
+//                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+//                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+//                    "WHERE r.tutor_id = ? LIMIT ? OFFSET ?";
+//            return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni, limit, offset);
+//        } catch (EmptyResultDataAccessException e) {
+//            return new java.util.ArrayList<>();
+//        }
+//    }
+//
+//    public int countNegotiationsByTutor(String tutorDni) {
+//        try {
+//            String sql = "SELECT COUNT(n.*) FROM Negotiation n " +
+//                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+//                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+//                    "WHERE r.tutor_id = ?";
+//            return jdbcTemplate.queryForObject(sql, Integer.class, tutorDni);
+//        } catch (EmptyResultDataAccessException e) {
+//            return 0;
+//        }
+//    }
 
     public Integer getNegotiationIdByRequestAndAssistant(int requestId, String papPatiDni) {
         try {
@@ -185,4 +185,108 @@ public class NegotiationDao {
             return null;
         }
     }
+    // ---------------------------------------------------------
+    // MÉTODOS GENERALES (Afecta al listado global)
+    // ---------------------------------------------------------
+    public List<Negotiation> getNegotiations() {
+        try {
+            // Obtenemos solo el mensaje más reciente de cada negociación
+            String sql = "SELECT * FROM Negotiation n " +
+                    "WHERE n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
+                    "ORDER BY n.hora DESC";
+            return jdbcTemplate.query(sql, new NegotiationRowMapper());
+        } catch (EmptyResultDataAccessException e)  {
+            return null;
+        }
+    }
+
+    // ---------------------------------------------------------
+    // MÉTODOS PARA EL USUARIO (Paginado y Conteo)
+    // ---------------------------------------------------------
+    public List<Negotiation> getNegotiationsByUserPaginated(String oviuserId, int limit, int offset) {
+        try {
+            String sql = "SELECT n.* FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.oviuser_id = ? " +
+                    "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
+                    "ORDER BY n.hora DESC LIMIT ? OFFSET ?";
+            return jdbcTemplate.query(sql, new NegotiationRowMapper(), oviuserId, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countNegotiationsByUser(String oviuserId) {
+        try {
+            // Contamos los IDs de negociación únicos, no el total de mensajes
+            String sql = "SELECT COUNT(DISTINCT n.negotiation_Id) FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.oviuser_id = ?";
+            return jdbcTemplate.queryForObject(sql, Integer.class, oviuserId);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+    // ---------------------------------------------------------
+    // MÉTODOS PARA EL TUTOR (Paginado y Conteo)
+    // ---------------------------------------------------------
+    public List<Negotiation> getNegotiationsByTutorPaginated(String tutorDni, int limit, int offset) {
+        try {
+            String sql = "SELECT n.* FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.tutor_id = ? " +
+                    "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
+                    "ORDER BY n.hora DESC LIMIT ? OFFSET ?";
+            return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countNegotiationsByTutor(String tutorDni) {
+        try {
+            // Contamos los IDs de negociación únicos
+            String sql = "SELECT COUNT(DISTINCT n.negotiation_Id) FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.tutor_id = ?";
+            return jdbcTemplate.queryForObject(sql, Integer.class, tutorDni);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+    // (Opcional) Si usas estos métodos sin paginar en algún otro lado, actualízalos igual:
+    public List<Negotiation> getNegotiationsByUser(String oviuserId) {
+        try {
+            String sql = "SELECT n.* FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.oviuser_id = ? " +
+                    "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
+                    "ORDER BY n.hora DESC";
+            return jdbcTemplate.query(sql, new NegotiationRowMapper(), oviuserId);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public List<Negotiation> getNegotiationsByTutor(String tutorDni) {
+        try {
+            String sql = "SELECT n.* FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "WHERE r.tutor_id = ? " +
+                    "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
+                    "ORDER BY n.hora DESC";
+            return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
 }

@@ -1,12 +1,7 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
-import es.uji.ei1027.proyectoOvi.dao.NegotiationDao;
-import es.uji.ei1027.proyectoOvi.dao.OviUserDao;
-import es.uji.ei1027.proyectoOvi.dao.PapPatiDao;
-import es.uji.ei1027.proyectoOvi.models.Negotiation;
-import es.uji.ei1027.proyectoOvi.models.OviUser;
-import es.uji.ei1027.proyectoOvi.models.Pap_Pati;
-import es.uji.ei1027.proyectoOvi.models.UserDetails;
+import es.uji.ei1027.proyectoOvi.dao.*;
+import es.uji.ei1027.proyectoOvi.models.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -15,8 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/negotiation")
@@ -24,6 +18,8 @@ public class NegotiationController {
     private NegotiationDao negotiationDao;
     private OviUserDao oviUserDao;
     private PapPatiDao papPatiDao;
+    private AssignmentRequestDao assignmentRequestDao;
+    private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
 
     @Autowired
     public void setOviUserDao(OviUserDao oviUserDao){
@@ -38,12 +34,21 @@ public class NegotiationController {
     public void setNegotiationDao(NegotiationDao negotiationDao){
         this.negotiationDao = negotiationDao;
     }
-
-    @RequestMapping("/list")
-    public String listNegotiations(Model model){
-        model.addAttribute("negotiations", negotiationDao.getNegotiations());
-        return "negotiation/list";
+    @Autowired
+    public void setAssignmentRequestDao(AssignmentRequestDao assignmentRequestDao) {
+        this.assignmentRequestDao = assignmentRequestDao;
     }
+
+    @Autowired
+    public void setListOfProposedCandidatesDao(ListOfProposedCandidatesDao listOfProposedCandidatesDao) {
+        this.listOfProposedCandidatesDao = listOfProposedCandidatesDao;
+    }
+
+//    @RequestMapping("/list")
+//    public String listNegotiations(Model model){
+//        model.addAttribute("negotiations", negotiationDao.getNegotiations());
+//        return "negotiation/list";
+//    }
 
 //    @RequestMapping(value="/add")
 //    public String addNegotiation(Model model) {
@@ -252,5 +257,62 @@ public class NegotiationController {
         negotiationDao.addNegotiation(newMessage);
 
         return "redirect:/negotiation/chat/" + negotiationId;
+    }
+    // --- NUEVO MÉTODO PARA CANCELAR LA NEGOCIACIÓN ---
+    // 1. PASO UNO: Mostrar la vista de confirmación (GET)
+    @RequestMapping(value="/cancel/{negotiationId}", method=RequestMethod.GET)
+    public String showCancelConfirmation(@PathVariable("negotiationId") String negotiationId,
+                                         @RequestParam("listId") String listId,
+                                         Model model, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("negotiationId", negotiationId);
+        model.addAttribute("listId", listId);
+        return "negotiation/cancel"; // Ruta de tu nuevo HTML
+    }
+
+    // Ejecutar la cancelación definitiva (POST) - Versión limpia sin residuos en BBDD
+    @RequestMapping(value="/cancel/execute/{negotiationId}", method=RequestMethod.POST)
+    public String executeCancelNegotiation(@PathVariable("negotiationId") String negotiationId,
+                                           @RequestParam("listId") String listId,
+                                           HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        // 1. ELIMINAR físicamente todo el historial de esta negociación de la Base de Datos
+        negotiationDao.deleteNegotiation(negotiationId);
+        // 2. Buscar la propuesta asociada para saber qué solicitud (AssignmentRequest) reabrir
+        ListOfProposedCandidates proposal = listOfProposedCandidatesDao.getListOfProposedCandidates(listId);
+        if (proposal != null) {
+            String requestId = proposal.getRequest_id();
+            // Cambiar estado del AssignmentRequest de "completed" a "accepted" para volver a habilitarla
+            AssignmentRequest req = assignmentRequestDao.getAssignmentRequest(requestId);
+            if (req != null) {
+                req.setStatus("accepted");
+                assignmentRequestDao.updateAssignmentRequest(req);
+            }
+            // Redirigir de vuelta a la pantalla de propuestas (Candidatos posibles)
+            return "redirect:/assignmentRequest/proposals/" + requestId;
+        }
+        return "redirect:/assignmentRequest/list";
+    }
+    @RequestMapping("/list")
+    public String listChats(Model model, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        // 1. Ahora el DAO ya nos devuelve directamente solo 1 fila por chat (el mensaje más reciente)
+        // Por tanto, no hace falta procesar la lista ni usar HashSet
+        List<Negotiation> chatsUnificados = negotiationDao.getNegotiations();
+
+        // 2. Enviamos al HTML la lista limpia
+        model.addAttribute("negotiations", chatsUnificados);
+        return "negotiation/list";
     }
 }

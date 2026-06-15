@@ -82,6 +82,19 @@
         </div>
 
         <div class="card-footer bg-white p-3 border-0 shadow rounded-bottom-4">
+
+            <div class="d-flex justify-content-end gap-2 mb-3">
+                <a th:href="@{/negotiation/cancel/{id}(id=${negotiationId}, listId=${listId})}"
+                   class="btn btn-outline-danger btn-sm rounded-pill fw-bold shadow-sm">
+                    <i class="bi bi-x-circle-fill me-1"></i> Cancelar Negociación
+                </a>
+
+                <a th:href="@{/contract/add(negotiationId=${negotiationId}, backUrl='/negotiation/chat/' + negotiationId)}"
+                   class="btn btn-success btn-sm rounded-pill fw-bold shadow-sm">
+                    <i class="bi bi-file-earmark-text-fill me-1"></i> Subir Contrato
+                </a>
+            </div>
+
             <form th:action="@{/negotiation/sendMessage}" method="post" class="d-flex align-items-center gap-2 m-0">
                 <input type="hidden" name="negotiationId" th:value="${negotiationId}">
                 <input type="hidden" name="listId" th:value="${listId}">

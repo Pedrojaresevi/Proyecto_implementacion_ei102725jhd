@@ -49,7 +49,7 @@ public class ContractController {
     }
 
     @RequestMapping(value="/add")
-    public String addContract(Model model, jakarta.servlet.http.HttpSession session) {
+    public String addContract(Model model, @RequestParam("negotiationId") String negotiationId,jakarta.servlet.http.HttpSession session) {
         // 1. Recuperamos el usuario de la sesión
         UserDetails user = (UserDetails) session.getAttribute("user");
 
@@ -63,6 +63,8 @@ public class ContractController {
 
         // 4. Pasamos el contrato vacío para el formulario
         model.addAttribute("contract", new Contract());
+        model.addAttribute("negotiationId", negotiationId);  // <-- esto falta
+
 
         return "contract/add";
     }

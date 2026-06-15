@@ -161,6 +161,21 @@ public class NegotiationController {
 
         return "negotiation/list"; // <- CAMBIADO: Ahora el tutor usa el HTML de la bandeja de entrada de chats
     }
+    @RequestMapping(value="/pappati/{dni}", method = RequestMethod.GET)
+    public String listNegotiationsByPapPati(Model model, @PathVariable String dni, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+
+        // Verificamos que esté logueado y sea él mismo
+        if (user == null || !user.getDni().equals(dni)) {
+            return "redirect:/login";
+        }
+
+        // Buscamos sus chats específicos
+        List<Negotiation> chats = negotiationDao.getNegotiationsByPapPati(dni);
+        model.addAttribute("negotiations", chats);
+
+        return "negotiation/list"; // Reutilizamos la vista de la lista de chats
+    }
 
     @RequestMapping("/chat/{negotiationId}")
     public String openChat(@PathVariable("negotiationId") String negotiationId,

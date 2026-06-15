@@ -36,7 +36,7 @@
             <tbody>
             <tr th:each="request: ${assignmentRequests}">
                 <td th:text="${request.request_Id}" class="fw-bold"></td>
-                <td th:text="${#dates.format(request.requestDate, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#temporals.format(request.requestDate, 'dd/MM/yyyy')}"></td>
                 <td th:text="${request.typeOfService}"></td>
                 <td th:text="${request.serviceLocation}"></td>
 

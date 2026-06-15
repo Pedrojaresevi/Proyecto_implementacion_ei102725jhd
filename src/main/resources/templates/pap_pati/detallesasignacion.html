@@ -98,7 +98,11 @@
         </div>
     </div>
 
-    <a th:href="@{/negotiation/chat/{negotiationId}(negotiationId=${negotiationId})}" class="btn btn-primary mt-3">Ir a la negociación</a>
+    <a th:if="${negotiationId != null}"
+       th:href="@{/negotiation/chat/{negotiationId}(negotiationId=${negotiationId})}"
+       class="btn btn-primary mt-3">
+        <i class="bi bi-chat-dots me-2"></i>Ir a la negociación
+    </a>
     <a th:href="@{/pap_pati/listpappati}" class="btn btn-secondary mt-3 ms-2">Volver</a>
 </main>
 </body>

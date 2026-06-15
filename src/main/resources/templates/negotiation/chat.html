@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
 </head>
 <body class="bg-secondary bg-opacity-10">
 
@@ -16,12 +16,29 @@
     <div class="card shadow-lg border-0 rounded-4 d-flex flex-column">
 
         <div class="card-header bg-primary bg-gradient text-white d-flex align-items-center py-3 px-4 border-0 rounded-top-4">
-            <a th:href="@{/negotiation/user/{dni}(dni=${session.user.dni})}" class="text-white me-3 fs-5 text-decoration-none">
+
+            <a th:if="${session.user.role == 'oviuser'}"
+               th:href="@{/negotiation/user/{dni}(dni=${session.user.dni})}"
+               class="text-white me-3 fs-5 text-decoration-none">
                 <i class="bi bi-arrow-left"></i>
             </a>
+
+            <a th:if="${session.user.role == 'tutor'}"
+               th:href="@{/negotiation/tutor/{dni}(dni=${session.user.dni})}"
+               class="text-white me-3 fs-5 text-decoration-none">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+
+            <a th:if="${session.user.role == 'pap_pati'}"
+               th:href="@{/negotiation/pappati/{dni}(dni=${session.user.dni})}"
+               class="text-white me-3 fs-5 text-decoration-none">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+
             <div class="rounded-circle bg-white text-primary d-flex justify-content-center align-items-center me-3 shadow-sm" style="width: 48px; height: 48px;">
                 <i class="bi bi-person-fill fs-3"></i>
             </div>
+
             <div class="flex-grow-1">
                 <h5 class="mb-0 fw-bold" th:text="'Negociación #' + ${negotiationId}">Chat</h5>
                 <div class="d-flex align-items-center mt-1">

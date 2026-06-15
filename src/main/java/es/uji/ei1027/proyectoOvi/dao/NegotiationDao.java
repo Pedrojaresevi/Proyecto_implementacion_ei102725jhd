@@ -108,16 +108,25 @@ public class NegotiationDao {
 //        }
 //    }
 
+//    public Negotiation getNegotiationByListId(String listId) {
+//        try {
+//            return jdbcTemplate.queryForObject(
+//                    "SELECT * FROM Negotiation WHERE list_id = ?",
+//                    new NegotiationRowMapper(), listId);
+//        } catch (EmptyResultDataAccessException e) {
+//            return null;
+//        }
+//    }
+
     public Negotiation getNegotiationByListId(String listId) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT * FROM Negotiation WHERE list_id = ?",
+                    "SELECT * FROM Negotiation WHERE list_id = ? ORDER BY hora DESC LIMIT 1",
                     new NegotiationRowMapper(), listId);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
-
 //    public List<Negotiation> getNegotiationsByUserPaginated(String oviuserId, int limit, int offset) {
 //        try {
 //            String sql = "SELECT n.* FROM Negotiation n " +
@@ -290,6 +299,19 @@ public class NegotiationDao {
                     "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
                     "ORDER BY n.hora DESC";
             return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+    public List<Negotiation> getNegotiationsByPapPati(String papPatiDni) {
+        try {
+            String sql = "SELECT n.* FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "WHERE l.pappati_id = ? " +
+                    "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
+                    "ORDER BY n.hora DESC";
+
+            return jdbcTemplate.query(sql, new NegotiationRowMapper(), papPatiDni);
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<>();
         }

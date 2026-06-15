@@ -169,7 +169,7 @@ public class Pap_PatiController {
         }
 
         // Si está aceptada y el usuario es pappati, buscamos su list_id para el botón de negociación
-        if ("accepted".equals(request.getStatus()) && "pappati".equals(user.getRole())) {
+        if ("accepted".equals(request.getStatus()) && "pap_pati".equals(user.getRole())) {
             listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni())
                     .stream()
                     .filter(p -> p.getRequest_id().equals(id))

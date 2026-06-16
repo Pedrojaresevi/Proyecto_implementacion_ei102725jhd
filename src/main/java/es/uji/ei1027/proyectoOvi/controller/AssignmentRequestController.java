@@ -242,19 +242,49 @@ public class AssignmentRequestController {
         return "assignmentRequest/update";
     }
 
+//    @RequestMapping(value="/update", method=RequestMethod.POST)
+//    public String processUpdateSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
+//                                      BindingResult bindingResult, Model model) {
+//        // Se recupera la fecha original de la base de datos usando el ID
+//        AssignmentRequest original = assignmentRequestDao.getAssignmentRequest(assignmentRequest.getRequest_Id());
+//        assignmentRequest.setRequestDate(original.getRequestDate());
+//        //Validar después de poner la fecha para que el validador no se queje
+//        AssignmentRequestValidator assignmentRequestValidator = new AssignmentRequestValidator();
+//        assignmentRequestValidator.validate(assignmentRequest, bindingResult);
+//
+//        if (bindingResult.hasErrors()) {
+//            return "assignmentRequest/update";
+//        }
+//
+//        assignmentRequestDao.updateAssignmentRequest(assignmentRequest);
+//
+//        return "redirect:list";
+//    }
+
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String processUpdateSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
                                       BindingResult bindingResult, Model model) {
+
+        // 1. CORRECCIÓN: Convertir cadenas vacías en null para la Base de Datos
+        if (assignmentRequest.getOviuser_id() != null && assignmentRequest.getOviuser_id().trim().isEmpty()) {
+            assignmentRequest.setOviuser_id(null);
+        }
+        if (assignmentRequest.getTutor_id() != null && assignmentRequest.getTutor_id().trim().isEmpty()) {
+            assignmentRequest.setTutor_id(null);
+        }
+
         // Se recupera la fecha original de la base de datos usando el ID
         AssignmentRequest original = assignmentRequestDao.getAssignmentRequest(assignmentRequest.getRequest_Id());
         assignmentRequest.setRequestDate(original.getRequestDate());
-        //Validar después de poner la fecha para que el validador no se queje
+
+        // Validar después de normalizar los IDs para que el validador funcione sobre seguro
         AssignmentRequestValidator assignmentRequestValidator = new AssignmentRequestValidator();
         assignmentRequestValidator.validate(assignmentRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return "assignmentRequest/update";
         }
+
         assignmentRequestDao.updateAssignmentRequest(assignmentRequest);
 
         return "redirect:list";

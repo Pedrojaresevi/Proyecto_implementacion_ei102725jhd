@@ -77,13 +77,20 @@
       <label class="control-label col-sm-2">Habilidades:</label>
       <div class="col-sm-10">
         <div class="row">
-          <div th:each="skill : ${skillsDisponibles}" class="col-md-4">
+          <div th:each="skill, iterStat : ${skillsDisponibles}" class="col-md-4">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" th:field="*{requiredSkills}" th:value="${skill}">
-              <label class="form-check-label" th:text="${skill}"></label>
+              <!-- Quitamos th:field y usamos name, id y th:checked manual -->
+              <input class="form-check-input" type="checkbox"
+                     name="requiredSkills"
+                     th:id="'skill_' + ${iterStat.index}"
+                     th:value="${skill}"
+                     th:checked="${assignmentRequest.requiredSkills != null and #strings.contains(assignmentRequest.requiredSkills, skill)}">
+              <label class="form-check-label" th:for="'skill_' + ${iterStat.index}" th:text="${skill}"></label>
             </div>
           </div>
         </div>
+        <!-- Input oculto clave para Spring Boot -->
+        <input type="hidden" name="_requiredSkills" value="on"/>
       </div>
     </div>
 

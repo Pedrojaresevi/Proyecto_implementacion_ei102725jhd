@@ -30,7 +30,7 @@
             </a>
 
             <a th:if="${session.user.role == 'pap_pati'}"
-               th:href="@{/negotiation/pappati/{dni}(dni=${session.user.dni})}"
+               th:href="@{/pap_pati/listpappati}"
                class="text-white me-3 fs-5 text-decoration-none">
                 <i class="bi bi-arrow-left"></i>
             </a>
@@ -66,10 +66,12 @@
 
                 <th:block th:unless="${#strings.startsWith(msg.recordOfComunications, 'Inicio de negociaciones')}">
 
+                    <!-- MENSAJES ENVIADOS POR MÍ -->
                     <div th:if="${session.user != null and msg.emisorDni == session.user.dni}" class="align-self-end mb-3" style="max-width: 85%;">
                         <div class="p-3 bg-primary bg-opacity-10 shadow-sm border-0 rounded-4 rounded-top-0 rounded-start-4">
                             <div class="d-flex align-items-center justify-content-end mb-2">
-                                <span class="text-primary fw-semibold small me-2" th:text="${msg.emisorNombre != null ? msg.emisorNombre : 'Yo'}">Mi Nombre</span>
+                                <!-- Cambiado para que ponga siempre 'Tú' de forma limpia -->
+                                <span class="text-primary fw-semibold small me-2">Tú</span>
                                 <i class="bi bi-person-circle text-primary"></i>
                             </div>
                             <p class="mb-2 text-dark text-end" th:text="${msg.recordOfComunications}">Texto</p>
@@ -80,6 +82,7 @@
                         </div>
                     </div>
 
+                    <!-- MENSAJES RECIBIDOS DEL INTERLOCUTOR -->
                     <div th:unless="${session.user != null and msg.emisorDni == session.user.dni}" class="align-self-start mb-3" style="max-width: 85%;">
                         <div class="p-3 bg-white shadow-sm border-0 rounded-4 rounded-top-0 rounded-end-4">
                             <div class="d-flex align-items-center mb-2">

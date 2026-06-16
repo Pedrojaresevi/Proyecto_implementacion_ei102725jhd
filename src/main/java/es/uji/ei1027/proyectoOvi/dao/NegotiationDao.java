@@ -210,19 +210,22 @@ public class NegotiationDao {
     }
 
     // ---------------------------------------------------------
-    // MÉTODOS PARA EL USUARIO (Paginado y Conteo)
+    // MÉTODOS PARA EL USUARIO (Paginado)
     // ---------------------------------------------------------
     public List<Negotiation> getNegotiationsByUserPaginated(String oviuserId, int limit, int offset) {
         try {
-            // Añadimos el JOIN con PapPati y extraemos el nombre completo como interlocutorName
-            String sql = "SELECT n.*, (p.name || ' ' || p.surname) AS interlocutorName " +
-                    "FROM Negotiation n " +
-                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+            String sql = "SELECT n1.*, (p.name || ' ' || p.surname) AS interlocutorName " +
+                    "FROM Negotiation n1 " +
+                    "JOIN ListOfProposedCandidates l ON n1.list_id = l.list_id " +
                     "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
                     "JOIN PapPati p ON l.pappati_id = p.dni " +
                     "WHERE r.oviuser_id = ? " +
-                    "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
-                    "ORDER BY n.hora DESC LIMIT ? OFFSET ?";
+                    "AND NOT EXISTS (" +
+                    "    SELECT 1 FROM Negotiation n2 " +
+                    "    WHERE n2.negotiation_Id = n1.negotiation_Id " +
+                    "    AND (n2.startDate > n1.startDate OR (n2.startDate = n1.startDate AND n2.hora > n1.hora))" +
+                    ") " +
+                    "ORDER BY n1.startDate DESC, n1.hora DESC LIMIT ? OFFSET ?";
             return jdbcTemplate.query(sql, new NegotiationRowMapper(), oviuserId, limit, offset);
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<>();
@@ -243,19 +246,20 @@ public class NegotiationDao {
     }
 
     // ---------------------------------------------------------
-    // MÉTODOS PARA EL TUTOR (Paginado)
+    // MÉTODOS PARA EL TUTOR (Paginado) - CORREGIDO CON ROW_NUMBER()
     // ---------------------------------------------------------
     public List<Negotiation> getNegotiationsByTutorPaginated(String tutorDni, int limit, int offset) {
         try {
-            // Igual que en OviUser, el interlocutor es el PapPati
-            String sql = "SELECT n.*, (p.name || ' ' || p.surname) AS interlocutorName " +
-                    "FROM Negotiation n " +
-                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
-                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
-                    "JOIN PapPati p ON l.pappati_id = p.dni " +
-                    "WHERE r.tutor_id = ? " +
-                    "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
-                    "ORDER BY n.hora DESC LIMIT ? OFFSET ?";
+            String sql = "WITH Ranked AS (" +
+                    "  SELECT n1.*, (p.name || ' ' || p.surname) AS interlocutorName, " +
+                    "  ROW_NUMBER() OVER(PARTITION BY n1.list_id ORDER BY n1.startDate DESC, n1.hora DESC) as rn " +
+                    "  FROM Negotiation n1 " +
+                    "  JOIN ListOfProposedCandidates l ON n1.list_id = l.list_id " +
+                    "  JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "  JOIN PapPati p ON l.pappati_id = p.dni " +
+                    "  WHERE r.tutor_id = ?" +
+                    ") " +
+                    "SELECT * FROM Ranked WHERE rn = 1 ORDER BY startDate DESC, hora DESC LIMIT ? OFFSET ?";
             return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni, limit, offset);
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<>();
@@ -275,7 +279,6 @@ public class NegotiationDao {
         }
     }
 
-    // (Opcional) Si usas estos métodos sin paginar en algún otro lado, actualízalos igual:
     public List<Negotiation> getNegotiationsByUser(String oviuserId) {
         try {
             String sql = "SELECT n.* FROM Negotiation n " +
@@ -290,19 +293,26 @@ public class NegotiationDao {
         }
     }
 
+    // ---------------------------------------------------------
+    // MÉTODO EXTRA PARA EL TUTOR (Sin paginar) - CORREGIDO CON ROW_NUMBER()
+    // ---------------------------------------------------------
     public List<Negotiation> getNegotiationsByTutor(String tutorDni) {
         try {
-            String sql = "SELECT n.* FROM Negotiation n " +
-                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
-                    "JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
-                    "WHERE r.tutor_id = ? " +
-                    "AND n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
-                    "ORDER BY n.hora DESC";
+            String sql = "WITH Ranked AS (" +
+                    "  SELECT n1.*, " +
+                    "  ROW_NUMBER() OVER(PARTITION BY n1.negotiation_Id ORDER BY n1.startDate DESC, n1.hora DESC) as rn " +
+                    "  FROM Negotiation n1 " +
+                    "  JOIN ListOfProposedCandidates l ON n1.list_id = l.list_id " +
+                    "  JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
+                    "  WHERE r.tutor_id = ?" +
+                    ") " +
+                    "SELECT * FROM Ranked WHERE rn = 1 ORDER BY startDate DESC, hora DESC";
             return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni);
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<>();
         }
     }
+
     public List<Negotiation> getNegotiationsByPapPati(String papPatiDni) {
         try {
             String sql = "SELECT n.* FROM Negotiation n " +

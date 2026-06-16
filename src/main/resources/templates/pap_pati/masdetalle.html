@@ -82,7 +82,7 @@
                             <div class="label-text text-muted">Fecha de Nacimiento</div>
                             <div class="data-text">
                                 <i class="bi bi-calendar3 me-2 text-muted"></i>
-                                <span th:text="${#dates.format(pap_pati.dateOfBirth, 'dd/MM/yyyy')}"></span>
+                                <span th:text="${#temporals.format(pap_pati.dateOfBirth, 'dd/MM/yyyy')}"></span>
                             </div>
                         </div>
                         <div>
@@ -133,10 +133,10 @@
                             <div class="label-text text-muted">Disponibilidad Actual</div>
                             <div class="data-text d-flex align-items-center">
                                 <i class="bi bi-calendar-check text-success me-2"></i>
-                                <span th:text="${#dates.format(pap_pati.startDate, 'dd/MM/yyyy')}"></span>
+                                <span th:text="${#temporals.format(pap_pati.startDate, 'dd/MM/yyyy')}"></span>
                                 <i class="bi bi-arrow-right mx-2 text-muted"></i>
                                 <i class="bi bi-calendar-x me-1 text-danger"></i>
-                                <span th:text="${#dates.format(pap_pati.endDate, 'dd/MM/yyyy')}"></span>
+                                <span th:text="${#temporals.format(pap_pati.endDate, 'dd/MM/yyyy')}"></span>
                             </div>
                         </div>
 

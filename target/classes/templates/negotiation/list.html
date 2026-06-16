@@ -36,13 +36,30 @@
                         Negociación
                     </h5>
 
-                    <small class="text-muted" th:text="${#dates.format(neg.startDate, 'dd/MM/yyyy')}">Fecha</small>
+                    <small class="text-muted d-flex align-items-center">
+                        <i class="bi bi-clock me-1"></i>
+                        <span th:text="${#dates.format(neg.startDate, 'dd/MM/yyyy')}">Fecha</span>
+                        <span class="mx-1">-</span>
+                        <span th:text="${#temporals.format(neg.hora, 'HH:mm')}">Hora</span>
+                    </small>
                 </div>
 
-                <p class="mb-1 text-truncate text-secondary" style="max-width: 350px;">
+                <!-- SECCIÓN MODIFICADA: Identifica el emisor del último mensaje -->
+                <p class="mb-1 text-truncate text-secondary" style="max-width: 450px;">
                     <i class="bi bi-check2-all text-info"></i>
-                    <span th:if="${neg.recordOfComunications != null and !neg.recordOfComunications.isEmpty()}"
-                          th:text="${neg.recordOfComunications}"></span>
+
+                    <span th:if="${neg.recordOfComunications != null and !neg.recordOfComunications.isEmpty()}">
+                        <!-- Si el mensaje lo enviaste tú -->
+                        <span th:if="${session.user != null and neg.emisorDni == session.user.dni}" class="fw-bold text-dark">Tú: </span>
+
+                        <!-- Si el mensaje lo envió la otra persona -->
+                        <span th:unless="${session.user != null and neg.emisorDni == session.user.dni}" class="fw-bold text-dark"
+                              th:text="${neg.interlocutorName != null ? neg.interlocutorName + ': ' : 'Participante: '}"></span>
+
+                        <!-- Texto del mensaje -->
+                        <span th:text="${neg.recordOfComunications}"></span>
+                    </span>
+
                     <span th:unless="${neg.recordOfComunications != null and !neg.recordOfComunications.isEmpty()}">
                         Escribe el primer mensaje...
                     </span>
@@ -66,21 +83,21 @@
         <a href="/dashboard" class="btn btn-secondary">Volver</a>
     </div>
 
-    <nav th:if="${totalPages > 1}" aria-label="Navegación de negociaciones" class="mt-5">
+    <nav th:if="${totalPages != null and totalPages > 1}" aria-label="Navegación de negociaciones" class="mt-5">
         <ul class="pagination justify-content-center">
 
             <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/negotiation/user/{dni}(dni=${dniOwner}, page=${currentPage - 1})}" aria-label="Anterior">
+                <a class="page-link" th:href="@{'/negotiation/' + ${rolePath} + '/' + ${dniOwner}(page=${currentPage - 1})}" aria-label="Anterior">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
             <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
-                <a class="page-link" th:href="@{/negotiation/user/{dni}(dni=${dniOwner}, page=${i})}" th:text="${i}">1</a>
+                <a class="page-link" th:href="@{'/negotiation/' + ${rolePath} + '/' + ${dniOwner}(page=${i})}" th:text="${i}">1</a>
             </li>
 
             <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/negotiation/user/{dni}(dni=${dniOwner}, page=${currentPage + 1})}" aria-label="Siguiente">
+                <a class="page-link" th:href="@{'/negotiation/' + ${rolePath} + '/' + ${dniOwner}(page=${currentPage + 1})}" aria-label="Siguiente">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

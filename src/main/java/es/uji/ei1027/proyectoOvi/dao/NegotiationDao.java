@@ -66,8 +66,9 @@ public class NegotiationDao {
 
     public List<Negotiation> getMessagesByNegotiationId(String negotiation_Id) {
         try {
-            return jdbcTemplate.query("SELECT * FROM Negotiation WHERE negotiation_Id=? ORDER BY hora ASC",
-                    new NegotiationRowMapper(), negotiation_Id);
+            // CORREGIDO: Añadido startDate ASC antes de hora ASC
+            String sql = "SELECT * FROM Negotiation WHERE negotiation_Id=? ORDER BY startDate ASC, hora ASC";
+            return jdbcTemplate.query(sql, new NegotiationRowMapper(), negotiation_Id);
         } catch (EmptyResultDataAccessException e)  {
             return new java.util.ArrayList<>();
         }

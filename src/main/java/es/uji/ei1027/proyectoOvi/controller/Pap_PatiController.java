@@ -317,6 +317,7 @@ public class Pap_PatiController {
     public String verMasDetalle(Model model,
                                 @PathVariable String id,
                                 @RequestParam(required = false) String requestId,
+                                @RequestParam(value = "from", required = false) String from,
                                 HttpSession session) {
 
         UserDetails user = (UserDetails) session.getAttribute("user");
@@ -330,10 +331,27 @@ public class Pap_PatiController {
             return "redirect:/pap_pati/list";
         }
 
-        // Pasamos el candidato
+        // 1. Inicializamos la variable vacía para procesarla con seguridad
+        String volverUrl = "/dashboard";
+
+        // 2. Control estricto de la ruta de retorno limpiando posibles espacios (.trim())
+        if (from != null) {
+            String origen = from.trim();
+
+            if ("proposals".equals(origen)) {
+                if (requestId != null && !requestId.isEmpty()) {
+                    volverUrl = "/assignmentRequest/proposals/" + requestId.trim();
+                }
+            } else if ("accepted".equals(origen)) {
+                // Forzamos explícitamente que si viene de 'accepted', regrese a la lista de registrados
+                volverUrl = "/pap_pati/accepted";
+            }
+        }
+
+        // Pasamos los atributos necesarios a la vista masdetalle.html
         model.addAttribute("pap_pati", candidato);
-        // Pasamos el ID de la solicitud (puede ser null si acceden por otra ruta)
         model.addAttribute("requestId", requestId);
+        model.addAttribute("volverUrl", volverUrl);
 
         return "pap_pati/masdetalle";
     }

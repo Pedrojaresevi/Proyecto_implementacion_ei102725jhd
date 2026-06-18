@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>PAP/PATI Registrados</title>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
@@ -12,7 +10,6 @@
 <body>
 
 <div th:replace="~{fragments/base :: navbar}"></div>
-
 
 <main class="container pb-5">
 
@@ -28,48 +25,39 @@
         <table class="table table-striped table-hover align-middle text-center">
             <thead class="table-dark">
             <tr>
-                <th>DNI</th>
                 <th>Nombre</th>
-                <th>Apellido</th>
-                <th>F. Nacimiento</th>
-                <th>Dirección</th>
-                <th>Teléfono</th>
                 <th>Email</th>
-                <th>Formación</th>
-                <th>Experiencia</th>
-                <th>Tipo Asistente</th>
-                <th>F. Inicio</th>
-                <th>F. Fin</th>
-                <th>Movilidad</th>
-                <th>Habilidades</th>
                 <th>Estado</th>
-                <th>Acciones</th>
+                <th class="text-center">Detalles</th>
+                <th class="text-center">Acciones</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="pap_pati: ${allpap_pati}">
-                <td th:text="${pap_pati.dni}"></td>
-                <td th:text="${pap_pati.name}"></td>
-                <td th:text="${pap_pati.surname}"></td>
-                <td th:text="${pap_pati.dateOfBirth}"></td>
-                <td th:text="${pap_pati.address}"></td>
-                <td th:text="${pap_pati.phone}"></td>
+                <td th:text="${pap_pati.name} + ' ' + ${pap_pati.surname}"></td>
                 <td th:text="${pap_pati.email}"></td>
-                <td th:text="${pap_pati.specificTraining}"></td>
-                <td th:text="${pap_pati.typeOfExperience}"></td>
-                <td th:text="${pap_pati.assistant_type}"></td>
-                <td th:text="${pap_pati.startDate}"></td>
-                <td th:text="${pap_pati.endDate}"></td>
-                <td th:text="${pap_pati.geographicMobility}"></td>
-                <td th:text="${pap_pati.skills}"></td>
-                <td><span class="badge rounded-pill bg-success px-3 py-2">Aceptado</span></td>
+
+                <td>
+                    <span class="badge rounded-pill bg-success px-3 py-2">Aceptado</span>
+                </td>
+
+                <td class="text-center">
+                    <a th:href="@{/pap_pati/masdetalle/{id}(id=${pap_pati.dni}, from='accepted')}"
+                       class="btn btn-secondary btn-sm px-4 py-2 shadow-sm fw-semibold">
+                        <i class="bi bi-eye-fill me-1"></i> Ver perfil
+                    </a>
+                </td>
+
                 <td class="text-center">
                     <a th:href="@{/pap_pati/update/{id}(id=${pap_pati.dni})}"
-                       class="btn btn-warning btn-sm">Editar</a>
+                       class="btn btn-warning btn-sm px-4 py-2 shadow-sm fw-semibold text-dark">
+                        <i class="bi bi-pencil-square me-1"></i> Editar
+                    </a>
                 </td>
             </tr>
+
             <tr th:if="${#lists.isEmpty(allpap_pati)}">
-                <td colspan="16" class="text-center text-muted p-4">No hay PAP/PATI registrados.</td>
+                <td colspan="5" class="text-center text-muted p-4">No hay PAP/PATI registrados.</td>
             </tr>
             </tbody>
         </table>
@@ -77,19 +65,15 @@
 
     <nav th:if="${totalPages > 1}" aria-label="Navegación de asistentes" class="mt-4">
         <ul class="pagination justify-content-center">
-
             <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
                 <a class="page-link" th:href="@{/pap_pati/accepted(page=${currentPage - 1})}">&laquo;</a>
             </li>
-
             <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
                 <a class="page-link" th:href="@{/pap_pati/accepted(page=${i})}" th:text="${i}">1</a>
             </li>
-
             <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
                 <a class="page-link" th:href="@{/pap_pati/accepted(page=${currentPage + 1})}">&raquo;</a>
             </li>
-
         </ul>
     </nav>
 

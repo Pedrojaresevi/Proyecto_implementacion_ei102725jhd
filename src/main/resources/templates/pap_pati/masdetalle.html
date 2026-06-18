@@ -164,13 +164,7 @@
     </div>
 
     <div class="mt-4">
-        <a th:if="${requestId != null}" th:href="@{/assignmentRequest/proposals/{id}(id=${requestId})}" class="btn btn-secondary px-4">
-            Volver
-        </a>
-
-        <a th:if="${requestId == null}" th:href="@{/pap_pati/list}" class="btn btn-secondary">
-            Volver
-        </a>
+        <a th:href="${volverUrl}" class="btn btn-secondary mt-3">Volver</a>
     </div>
 
 </main>

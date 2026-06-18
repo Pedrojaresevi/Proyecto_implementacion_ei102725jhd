@@ -239,7 +239,19 @@ public class AssignmentRequestController {
 
     @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
     public String editAssignmentRequest(Model model, @PathVariable String id) {
-        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
+        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+        model.addAttribute("assignmentRequest", request);
+
+        // Novedad: Convertimos el String de habilidades ("Cocina,Conducción") en una Lista para el HTML
+        List<String> habilidadesSeleccionadas = new ArrayList<>();
+        if (request.getRequiredSkills() != null && !request.getRequiredSkills().trim().isEmpty()) {
+            // Dividimos por coma y eliminamos los espacios en blanco alrededor de cada palabra
+            habilidadesSeleccionadas = Arrays.stream(request.getRequiredSkills().split(","))
+                    .map(String::trim)
+                    .collect(java.util.stream.Collectors.toList());
+        }
+        model.addAttribute("habilidadesSeleccionadas", habilidadesSeleccionadas);
+
         return "assignmentRequest/update";
     }
 

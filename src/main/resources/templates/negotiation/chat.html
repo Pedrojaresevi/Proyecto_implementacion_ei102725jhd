@@ -19,31 +19,34 @@
 
             <a th:if="${session.user.role == 'oviuser'}"
                th:href="@{/negotiation/user/{dni}(dni=${session.user.dni})}"
-               class="text-white me-3 fs-5 text-decoration-none">
-                <i class="bi bi-arrow-left"></i>
+               class="text-white me-3 fs-5 text-decoration-none"
+               aria-label="Volver atrás">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
             </a>
 
             <a th:if="${session.user.role == 'tutor'}"
                th:href="@{/negotiation/tutor/{dni}(dni=${session.user.dni})}"
-               class="text-white me-3 fs-5 text-decoration-none">
-                <i class="bi bi-arrow-left"></i>
+               class="text-white me-3 fs-5 text-decoration-none"
+               aria-label="Volver atrás">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
             </a>
 
             <a th:if="${session.user.role == 'pap_pati'}"
                th:href="@{/pap_pati/listpappati}"
-               class="text-white me-3 fs-5 text-decoration-none">
-                <i class="bi bi-arrow-left"></i>
+               class="text-white me-3 fs-5 text-decoration-none"
+               aria-label="Volver atrás">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
             </a>
 
             <div class="rounded-circle bg-white text-primary d-flex justify-content-center align-items-center me-3 shadow-sm" style="width: 48px; height: 48px;">
-                <i class="bi bi-person-fill fs-3"></i>
+                <i class="bi bi-person-fill fs-3" aria-hidden="true"></i>
             </div>
 
             <div class="flex-grow-1">
                 <h5 class="mb-0 fw-bold" th:text="'Negociación #' + ${negotiationId}">Chat</h5>
                 <div class="d-flex align-items-center mt-1">
-                    <span class="badge bg-light text-primary rounded-pill px-2 py-1 fw-medium">
-                        <i class="bi bi-circle-fill text-success me-1" style="font-size: 0.5rem;" th:if="${status == 'Activo' or status == 'Abierta' or status == 'in progress'}"></i>
+                    <span class="badge bg-light text-primary-emphasis rounded-pill px-2 py-1 fw-medium">
+                        <i class="bi bi-circle-fill text-success me-1" style="font-size: 0.5rem;" th:if="${status == 'Activo' or status == 'Abierta' or status == 'in progress'}" aria-hidden="true"></i>
                         <span th:text="${status}">Estado</span>
                     </span>
                 </div>
@@ -57,7 +60,7 @@
                 <div th:if="${#strings.startsWith(msg.recordOfComunications, 'Inicio de negociaciones')}"
                      class="align-self-center w-75 mb-4 p-3 shadow-sm rounded-4 text-center bg-white border-start border-4 border-primary order-first">
                     <div class="d-flex align-items-center justify-content-center mb-2">
-                        <i class="bi bi-robot text-primary me-2 fs-5"></i>
+                        <i class="bi bi-robot text-primary me-2 fs-5" aria-hidden="true"></i>
                         <span class="text-primary fw-bold">Sistema OVI</span>
                     </div>
                     <p class="mb-1 text-dark fw-bold small" th:text="${msg.recordOfComunications}"></p>
@@ -66,27 +69,24 @@
 
                 <th:block th:unless="${#strings.startsWith(msg.recordOfComunications, 'Inicio de negociaciones')}">
 
-                    <!-- MENSAJES ENVIADOS POR MÍ -->
                     <div th:if="${session.user != null and msg.emisorDni == session.user.dni}" class="align-self-end mb-3" style="max-width: 85%;">
                         <div class="p-3 bg-primary bg-opacity-10 shadow-sm border-0 rounded-4 rounded-top-0 rounded-start-4">
                             <div class="d-flex align-items-center justify-content-end mb-2">
-                                <!-- Cambiado para que ponga siempre 'Tú' de forma limpia -->
                                 <span class="text-primary fw-semibold small me-2">Tú</span>
-                                <i class="bi bi-person-circle text-primary"></i>
+                                <i class="bi bi-person-circle text-primary" aria-hidden="true"></i>
                             </div>
                             <p class="mb-2 text-dark text-end" th:text="${msg.recordOfComunications}">Texto</p>
                             <div class="text-end text-muted opacity-75 small">
                                 <span th:text="${#temporals.format(msg.hora, 'HH:mm')}">12:34</span>
-                                <i class="bi bi-check2-all ms-1 text-primary"></i>
+                                <i class="bi bi-check2-all ms-1 text-primary" aria-label="Leído"></i>
                             </div>
                         </div>
                     </div>
 
-                    <!-- MENSAJES RECIBIDOS DEL INTERLOCUTOR -->
                     <div th:unless="${session.user != null and msg.emisorDni == session.user.dni}" class="align-self-start mb-3" style="max-width: 85%;">
                         <div class="p-3 bg-white shadow-sm border-0 rounded-4 rounded-top-0 rounded-end-4">
                             <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-person-circle text-secondary me-2"></i>
+                                <i class="bi bi-person-circle text-secondary me-2" aria-hidden="true"></i>
                                 <span class="text-secondary fw-semibold small" th:text="${msg.emisorNombre != null ? msg.emisorNombre : 'Participante'}">Nombre</span>
                             </div>
                             <p class="mb-2 text-dark" th:text="${msg.recordOfComunications}">Texto</p>
@@ -106,12 +106,12 @@
             <div class="d-flex justify-content-end gap-2 mb-3">
                 <a th:href="@{/negotiation/cancel/{id}(id=${negotiationId}, listId=${listId})}"
                    class="btn btn-outline-danger btn-sm rounded-pill fw-bold shadow-sm">
-                    <i class="bi bi-x-circle-fill me-1"></i> Cancelar Negociación
+                    <i class="bi bi-x-circle-fill me-1" aria-hidden="true"></i> Cancelar Negociación
                 </a>
 
                 <a th:href="@{/contract/add(negotiationId=${negotiationId}, backUrl='/negotiation/chat/' + negotiationId)}"
                    class="btn btn-success btn-sm rounded-pill fw-bold shadow-sm">
-                    <i class="bi bi-file-earmark-text-fill me-1"></i> Subir Contrato
+                    <i class="bi bi-file-earmark-text-fill me-1" aria-hidden="true"></i> Subir Contrato
                 </a>
             </div>
 
@@ -120,11 +120,11 @@
                 <input type="hidden" name="listId" th:value="${listId}">
 
                 <input type="text" name="messageText" class="form-control rounded-pill px-4 py-2 bg-light border-0"
-                       placeholder="Escribe tu mensaje aquí..." required autocomplete="off" style="height: 48px;">
+                       placeholder="Escribe tu mensaje aquí..." aria-label="Escribe tu mensaje aquí" required autocomplete="off" style="height: 48px;">
 
                 <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm p-0"
-                        type="submit" style="width: 48px; height: 48px;">
-                    <i class="bi bi-send-fill text-white fs-5"></i>
+                        type="submit" style="width: 48px; height: 48px;" aria-label="Enviar mensaje">
+                    <i class="bi bi-send-fill text-white fs-5" aria-hidden="true"></i>
                 </button>
             </form>
         </div>

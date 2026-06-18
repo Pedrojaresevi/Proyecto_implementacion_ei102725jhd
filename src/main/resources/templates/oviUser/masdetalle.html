@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <title>Detalle del Usuario OVI</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .card-custom {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease-in-out;
+    }
+    .card-custom:hover {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+    }
+    .icon-circle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin-right: 15px;
+      font-size: 1.25rem;
+    }
+    .bg-primary-subtle { background-color: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+    .label-text {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .data-text {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #212529;
+    }
+  </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<main class="container py-5">
+
+  <div class="card card-custom mb-4 overflow-hidden">
+    <div class="card-body p-4 p-md-5 d-flex flex-column flex-md-row align-items-center">
+      <i class="bi bi-person-bounding-box text-secondary me-md-4 mb-3 mb-md-0" style="font-size: 5rem; line-height: 1;"></i>
+      <div class="text-center text-md-start">
+        <h1 class="fw-bold mb-1 text-dark" th:text="${oviUser.name}"></h1>
+        <p class="text-muted fs-5 mb-2">
+          <i class="bi bi-card-text me-2"></i>DNI: <span th:text="${oviUser.dni}"></span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <div class="card card-custom h-100">
+        <div class="card-body p-4 p-md-5">
+          <h4 class="fw-bold mb-4 d-flex align-items-center">
+            <div class="icon-circle bg-primary-subtle">
+              <i class="bi bi-person-lines-fill"></i>
+            </div>
+            Datos Personales
+          </h4>
+
+          <div class="d-flex flex-column gap-4">
+            <div>
+              <div class="label-text text-muted">Fecha de Nacimiento</div>
+              <div class="data-text">
+                <i class="bi bi-calendar3 me-2 text-muted"></i>
+                <span th:text="${#temporals.format(oviUser.dateOfBirth, 'dd/MM/yyyy')}"></span>
+              </div>
+            </div>
+            <div>
+              <div class="label-text text-muted">Correo</div>
+              <div class="data-text text-break">
+                <i class="bi bi-envelope me-2 text-muted"></i>
+                <span th:text="${oviUser.email}"></span>
+              </div>
+            </div>
+            <div>
+              <div class="label-text text-muted">Dirección</div>
+              <div class="data-text">
+                <i class="bi bi-geo-alt me-2 text-muted"></i>
+                <span th:text="${oviUser.address}"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-7">
+      <div class="card card-custom h-100">
+        <div class="card-body p-4 p-md-5">
+          <h4 class="fw-bold mb-4 d-flex align-items-center">
+            <div class="icon-circle bg-primary-subtle">
+              <i class="bi bi-briefcase-fill"></i>
+            </div>
+            Perfil
+          </h4>
+
+          <div class="row g-4 mb-4">
+            <div class="col-md-6">
+              <div class="label-text text-muted">Estado</div>
+              <div class="data-text" th:text="${oviUser.status}"></div>
+            </div>
+            <div class="col-md-6">
+              <div class="label-text text-muted">Diversidad Funcional</div>
+              <div class="data-text" th:text="${oviUser.typeOfFunctionalDiversity}"></div>
+            </div>
+            <div class="col-12">
+              <div class="label-text text-muted">Entidad Implicada</div>
+              <div class="data-text" th:text="${oviUser.entityThatIsInvolved}"></div>
+            </div>
+            <div class="col-12">
+              <div class="label-text text-muted">Plan de Vida</div>
+              <div class="data-text p-3 bg-light rounded-3 mt-1 text-break" style="font-size: 0.95rem; line-height: 1.5;" th:text="${oviUser.lifePlan}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <a th:href="@{/oviuser/list}" class="btn btn-secondary px-4">
+      Volver
+    </a>
+  </div>
+
+</main>
+</body>
+</html>

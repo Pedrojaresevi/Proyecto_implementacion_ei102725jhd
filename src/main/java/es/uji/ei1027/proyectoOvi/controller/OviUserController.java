@@ -2,6 +2,8 @@ package es.uji.ei1027.proyectoOvi.controller;
 
 import es.uji.ei1027.proyectoOvi.dao.OviUserDao;
 import es.uji.ei1027.proyectoOvi.models.OviUser;
+import es.uji.ei1027.proyectoOvi.models.UserDetails;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
@@ -241,6 +243,25 @@ public class OviUserController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         return "technician/oviUser/refused"; // Nombre del nuevo HTML
+    }
+    @RequestMapping(value="/masdetalle/{dni}", method = RequestMethod.GET)
+    public String verMasDetalle(Model model, @PathVariable String dni, HttpSession session) {
+
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        OviUser oviUser = oviUserDao.getOviUser(dni);
+
+        if (oviUser == null) {
+            return "redirect:/oviUser/accepted";
+        }
+
+        // Pasamos el oviUser a la vista (el HTML)
+        model.addAttribute("oviUser", oviUser);
+
+        return "oviUser/masdetalle";
     }
 
 }

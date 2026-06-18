@@ -1,171 +1,194 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
-import es.uji.ei1027.proyectoOvi.dao.ContractDao;
-import es.uji.ei1027.proyectoOvi.models.Contract;
-import es.uji.ei1027.proyectoOvi.models.UserDetails;
-import org.apache.catalina.User;
+import es.uji.ei1027.proyectoOvi.dao.*;
+import es.uji.ei1027.proyectoOvi.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/contract")
 public class ContractController {
+
     private ContractDao contractDao;
+    private NegotiationDao negotiationDao;
+    private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
+    private PapPatiDao papPatiDao;
 
     @Autowired
-    public void setContractDao(ContractDao contractDao){
+    public void setContractDao(ContractDao contractDao) {
         this.contractDao = contractDao;
     }
 
-    @RequestMapping("/list") // Cambia la ruta si tu endpoint es diferente
-    public String listContracts(Model model, @RequestParam(defaultValue = "1") int page) {
-        int pageSize = 6;
-        int offset = (page - 1) * pageSize;
-
-        // 1. Obtener los contratos de la página actual
-        List<Contract> contracts = contractDao.getContractsPaginated(pageSize, offset);
-
-        // 2. Calcular el total de páginas
-        int totalItems = contractDao.countContracts();
-        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-
-        if (totalPages == 0) {
-            totalPages = 1;
-        }
-
-        // 3. Pasar las variables a la vista
-        model.addAttribute("contracts", contracts); // Asegúrate de usar el mismo nombre que recorre tu th:each
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-
-        return "contract/list"; // Cambia al nombre exacto de tu HTML
+    @Autowired
+    public void setNegotiationDao(NegotiationDao negotiationDao) {
+        this.negotiationDao = negotiationDao;
     }
 
-    @RequestMapping(value="/add")
-    public String addContract(Model model, @RequestParam("negotiationId") String negotiationId,jakarta.servlet.http.HttpSession session) {
-        // 1. Recuperamos el usuario de la sesión
-        UserDetails user = (UserDetails) session.getAttribute("user");
+    @Autowired
+    public void setListOfProposedCandidatesDao(ListOfProposedCandidatesDao listOfProposedCandidatesDao) {
+        this.listOfProposedCandidatesDao = listOfProposedCandidatesDao;
+    }
 
-        // 2. Si no hay usuario logueado, lo mandamos al login por seguridad
-        if (user == null) {
-            return "redirect:/login";
+    @Autowired
+    public void setPapPatiDao(PapPatiDao papPatiDao) {
+        this.papPatiDao = papPatiDao;
+    }
+
+    // ==========================================
+    // 1. GET: Preparar el formulario de contrato
+    // ==========================================
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String addContract(@RequestParam("negotiationId") String negotiationId, Model model) {
+
+        // 1. Obtener los metadatos de la negociación activa para conocer el listId
+        Negotiation negotiationBase = negotiationDao.getNegotiation(negotiationId);
+        if (negotiationBase == null) {
+            return "redirect:/negotiation/list";
         }
 
-        // 3. Pasamos el usuario al modelo para que el HTML no de error al buscar su DNI
-        model.addAttribute("user", user);
+        // 2. Localizar la propuesta de candidatos vinculada para extraer request_id y pappati_id
+        ListOfProposedCandidates proposal = listOfProposedCandidatesDao.getListOfProposedCandidates(negotiationBase.getListId());
 
-        // 4. Pasamos el contrato vacío para el formulario
-        model.addAttribute("contract", new Contract());
-        model.addAttribute("negotiationId", negotiationId);  // <-- esto falta
+        // 3. Inicializar el objeto Contract mapeando los campos correspondientes de tu Modelo
+        Contract contract = new Contract();
+        if (proposal != null) {
+            contract.setRequest_Id(proposal.getRequest_id());
+            contract.setPappati_id(proposal.getPappati_id());
+        }
 
+        // 4. Pasar el objeto y el ID de negociación a la vista Thymeleaf
+        model.addAttribute("contract", contract);
+        model.addAttribute("negotiationId", negotiationId);
 
         return "contract/add";
     }
 
+    // ==========================================
+    // 2. POST: Procesar, automatizar y redirigir por Rol
+    // ==========================================
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String processAddSubmit(@ModelAttribute("contract") Contract contract,
+                                   BindingResult bindingResult,
+                                   @RequestParam("negotiationId") String negotiationId,
+                                   jakarta.servlet.http.HttpSession session, // <-- AÑADIDO: Inyectamos la sesión
+                                   Model model) {
 
-    @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
-    public String editContract(Model model, @PathVariable String id, jakarta.servlet.http.HttpSession session) {
-        UserDetails user = (UserDetails) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        model.addAttribute("user", user);
-
-        // PASAMOS EL DNI BUSCADO A LA VISTA (Para arreglar el botón "Volver")
-        model.addAttribute("searchedDni", session.getAttribute("searchedDni"));
-
-        model.addAttribute("contract", contractDao.getContract(id));
-        List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
-        model.addAttribute("statusList", statusList);
-
-        return "contract/update";
-    }
-
-    @RequestMapping(value="/update", method = RequestMethod.POST)
-    public String processUpdateSubmit(@ModelAttribute("contract") Contract contract,
-                                      BindingResult bindingResult,
-                                      jakarta.servlet.http.HttpSession session,
-                                      Model model) {
-
-        UserDetails user = (UserDetails) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        ContractValidator contractValidator = new ContractValidator();
-        contractValidator.validate(contract, bindingResult);
-
+        // Si hay errores de validación en las fechas, volvemos al formulario
         if (bindingResult.hasErrors()) {
-            model.addAttribute("user", user);
-            model.addAttribute("searchedDni", session.getAttribute("searchedDni"));
-            List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
-            model.addAttribute("statusList", statusList);
-            return "contract/update";
+            model.addAttribute("negotiationId", negotiationId);
+            return "contract/add";
         }
 
-        contractDao.updateContract(contract);
+        // --- AUTOMATIZACIÓN DE CAMPOS ---
+        String nextContractId = contractDao.generateNextContractId();
+        contract.setContract_Id(nextContractId);
+        contract.setStatus("accepted");
 
-        // AQUÍ ESTÁ LA MAGIA DE LA REDIRECCIÓN
-        if ("technician".equals(user.getRole())) {
-            String searchedDni = (String) session.getAttribute("searchedDni");
-            // Si el admin hizo una búsqueda previa, le devolvemos a esa búsqueda
-            if (searchedDni != null) {
-                return "redirect:/contract/user/" + searchedDni;
-            } else {
-                // Por si acaso entra directamente sin buscar
-                return "redirect:/";
-            }
-        } else {
-            // Si es un usuario normal (OVI user o PAP/PATI), vuelve a sus propios contratos
-            return "redirect:/contract/user/" + user.getDni();
+        int currentYear = java.time.LocalDate.now().getYear();
+        String candidateName = "Documento";
+
+        Pap_Pati papPati = papPatiDao.getPap_Pati(contract.getPappati_id());
+        if (papPati != null) {
+            String fullName = papPati.getName() + " " + (papPati.getSurname() != null ? papPati.getSurname() : "");
+            candidateName = fullName.trim().replace(" ", "_");
         }
-    }
 
-    @RequestMapping(value="/delete/{id}")
-    public String processDelete(@PathVariable String id, jakarta.servlet.http.HttpSession session) {
+        String pdfPath = "/docs/contracts/" + currentYear + "/" + nextContractId + "_" + candidateName + ".pdf";
+        contract.setPlaceWhereThePDFIsGonnaBeSaved(pdfPath);
 
+        // 4. Guardar contrato en la Base de Datos
+        contractDao.addContract(contract);
+
+        // 5. Cerrar la negociación pasando el estado a 'accepted' y fijando el enddate
+        negotiationDao.closeNegotiation(negotiationId, new java.util.Date());
+
+        // -------------------------------------------------------------
+        // 6. REDIRECCIÓN DINÁMICA SEGÚN EL ROL (Igual que el botón)
+        // -------------------------------------------------------------
         UserDetails user = (UserDetails) session.getAttribute("user");
 
-        if (user == null) {
-            return "redirect:/login";
-        }
+        if (user != null) {
+            String role = user.getRole();
+            String dni = user.getDni();
 
-        // 1. Eliminamos el contrato
-        contractDao.deleteContract(id);
-
-        // 2. Redirección inteligente según el rol
-        if ("technician".equals(user.getRole())) {
-            String searchedDni = (String) session.getAttribute("searchedDni");
-            // Si el técnico estaba viendo la búsqueda de alguien, vuelve ahí
-            if (searchedDni != null) {
-                return "redirect:/contract/user/" + searchedDni;
-            } else {
-                return "redirect:/"; // Redirección segura por defecto
+            if ("oviuser".equals(role)) {
+                return "redirect:/negotiation/user/" + dni;
+            } else if ("tutor".equals(role)) {
+                return "redirect:/negotiation/tutor/" + dni;
+            } else if ("pap_pati".equals(role)) {
+                return "redirect:/pap_pati/listpappati";
             }
-        } else {
-            // Si es un OVI user o PAP/PATI, vuelve a su propia lista
-            return "redirect:/contract/user/" + user.getDni();
         }
+
+        // Ruta por defecto en caso de que no hubiera un usuario válido en la sesión
+        return "redirect:/dashboard";
     }
-    //
-    @RequestMapping("/user/{dni}")
-    public String listContractsByUser(Model model, @PathVariable String dni, jakarta.servlet.http.HttpSession session) {
-        // Necesitas tener un método en contractDao que filtre por DNI
-        session.setAttribute("searchedDni", dni);
+
+    // ==========================================
+    // 3. GET: Listar contratos de la persona logueada
+    // ==========================================
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String listContracts(Model model, jakarta.servlet.http.HttpSession session) {
+
+        // 1. Obtenemos el usuario conectado desde la sesión
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login"; // Redirige al login si la sesión expiró
+        }
+
+        String dni = user.getDni();
+        String role = user.getRole();
+
+        // 2. Filtrar los contratos en el DAO usando el DNI del usuario actual
         model.addAttribute("contracts", contractDao.getContractsByUser(dni));
+
+        // 3. Enviamos las variables de paginación que tu HTML necesita
+        model.addAttribute("currentPage", 1);
+        model.addAttribute("totalPages", 1); // Por defecto 1 (puedes meterle lógica de paginación real más adelante)
+        model.addAttribute("dniOwner", dni);
+
+        // 4. Mapeamos el 'rolePath' para que los enlaces de volver/paginación del HTML funcionen
+        String rolePath = "user";
+        if ("tutor".equals(role)) {
+            rolePath = "tutor";
+        } else if ("pap_pati".equals(role)) {
+            rolePath = "pap_pati";
+        }
+        model.addAttribute("rolePath", rolePath);
+
+        // 5. Devolvemos la vista HTML (contract/list.html)
         return "contract/list";
     }
-    //
-    @RequestMapping(value="/search", method = RequestMethod.GET)
-    public String searchContractsByDni(@RequestParam("dni") String dni) {
-        return "redirect:/contract/user/" + dni;
+
+    // ==========================================
+    // 4. GET: Buscar contratos por DNI (Para el Técnico)
+    // ==========================================
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String searchContractsByDni(@RequestParam("dni") String dni, Model model, jakarta.servlet.http.HttpSession session) {
+
+        // 1. Verificamos que el usuario esté logueado
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        // 2. Buscamos los contratos usando el DNI que viene del formulario
+        model.addAttribute("contracts", contractDao.getContractsByUser(dni));
+
+        // 3. Pasamos las variables por defecto para la vista HTML (para que no falle la paginación)
+        model.addAttribute("currentPage", 1);
+        model.addAttribute("totalPages", 1);
+        model.addAttribute("dniOwner", dni);
+
+        // Le pasamos el rol de técnico para que sepa de dónde viene
+        model.addAttribute("rolePath", "technician");
+
+        // 4. Devolvemos la misma vista de tabla de contratos
+        return "contract/list";
     }
 }

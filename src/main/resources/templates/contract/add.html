@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Crear nuevo Contrato - OVI</title>
-    <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
@@ -22,6 +22,8 @@
     <hr class="mb-4 text-muted">
 
     <form class="form-horizontal" th:action="@{/contract/add}" th:object="${contract}" method="post">
+
+        <input type="hidden" name="negotiationId" th:value="${negotiationId}" />
 
         <h5 class="text-primary text-opacity-75 mb-3 fw-bold">1. Fechas del Contrato</h5>
 
@@ -43,12 +45,12 @@
 
         <hr class="mb-4 text-muted">
 
-        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">2. Datos de Vinculación</h5>
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">2. Datos de Vinculación (Automáticos)</h5>
 
         <div class="form-group row mb-3">
             <label for="request_Id" class="control-label col-sm-2">ID de la solicitud:</label>
             <div class="col-sm-4">
-                <input id="request_Id" type="text" th:field="*{request_Id}" class="form-control" maxlength="20">
+                <input id="request_Id" type="text" th:field="*{request_Id}" class="form-control bg-light" readonly>
                 <div th:if="${#fields.hasErrors('request_Id')}" th:errors="*{request_Id}" class="text-danger mt-1"></div>
             </div>
         </div>
@@ -56,7 +58,7 @@
         <div class="form-group row mb-3">
             <label for="pappati_id" class="control-label col-sm-2">ID del PAP/PATI:</label>
             <div class="col-sm-4">
-                <input type="text" class="form-control" id="pappati_id" th:field="*{pappati_id}" maxlength="9"/>
+                <input type="text" class="form-control bg-light" id="pappati_id" th:field="*{pappati_id}" readonly/>
                 <div th:if="${#fields.hasErrors('pappati_id')}" th:errors="*{pappati_id}" class="text-danger mt-1"></div>
             </div>
         </div>

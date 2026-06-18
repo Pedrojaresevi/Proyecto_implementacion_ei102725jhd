@@ -234,7 +234,7 @@ public class AssignmentRequestController {
             return "assignmentRequest/add";
         }
 
-        return "redirect:list";
+        return "assignmentRequest/assignmentRequestRealizada";
     }
 
     @RequestMapping(value="/update/{id}", method = RequestMethod.GET)

@@ -26,6 +26,33 @@ public class OviUserController {
         this.oviUserDao = oviUserDao;
     }
 
+    @ModelAttribute("entidadesDisponibles")
+    public List<String> getEntidadesDisponibles() {
+        return Arrays.asList(
+                "ONCE (Visual)",
+                "Asociación Parkinson",
+                "AFA (Asociación Familiares Alzheimer)",
+                "Plena Inclusión (Intelectual)",
+                "CERMI",
+                "FESOCE (Sordoceguera)",
+                "Asperger España / TEA",
+                "Otra"
+        );
+    }
+
+    @ModelAttribute("diversidadesDisponibles")
+    public List<String> getDiversidadesDisponibles() {
+        return Arrays.asList(
+                "Visual",
+                "Física / Motora",
+                "Auditiva",
+                "Intelectual / Cognitiva",
+                "Orgánica",
+                "Trastorno del Espectro Autista (TEA)",
+                "Otra"
+        );
+    }
+
     @RequestMapping("/list")
     public String listOviUsers(Model model, @RequestParam(defaultValue = "1") int page){
         int pageSize = 6;

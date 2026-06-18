@@ -26,33 +26,6 @@ public class OviUserController {
         this.oviUserDao = oviUserDao;
     }
 
-    @ModelAttribute("entidadesDisponibles")
-    public List<String> getEntidadesDisponibles() {
-        return Arrays.asList(
-                "ONCE (Visual)",
-                "Asociación Parkinson",
-                "AFA (Asociación Familiares Alzheimer)",
-                "Plena Inclusión (Intelectual)",
-                "CERMI",
-                "FESOCE (Sordoceguera)",
-                "Asperger España / TEA",
-                "Otra"
-        );
-    }
-
-    @ModelAttribute("diversidadesDisponibles")
-    public List<String> getDiversidadesDisponibles() {
-        return Arrays.asList(
-                "Visual",
-                "Física / Motora",
-                "Auditiva",
-                "Intelectual / Cognitiva",
-                "Orgánica",
-                "Trastorno del Espectro Autista (TEA)",
-                "Otra"
-        );
-    }
-
     @RequestMapping("/list")
     public String listOviUsers(Model model, @RequestParam(defaultValue = "1") int page){
         int pageSize = 6;
@@ -115,14 +88,14 @@ public class OviUserController {
                     "Ya existe un usuario con este DNI");
             return "oviUser/add";
         } catch (DataIntegrityViolationException e) {
-        // AÑADE ESTA LÍNEA PARA VER EL ERROR REAL EN LA CONSOLA DE SPRING BOOT
-        System.out.println("ERROR REAL EN LA BD: " + e.getMessage());
-        e.printStackTrace();
+            // AÑADE ESTA LÍNEA PARA VER EL ERROR REAL EN LA CONSOLA DE SPRING BOOT
+            System.out.println("ERROR REAL EN LA BD: " + e.getMessage());
+            e.printStackTrace();
 
-        bindingResult.rejectValue("tutor_id", "no_existe",
-                "El tutor introducido no existe en el sistema");
-        return "oviUser/add";
-    }
+            bindingResult.rejectValue("tutor_id", "no_existe",
+                    "El tutor introducido no existe en el sistema");
+            return "oviUser/add";
+        }
 
         return "redirect:/oviUser/success";
     }
@@ -132,7 +105,7 @@ public class OviUserController {
         return "oviUser/success";
     }
 
-//    @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
+    //    @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
 //    public String editOviUser(Model model, @PathVariable String id) {
 //        model.addAttribute("oviUser", oviUserDao.getOviUser(id));
 //
@@ -146,7 +119,7 @@ public class OviUserController {
         return "oviUser/update";
     }
 
-//    @RequestMapping(value="/update", method = RequestMethod.POST)
+    //    @RequestMapping(value="/update", method = RequestMethod.POST)
 //    public String processUpdateSubmit(
 //            @ModelAttribute("oviUser") OviUser oviUser,
 //            BindingResult bindingResult) {
@@ -272,7 +245,11 @@ public class OviUserController {
         return "technician/oviUser/refused"; // Nombre del nuevo HTML
     }
     @RequestMapping(value="/masdetalle/{dni}", method = RequestMethod.GET)
-    public String verMasDetalle(Model model, @PathVariable String dni, HttpSession session) {
+    public String verMasDetalle(Model model,
+                                @PathVariable String dni,
+                                @RequestParam(value = "from", required = false) String from,
+                                @RequestParam(value = "tutorDni", required = false) String tutorDni,
+                                HttpSession session) {
 
         UserDetails user = (UserDetails) session.getAttribute("user");
         if (user == null) {
@@ -285,10 +262,21 @@ public class OviUserController {
             return "redirect:/oviUser/accepted";
         }
 
-        // Pasamos el oviUser a la vista (el HTML)
-        model.addAttribute("oviUser", oviUser);
+        // LÓGICA DEL BOTÓN VOLVER DINÁMICO
+        String volverUrl = "/dashboard"; // Ruta por defecto (fallback)
 
-        return "oviUser/masdetalle";
+        if ("accepted".equals(from)) {
+            volverUrl = "/oviUser/accepted";
+        } else if ("list_minors".equals(from) && tutorDni != null) {
+            volverUrl = "/tutor/users/" + tutorDni;
+        }
+
+        // Pasamos los atributos al modelo
+        model.addAttribute("oviUser", oviUser);
+        model.addAttribute("volverUrl", volverUrl); // Enviamos la URL a la vista
+
+        return "oviUser/masdetalle"; // Asegúrate de que coincida con tu ruta de carpetas
     }
+
 
 }

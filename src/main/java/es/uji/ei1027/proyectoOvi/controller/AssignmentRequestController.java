@@ -609,14 +609,63 @@ public class AssignmentRequestController {
     }
 
     // --- NUEVA LÓGICA DE NEGOCIACIÓN ---
-    @RequestMapping(value="/startNegotiation", method = RequestMethod.POST)
-    public String startNegotiation(@RequestParam("list_id") String listId,
+//    @RequestMapping(value="/startNegotiation", method = RequestMethod.POST)
+//    public String startNegotiation(@RequestParam("list_id") String listId,
+//                                   @RequestParam("requestId") String requestId,
+//                                   @RequestParam("candidateId") String candidateId) {
+//
+//        Negotiation negotiation = new Negotiation();
+//
+//        // 1. Crear la negociación inicial
+//        String negotiationId = "NEG-" + listId;
+//        negotiation.setNegotiation_Id(negotiationId);
+//        negotiation.setListId(listId);
+//        negotiation.setStatus("In progress");
+//        negotiation.setStartDate(new java.util.Date());
+//        negotiation.setHora(java.time.LocalTime.now());
+//        negotiation.setRecordOfComunications("Inicio de negociaciones con el candidato " + candidateId);
+//
+//        negotiationDao.addNegotiation(negotiation);
+//
+//        // 2. NUEVO: Pasar la solicitud a estado 'completed'
+//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(requestId);
+//        if (request != null) {
+//            request.setStatus("completed");
+//            assignmentRequestDao.updateAssignmentRequest(request);
+//        }
+//
+//        // 3. NUEVO: Redirigir a la vista de la conversación (al NegotiationController)
+//        return "redirect:/negotiation/chat/" + negotiationId;
+//    }
+// --- NUEVA LÓGICA DE NEGOCIACIÓN CON CONFIRMACIÓN INTERMEDIA ---
+
+    // Paso 1: Muestra la pantalla intermedia 'confirmarcandidato.html'
+    @RequestMapping(value="/confirmCandidate", method = RequestMethod.POST)
+    public String confirmCandidate(@RequestParam("list_id") String listId,
                                    @RequestParam("requestId") String requestId,
-                                   @RequestParam("candidateId") String candidateId) {
+                                   @RequestParam("candidateId") String candidateId,
+                                   Model model) {
+        // Buscamos los datos del Pap_Pati para poder pintar su nombre y DNI en la confirmación
+        Pap_Pati papPati = papPatiDao.getPap_Pati(candidateId);
+
+        model.addAttribute("pappati", papPati);
+        model.addAttribute("requestId", requestId);
+        model.addAttribute("listId", listId); // Lo pasamos para no perderlo de vista
+
+        // Dependiendo de cómo tengas estructuradas tus carpetas de templates,
+        // si está en la raíz de templates usa "confirmarcandidato", si está dentro de la carpeta usa "assignmentRequest/confirmarcandidato"
+        return "assignmentRequest/confirmarcandidato";
+    }
+
+    // Paso 2: Ejecuta la acción real tras pulsar "Confirmar"
+    @RequestMapping(value="/finalizeAssignment", method = RequestMethod.POST)
+    public String finalizeAssignment(@RequestParam("listId") String listId,
+                                     @RequestParam("requestId") String requestId,
+                                     @RequestParam("candidateId") String candidateId) {
 
         Negotiation negotiation = new Negotiation();
 
-        // 1. Crear la negociación inicial
+        // 1. Crear la negociación inicial utilizando el listId que recuperamos
         String negotiationId = "NEG-" + listId;
         negotiation.setNegotiation_Id(negotiationId);
         negotiation.setListId(listId);
@@ -627,14 +676,14 @@ public class AssignmentRequestController {
 
         negotiationDao.addNegotiation(negotiation);
 
-        // 2. NUEVO: Pasar la solicitud a estado 'completed'
+        // 2. Pasar la solicitud a estado 'completed'
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(requestId);
         if (request != null) {
             request.setStatus("completed");
             assignmentRequestDao.updateAssignmentRequest(request);
         }
 
-        // 3. NUEVO: Redirigir a la vista de la conversación (al NegotiationController)
+        // 3. Redirigir a la vista del Chat
         return "redirect:/negotiation/chat/" + negotiationId;
     }
 

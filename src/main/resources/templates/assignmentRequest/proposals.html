@@ -65,11 +65,10 @@
             </td>
 
             <td class="text-center">
-              <form th:action="@{/assignmentRequest/startNegotiation}" method="post" class="m-0 d-flex justify-content-center">
+              <form th:action="@{/assignmentRequest/confirmCandidate}" method="post" class="m-0 d-flex justify-content-center">
 
                 <input type="hidden" name="requestId" th:value="${assignmentRequest.request_Id}" />
                 <input type="hidden" name="candidateId" th:value="${proposal.pappati_id}" />
-
                 <input type="hidden" name="list_id" th:value="${proposal.list_id}" />
 
                 <button type="submit" class="btn btn-primary btn-sm px-4 py-2 shadow-sm fw-semibold text-white">

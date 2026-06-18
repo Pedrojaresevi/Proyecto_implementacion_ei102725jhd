@@ -14,7 +14,7 @@
 <div class="container mt-5">
     <div class="card shadow-sm border-0">
         <div class="card-header bg-success text-white">
-            <h4 class="mb-0">Confirmar Aceptación de candidato</h4>
+            <h4 class="mb-0">Confirmar selección de candidato</h4>
         </div>
         <div class="card-body">
             <p>Estás a punto de aceptar al candidato <strong th:text="${pappati.name}"></strong> con DNI <strong th:text="${pappati.dni}"></strong>.</p>
@@ -23,7 +23,10 @@
                 <form th:action="@{/assignmentRequest/finalizeAssignment}" method="post" class="m-0">
                     <input type="hidden" name="candidateId" th:value="${pappati.dni}" />
                     <input type="hidden" name="requestId" th:value="${requestId}" />
-                    <button type="submit" class="btn btn-success">Confirmar Aceptación</button>
+
+                    <input type="hidden" name="listId" th:value="${listId}" />
+
+                    <button type="submit" class="btn btn-success">Confirmar</button>
                 </form>
 
                 <a th:href="@{/assignmentRequest/proposals/{id}(id=${requestId})}" class="btn btn-secondary">Cancelar</a>

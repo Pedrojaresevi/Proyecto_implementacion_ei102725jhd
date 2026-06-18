@@ -47,19 +47,14 @@
                           th:class="${contract.status == 'in progress' ? 'badge rounded-pill bg-warning text-dark px-3 py-2' :
                                    (contract.status == 'accepted' ? 'badge rounded-pill bg-success px-3 py-2' : 'badge rounded-pill bg-danger px-3 py-2')}">
                     </span>
-                    <div th:if="${contract.status == 'refused' and assignmentRequest.rejectReason != null}"
-                         class="text-muted small mt-1">
-                        <strong>Motivo:</strong>
-                        <em th:text="${contract.rejectReason}"></em>
-                    </div>
                 </td>
                 <td th:text="${contract.placeWhereThePDFIsGonnaBeSaved}"></td>
                 <td th:text="${contract.pappati_id}"></td>
 
                 <td class="text-center">
                     <div class="d-flex justify-content-center gap-2">
-                        <a th:href="@{/contract/update/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-warning btn-sm">Edita</a>
-                        <a th:href="@{/contract/delete/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-danger btn-sm">Esborra</a>
+                        <a th:href="@{/contract/update/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-warning btn-sm">Editar</a>
+                        <a th:href="@{/contract/delete/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-danger btn-sm">Eliminar</a>
                     </div>
                 </td>
             </tr>

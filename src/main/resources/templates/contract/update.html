@@ -13,7 +13,9 @@
 <div th:replace="~{fragments/base :: navbar}"></div>
 
 <main class="container pb-5">
-    <h1 class="mb-2 text-primary fw-bold">Modificación de Contrato</h1>
+    <h1 class="mb-0 align-middle">
+        <i class="bi bi-pencil-square me-2" style="font-size: 2rem; color: #0d9488; vertical-align: middle;"></i>Modificación de Contrato
+    </h1>
     <p class="text-muted mb-4">Actualice las fechas del contrato. Los datos de identificación, el estado y la ubicación del archivo son administrativos y no pueden ser modificados.</p>
 
     <hr class="mb-4 text-muted">
@@ -82,7 +84,7 @@
             </div>
         </div>
 
-        <a th:href="@{/contract/user/{dni}(dni=${searchedDni != null ? searchedDni : user.dni})}" class="btn btn-secondary">
+        <a th:href="@{/contract/list}" class="btn btn-secondary">
             Volver
         </a>
     </form>

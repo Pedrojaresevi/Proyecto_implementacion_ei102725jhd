@@ -47,19 +47,14 @@
                           th:class="${contract.status == 'in progress' ? 'badge rounded-pill bg-warning text-dark px-3 py-2' :
                                    (contract.status == 'accepted' ? 'badge rounded-pill bg-success px-3 py-2' : 'badge rounded-pill bg-danger px-3 py-2')}">
                     </span>
-                    <div th:if="${contract.status == 'refused' and assignmentRequest.rejectReason != null}"
-                         class="text-muted small mt-1">
-                        <strong>Motivo:</strong>
-                        <em th:text="${contract.rejectReason}"></em>
-                    </div>
                 </td>
                 <td th:text="${contract.placeWhereThePDFIsGonnaBeSaved}"></td>
                 <td th:text="${contract.pappati_id}"></td>
 
                 <td class="text-center">
                     <div class="d-flex justify-content-center gap-2">
-                        <a th:href="@{/contract/update/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-warning btn-sm">Edita</a>
-                        <a th:href="@{/contract/delete/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-danger btn-sm">Esborra</a>
+                        <a th:href="@{/contract/update/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-warning btn-sm">Editar</a>
+                        <a th:href="@{/contract/delete/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-danger btn-sm">Eliminar</a>
                     </div>
                 </td>
             </tr>
@@ -67,25 +62,24 @@
         </table>
     </div>
 
-    <!-- Componente de Paginación para Contratos -->
-    <nav th:if="${totalPages > 1}" aria-label="Navegación de negociaciones" class="mt-5">
+    <nav th:if="${totalPages > 1}" aria-label="Navegación de contratos" class="mt-5">
         <ul class="pagination justify-content-center">
 
             <!-- Botón Anterior -->
             <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/negotiation/{role}/{dni}(role=${rolePath}, dni=${dniOwner}, page=${currentPage - 1})}" aria-label="Anterior">
+                <a class="page-link" th:href="@{/contract/list(page=${currentPage - 1})}" aria-label="Anterior">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
             <!-- Números de Página -->
             <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
-                <a class="page-link" th:href="@{/negotiation/{role}/{dni}(role=${rolePath}, dni=${dniOwner}, page=${i})}" th:text="${i}">1</a>
+                <a class="page-link" th:href="@{/contract/list(page=${i})}" th:text="${i}">1</a>
             </li>
 
             <!-- Botón Siguiente -->
             <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/negotiation/{role}/{dni}(role=${rolePath}, dni=${dniOwner}, page=${currentPage + 1})}" aria-label="Siguiente">
+                <a class="page-link" th:href="@{/contract/list(page=${currentPage + 1})}" aria-label="Siguiente">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

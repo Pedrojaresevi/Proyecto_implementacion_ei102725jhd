@@ -65,21 +65,12 @@
                 </td>
 
                 <td class="text-center">
-                    <div th:if="${assignmentRequest.status == 'in progress'}">
+                    <div class="d-flex justify-content-center gap-1">
                         <a th:href="@{/assignmentRequest/accept/{id}(id=${assignmentRequest.request_Id})}"
-                           class="btn btn-success btn-sm me-1">Aceptar</a>
+                           class="btn btn-success btn-sm">Aceptar</a>
 
                         <a th:href="@{/assignmentRequest/reject/{id}(id=${assignmentRequest.request_Id})}"
                            class="btn btn-danger btn-sm">Rechazar</a>
-                    </div>
-
-                    <div th:if="${assignmentRequest.status == 'accepted'}">
-                        <a th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id})}"
-                           class="btn btn-info btn-sm">Ver Candidatos</a>
-                    </div>
-
-                    <div th:if="${assignmentRequest.status == 'refused'}">
-                        <span class="text-muted small">Sin acciones</span>
                     </div>
                 </td>
             </tr>

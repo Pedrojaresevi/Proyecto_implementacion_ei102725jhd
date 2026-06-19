@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/contract")
 public class ContractController {
@@ -76,6 +78,9 @@ public class ContractController {
                                    jakarta.servlet.http.HttpSession session,
                                    Model model) {
 
+        ContractValidator contractValidator = new ContractValidator();
+        contractValidator.validate(contract, bindingResult);
+
         // Si hay errores de validación en las fechas, volvemos al formulario
         if (bindingResult.hasErrors()) {
             model.addAttribute("negotiationId", negotiationId);
@@ -128,10 +133,12 @@ public class ContractController {
     }
 
     // =========================================================================
-    // 3. GET: Listar los contratos filtrados por la persona logueada
+    // 3. GET: Listar los contratos filtrados por la persona logueada (CON PAGINACIÓN)
     // =========================================================================
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String listContracts(Model model, jakarta.servlet.http.HttpSession session) {
+    public String listContracts(Model model,
+                                @RequestParam(defaultValue = "1") int page,
+                                jakarta.servlet.http.HttpSession session) {
 
         // 1. Obtenemos el usuario conectado desde la sesión
         UserDetails user = (UserDetails) session.getAttribute("user");
@@ -142,15 +149,27 @@ public class ContractController {
         String dni = user.getDni();
         String role = user.getRole();
 
-        // 2. Filtrar los contratos en el DAO usando el DNI del usuario actual
-        model.addAttribute("contracts", contractDao.getContractsByUser(dni));
+        // 2. Configuración de la paginación (6 items por página)
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
 
-        // 3. Enviamos las variables necesarias para la vista
-        model.addAttribute("currentPage", 1);
-        model.addAttribute("totalPages", 1);
+        // 3. Filtrar los contratos en el DAO usando el DNI y la paginación
+        List<Contract> contracts = contractDao.getContractsByUserPaginated(dni, pageSize, offset);
+
+        // 4. Calcular el total de páginas
+        int totalItems = contractDao.countContractsByUser(dni);
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
+
+        // 5. Enviamos las variables necesarias para la vista
+        model.addAttribute("contracts", contracts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("dniOwner", dni);
 
-        // 4. Mapeamos el 'rolePath' para la construcción de rutas de navegación
+        // 6. Mapeamos el 'rolePath' para la construcción de rutas de navegación
         String rolePath = "user";
         if ("tutor".equals(role)) {
             rolePath = "tutor";

@@ -8,30 +8,31 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
-<body>
+<body> <!-- Se elimina bg-light para que coincida exactamente con modificar usuario -->
 
 <div th:replace="~{fragments/base :: navbar}"></div>
 
+<!-- Se ajusta la cabecera exactamente al estilo de modificar usuario -->
 <main class="container pb-5">
-
-    <h1 class="mb-0 align-middle">
-        <i class="bi bi-file-earmark-break-fill me-2" style="font-size: 2rem; color: #0d9488; vertical-align: middle;"></i>Nuevo contrato
-    </h1>
-    <p class="text-muted mb-4">Por favor, introduzca los detalles y fechas correspondientes para formalizar el nuevo contrato.</p>
+    <h1 class="mb-2 text-primary fw-bold">Nuevo contrato</h1>
+    <p class="text-muted mb-4">Por favor, introduzca las fechas correspondientes para formalizar el nuevo contrato. El resto de datos se vincularán de forma automática.</p>
 
     <hr class="mb-4 text-muted">
 
     <form class="form-horizontal" th:action="@{/contract/add}" th:object="${contract}" method="post">
 
+        <!-- ID Oculto para redirección posterior en el controlador -->
         <input type="hidden" name="negotiationId" th:value="${negotiationId}" />
 
+        <!-- Se elimina el icono del h5 para calcar el estilo solicitado -->
         <h5 class="text-primary text-opacity-75 mb-3 fw-bold">1. Fechas del Contrato</h5>
 
+        <!-- Estructura horizontal: label en col-sm-2 e inputs en col-sm-4 (estilo fecha de nacimiento) -->
         <div class="form-group row mb-3">
             <label for="startDate" class="control-label col-sm-2">Fecha de inicio:</label>
             <div class="col-sm-4">
                 <input type="date" class="form-control" id="startDate" th:field="*{startDate}"/>
-                <div th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class="text-danger mt-1"></div>
+                <div th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class="text-danger"></div>
             </div>
         </div>
 
@@ -39,32 +40,35 @@
             <label for="endDate" class="control-label col-sm-2">Fecha de fin:</label>
             <div class="col-sm-4">
                 <input type="date" class="form-control" id="endDate" th:field="*{endDate}"/>
-                <div th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" class="text-danger mt-1"></div>
+                <div th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" class="text-danger"></div>
             </div>
         </div>
 
         <hr class="mb-4 text-muted">
 
-        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">2. Datos de Vinculación (Automáticos)</h5>
+        <h5 class="text-primary text-opacity-75 mb-3 fw-bold">2. Datos de Vinculación</h5>
 
+        <!-- Estructura horizontal para los campos readonly (estilo DNI/Estado) -->
         <div class="form-group row mb-3">
-            <label for="request_Id" class="control-label col-sm-2">ID de la solicitud:</label>
+            <label for="request_Id" class="control-label col-sm-2">ID de la solicitud vinculada:</label>
             <div class="col-sm-4">
                 <input id="request_Id" type="text" th:field="*{request_Id}" class="form-control bg-light" readonly>
-                <div th:if="${#fields.hasErrors('request_Id')}" th:errors="*{request_Id}" class="text-danger mt-1"></div>
+                <div th:if="${#fields.hasErrors('request_Id')}" th:errors="*{request_Id}" class="text-danger"></div>
             </div>
         </div>
 
         <div class="form-group row mb-3">
-            <label for="pappati_id" class="control-label col-sm-2">ID del PAP/PATI:</label>
+            <label for="pappati_id" class="control-label col-sm-2">DNI / ID del PAP/PATI:</label>
             <div class="col-sm-4">
                 <input type="text" class="form-control bg-light" id="pappati_id" th:field="*{pappati_id}" readonly/>
-                <div th:if="${#fields.hasErrors('pappati_id')}" th:errors="*{pappati_id}" class="text-danger mt-1"></div>
+                <div th:if="${#fields.hasErrors('pappati_id')}" th:errors="*{pappati_id}" class="text-danger"></div>
             </div>
         </div>
 
+        <!-- Botonera adaptada con los márgenes y clases exactas de modificar usuario -->
         <button type="submit" class="btn btn-primary mt-3">Añadir contrato</button>
-        <a th:href="@{/negotiation/chat/{id}(id=${negotiationId})}" class="btn btn-secondary mt-3 ms-2">Volver </a>
+        <a th:href="@{/negotiation/chat/{id}(id=${negotiationId})}" class="btn btn-secondary mt-3 ms-2">Cancelar y Volver</a>
+
     </form>
 </main>
 </body>

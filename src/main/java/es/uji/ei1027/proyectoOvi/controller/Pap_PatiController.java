@@ -118,10 +118,20 @@ public class Pap_PatiController {
         return "redirect:/pap_pati/accepted";
     }
 
-    @RequestMapping(value="/delete/{id}")
+    // 1. Muestra la pantalla roja de confirmación (GET)
+    @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
+    public String showDeleteConfirmation(Model model, @PathVariable String id) {
+        model.addAttribute("id", id);
+        // Importante: ruta apuntando a technician/pap_pati
+        return "technician/pap_pati/confirmarborrado";
+    }
+
+    // 2. Ejecuta el borrado real al confirmar en el formulario (POST)
+    @RequestMapping(value="/delete/{id}", method = RequestMethod.POST)
     public String processDelete(@PathVariable String id) {
         pap_patiDao.deletePap_Pati(id);
-        return "redirect:../list";
+        // Redirige a la lista de asistentes aceptados tras borrar
+        return "redirect:/pap_pati/accepted";
     }
     @ModelAttribute("provincias")
     public List<String> getProvincias() {

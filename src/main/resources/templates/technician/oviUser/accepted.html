@@ -50,10 +50,17 @@
                 </td>
 
                 <td class="text-center">
-                    <a th:href="@{/oviUser/update/{dni}(dni=${oviUser.dni})}"
-                       class="btn btn-warning btn-sm px-4 py-2 shadow-sm fw-semibold text-dark">
-                        <i class="bi bi-pencil-square me-1"></i> Editar
-                    </a>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a th:href="@{/oviUser/update/{dni}(dni=${oviUser.dni})}"
+                           class="btn btn-warning btn-sm">
+                            Editar
+                        </a>
+
+                        <a th:href="@{/oviUser/delete/{dni}(dni=${oviUser.dni})}"
+                           class="btn btn-danger btn-sm">
+                            Borrar
+                        </a>
+                    </div>
                 </td>
             </tr>
 

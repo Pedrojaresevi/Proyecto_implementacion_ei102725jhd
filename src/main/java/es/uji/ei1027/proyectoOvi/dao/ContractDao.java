@@ -118,21 +118,28 @@ public class ContractDao {
         }
     }
 
-    // 10. OBTENER CONTRATOS PAGINADOS
-    public List<Contract> getContractsPaginated(int limit, int offset) {
-        String sql = "SELECT * FROM Contract LIMIT ? OFFSET ?";
+    // OBTENER CONTRATOS POR USUARIO PAGINADOS
+    public List<Contract> getContractsByUserPaginated(String dni, int limit, int offset) {
+        String sql = "SELECT c.* " +
+                "FROM Contract c " +
+                "JOIN AssignmentRequest ar ON c.request_id = ar.request_id " +
+                "WHERE c.pappati_id = ? OR ar.oviuser_id = ? OR ar.tutor_id = ? " +
+                "LIMIT ? OFFSET ?";
         try {
-            return jdbcTemplate.query(sql, new ContractRowMapper(), limit, offset); // Usa tu archivo externo
+            return jdbcTemplate.query(sql, new ContractRowMapper(), dni, dni, dni, limit, offset);
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
     }
 
-    // 11. CONTAR TOTAL DE CONTRATOS
-    public int countContracts() {
-        String sql = "SELECT COUNT(*) FROM Contract";
+    // CONTAR CONTRATOS POR USUARIO
+    public int countContractsByUser(String dni) {
+        String sql = "SELECT COUNT(c.contract_id) " +
+                "FROM Contract c " +
+                "JOIN AssignmentRequest ar ON c.request_id = ar.request_id " +
+                "WHERE c.pappati_id = ? OR ar.oviuser_id = ? OR ar.tutor_id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, Integer.class);
+            return jdbcTemplate.queryForObject(sql, Integer.class, dni, dni, dni);
         } catch (EmptyResultDataAccessException e) {
             return 0;
         }

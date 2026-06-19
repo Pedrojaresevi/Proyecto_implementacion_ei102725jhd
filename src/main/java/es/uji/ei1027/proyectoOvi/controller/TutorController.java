@@ -103,11 +103,21 @@ public class TutorController {
 
         return "redirect:/tutor/accepted";
     }
-    //
-    @RequestMapping(value="/delete/{dni}")
+
+    // 1. Muestra la pantalla roja de confirmación (GET)
+    @RequestMapping(value="/delete/{dni}", method = RequestMethod.GET)
+    public String showDeleteConfirmation(Model model, @PathVariable String dni) {
+        model.addAttribute("dni", dni);
+        // Importante: ruta apuntando a technician/tutor
+        return "technician/tutor/confirmarborrado";
+    }
+
+    // 2. Ejecuta el borrado real al confirmar en el formulario (POST)
+    @RequestMapping(value="/delete/{dni}", method = RequestMethod.POST)
     public String processDelete(@PathVariable String dni) {
         tutorDao.deleteTutor(dni);
-        return "redirect:../list";
+        // Redirige a la lista de tutores aceptados tras borrar
+        return "redirect:/tutor/accepted";
     }
 
     @RequestMapping("/users/{dni}")

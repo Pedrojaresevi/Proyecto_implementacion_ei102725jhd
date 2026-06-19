@@ -45,6 +45,7 @@ public class OviUserController {
     @RequestMapping(value="/add")
     public String addOviUser(Model model) {
         model.addAttribute("oviUser", new OviUser());
+        cargarListasDesplegables(model); // Cargamos las listas para el registro
         return "oviUser/add";
     }
 
@@ -59,18 +60,17 @@ public class OviUserController {
 
     @RequestMapping(value="/add", method=RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("oviUser") OviUser oviUser,
-                                   BindingResult bindingResult) {
+                                   BindingResult bindingResult, Model model) {
 
-        // 1. PRIMERO: Limpiamos los datos conflictivos (transformamos "" en null)
         if (oviUser.getTutor_id() != null && oviUser.getTutor_id().trim().isEmpty()) {
             oviUser.setTutor_id(null);
         }
 
-        // 2. SEGUNDO: Validamos el objeto ya limpio
         OviUserValidator oviUserValidator = new OviUserValidator();
         oviUserValidator.validate(oviUser, bindingResult);
 
         if (bindingResult.hasErrors()) {
+            cargarListasDesplegables(model); // Recargamos si hay error
             return "oviUser/add";
         }
 
@@ -111,11 +111,38 @@ public class OviUserController {
 //
 //        return "oviUser/update";
 //    }
+    // --- MÉTODO AUXILIAR PARA CARGAR LOS DESPLEGABLES ---
+    private void cargarListasDesplegables(Model model) {
+        // Pon aquí EXACTAMENTE las mismas opciones que quieres en tu sistema
+        List<String> entidades = Arrays.asList(
+                "Ayuntamiento de Castellón",
+                "Cocemfe",
+                "ONCE",
+                "Fundación Síndrome de Down",
+                "Otra"
+        );
+
+        List<String> diversidades = Arrays.asList(
+                "Física",
+                "Visual",
+                "Auditiva",
+                "Intelectual",
+                "Mental",
+                "Múltiple"
+        );
+
+        model.addAttribute("entidadesDisponibles", entidades);
+        model.addAttribute("diversidadesDisponibles", diversidades);
+    }
     @RequestMapping(value="/update/{dni}", method = RequestMethod.GET)
     public String editOviUser(Model model, @PathVariable String dni) {
         model.addAttribute("oviUser", oviUserDao.getOviUser(dni));
+
         List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
         model.addAttribute("statusList", statusList);
+
+        cargarListasDesplegables(model); // Cargamos las mismas listas para edición
+
         return "oviUser/update";
     }
 
@@ -137,6 +164,10 @@ public class OviUserController {
         oviUserValidator.validate(oviUser, bindingResult);
 
         if (bindingResult.hasErrors()) {
+            List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
+            model.addAttribute("statusList", statusList);
+            cargarListasDesplegables(model); // Recargamos si hay error al editar
+
             return "oviUser/update";
         }
 
@@ -147,17 +178,30 @@ public class OviUserController {
         try {
             oviUserDao.updateOviUser(oviUser);
         } catch (DataIntegrityViolationException e) {
+            List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
+            model.addAttribute("statusList", statusList);
+            cargarListasDesplegables(model); // Recargamos si falla la base de datos
+
             bindingResult.rejectValue("tutor_id", "noExiste",
                     "El ID de tutor introducido no existe en el sistema");
             return "oviUser/update";
         }
 
-        return "redirect:/oviUser/accepted";    }
+        return "redirect:/oviUser/accepted";
+    }
 
-    @RequestMapping(value="/delete/{dni}")
+    // 1. Muestra la pantalla de confirmación (GET)
+    @RequestMapping(value="/delete/{dni}", method = RequestMethod.GET)
+    public String showDeleteConfirmation(Model model, @PathVariable String dni) {
+        // Le pasamos el DNI al HTML para que lo muestre en el mensaje
+        model.addAttribute("dni", dni);
+        return "technician/oviUser/confirmarborrado"; // Asegúrate de guardar el HTML anterior con este nombre
+    }
+    // 2. Ejecuta el borrado real al enviar el formulario (POST)
+    @RequestMapping(value="/delete/{dni}", method = RequestMethod.POST)
     public String processDelete(@PathVariable String dni) {
         oviUserDao.deleteOviUser(dni);
-        return "redirect:../list";
+        return "redirect:/oviUser/accepted"; // Vuelve a la lista tras borrar
     }
     //
     @RequestMapping("/pending")

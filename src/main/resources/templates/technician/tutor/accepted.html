@@ -42,8 +42,17 @@
                     <span class="badge rounded-pill bg-success px-3 py-2">Aceptado</span>
                 </td>
                 <td class="text-center">
-                    <a th:href="@{/tutor/update/{dni}(dni=${tutor.dni})}"
-                       class="btn btn-warning btn-sm">Editar</a>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a th:href="@{/tutor/update/{dni}(dni=${tutor.dni})}"
+                           class="btn btn-warning btn-sm">
+                            Editar
+                        </a>
+
+                        <a th:href="@{/tutor/delete/{dni}(dni=${tutor.dni})}"
+                           class="btn btn-danger btn-sm">
+                            Borrar
+                        </a>
+                    </div>
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(tutors)}">

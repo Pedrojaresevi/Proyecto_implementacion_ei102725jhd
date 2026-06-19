@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Eliminar Tutor</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<div class="container mt-5" style="max-width: 700px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-danger text-white py-3">
+            <h4 class="mb-0 d-flex align-items-center">
+                <i class="bi bi-person-x-fill me-2"></i> Confirmar Eliminación de Tutor
+            </h4>
+        </div>
+        <div class="card-body p-4">
+            <p class="fs-5">Estás a punto de <strong>eliminar definitivamente</strong> al tutor con DNI/NIE:
+                <strong class="text-danger" th:text="${dni}">00000000X</strong>.
+            </p>
+
+            <form th:action="@{/tutor/delete/{dni}(dni=${dni})}" method="post">
+
+                <div class="alert alert-warning my-4">
+                    <h5 class="alert-heading fw-bold"><i class="bi bi-exclamation-octagon-fill me-2"></i> ¿Estás completamente seguro?</h5>
+                    <p class="mb-0">
+                        Esta acción es completamente irreversible. Al confirmar, el registro del tutor se borrará de forma permanente del sistema y se perderán todos sus datos. Ten en cuenta que esto podría afectar a los usuarios OVI que tenga a su cargo.
+                    </p>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="submit" class="btn btn-danger px-4 fw-bold rounded-pill shadow-sm">
+                        Confirmar Eliminación
+                    </button>
+                    <a th:href="@{/tutor/accepted}" class="btn btn-secondary px-4 rounded-pill">
+                        Cancelar y Volver
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

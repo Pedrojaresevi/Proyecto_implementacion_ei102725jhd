@@ -4,10 +4,8 @@ import es.uji.ei1027.proyectoOvi.models.Contract;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class ContractValidator implements Validator {
+
     @Override
     public boolean supports(Class<?> cls) {
         return Contract.class.equals(cls);
@@ -16,28 +14,30 @@ public class ContractValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         Contract contract = (Contract) obj;
-        if (contract.getContract_Id() == null || contract.getContract_Id().trim().equals(""))
-            errors.rejectValue("contract_Id", "obligatori", "Cal introduir un valor");
-        //
-        List<String> valors = Arrays.asList("accepted", "refused", "in progress");
-        if (!valors.contains(contract.getStatus()))
-            errors.rejectValue("status", "valor incorrecte",
-                    "Deu ser: accepted,refused o in progress");
-        if (contract.getPappati_id() == null || contract.getPappati_id().trim().equals(""))
-            errors.rejectValue("pappati_id", "obligatori", "Cal introduir un valor");
 
-        if (contract.getRequest_Id() == null || contract.getRequest_Id().trim().equals(""))
-            errors.rejectValue("request_Id", "obligatori", "Cal introduir un valor");
+        // 1. Validar campos de vinculación (se autocompletan en el HTML como readonly)
+        if (contract.getPappati_id() == null || contract.getPappati_id().trim().isEmpty()) {
+            errors.rejectValue("pappati_id", "obligatori", "Error interno: El ID del PAP/PATI se ha perdido.");
+        }
 
-        //validación fecha inicio
-        if (contract.getStartDate() == null)
-            errors.rejectValue("startDate", "obligatori", "Hay que introducir una fecha de inicio");
+        if (contract.getRequest_Id() == null || contract.getRequest_Id().trim().isEmpty()) {
+            errors.rejectValue("request_Id", "obligatori", "Error interno: El ID de la solicitud se ha perdido.");
+        }
 
-        if (contract.getEndDate() == null)
-            errors.rejectValue("endDate", "obligatori", "Hay que introducir una fecha de fin");
+        // 2. Validar fechas (las introduce el usuario)
+        if (contract.getStartDate() == null) {
+            errors.rejectValue("startDate", "obligatori", "Hay que introducir una fecha de inicio.");
+        }
 
-        if (contract.getPlaceWhereThePDFIsGonnaBeSaved() == null || contract.getPlaceWhereThePDFIsGonnaBeSaved().trim().equals("")) {
-            errors.rejectValue("placeWhereThePDFIsGonnaBeSaved", "obligatori", "Hay que introducir el lugar donde el PDF será guardado");
+        if (contract.getEndDate() == null) {
+            errors.rejectValue("endDate", "obligatori", "Hay que introducir una fecha de fin.");
+        }
+
+        // 3. Validar coherencia de fechas: el fin no puede ser anterior al inicio
+        if (contract.getStartDate() != null && contract.getEndDate() != null) {
+            if (contract.getEndDate().before(contract.getStartDate())) {
+                errors.rejectValue("endDate", "incoherente", "La fecha de fin no puede ser anterior a la fecha de inicio.");
+            }
         }
     }
 }

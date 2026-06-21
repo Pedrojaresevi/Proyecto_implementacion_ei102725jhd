@@ -151,22 +151,71 @@ public class TutorController {
 
         OviUser oviUser = new OviUser();
 
-
         model.addAttribute("oviUser", oviUser);
+
+        // Cargar listas para los select
+        cargarListasDesplegables(model);
+
         return "technician/add_minor";
     }
 
+    // AÑADE 'Model model' A LOS PARÁMETROS AQUÍ
     @RequestMapping(value="/add-minor", method = RequestMethod.POST)
     public String processAddMinorSubmit(@ModelAttribute("oviUser") OviUser oviUser,
-                                        BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return "tutor/add-minor";
+                                        BindingResult bindingResult, Model model) {
 
+        // 1. Usar el validador específico para menores
+        OviUserMinorValidator minorValidator = new OviUserMinorValidator();
+        minorValidator.validate(oviUser, bindingResult);
+
+        // 2. Comprobar errores y devolver la vista correcta
+        if (bindingResult.hasErrors()) {
+            // Recargamos las listas antes de volver a la vista para que no falle el HTML
+            cargarListasDesplegables(model);
+            return "technician/add_minor";
+        }
+
+        // 3. Encriptar la contraseña antes de guardarla
+        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+        String contrasenaEncriptada = passwordEncryptor.encryptPassword(oviUser.getPassword());
+        oviUser.setPassword(contrasenaEncriptada);
+
+        // 4. Asignar estado y guardar
         oviUser.setStatus("accepted");
 
-        oviUserDao.addOviUser(oviUser);
+        try {
+            oviUserDao.addOviUser(oviUser);
+        } catch (DuplicateKeyException e) {
+            bindingResult.rejectValue("dni", "duplicat", "Ya existe un usuario con este DNI");
+            // Recargamos las listas también aquí si hay error de duplicado
+            cargarListasDesplegables(model);
+            return "technician/add_minor";
+        }
 
         return "redirect:/dashboard";
+    }
+
+    // MÉTODO AUXILIAR PARA LAS LISTAS DESPLEGABLES
+    private void cargarListasDesplegables(Model model) {
+        List<String> entidades = Arrays.asList(
+                "Ayuntamiento de Castellón",
+                "Cocemfe",
+                "ONCE",
+                "Fundación Síndrome de Down",
+                "Otra"
+        );
+
+        List<String> diversidades = Arrays.asList(
+                "Física",
+                "Visual",
+                "Auditiva",
+                "Intelectual",
+                "Mental",
+                "Múltiple"
+        );
+
+        model.addAttribute("entidadesDisponibles", entidades);
+        model.addAttribute("diversidadesDisponibles", diversidades);
     }
 
     //

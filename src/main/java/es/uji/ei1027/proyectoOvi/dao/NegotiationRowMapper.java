@@ -12,7 +12,7 @@ public final class NegotiationRowMapper implements RowMapper<Negotiation> {
         negotiation.setNegotiation_Id(rs.getString("negotiation_Id"));
         negotiation.setStatus(rs.getString("status"));
         negotiation.setRecordOfComunications(rs.getString("recordofcommunications"));
-        negotiation.setStartDate(rs.getDate("startDate"));
+        negotiation.setStartDate(rs.getDate("message_date"));
         negotiation.setEndDate(rs.getDate("endDate"));
         negotiation.setListId(rs.getString("list_id"));
         java.sql.Time time = rs.getTime("hora");

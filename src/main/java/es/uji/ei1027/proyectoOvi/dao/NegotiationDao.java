@@ -21,12 +21,12 @@ public class NegotiationDao {
 
     public void addNegotiation(Negotiation negotiation) {
         // AÑADIDO: emisor_dni al INSERT y el octavo parámetro (?)
-        String sql = "INSERT INTO negotiation (negotiation_id, status, recordofcommunications, startdate, enddate, list_id, hora, emisor_dni) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO negotiation (negotiation_id, status, recordofcommunications, message_date, enddate, list_id, hora, emisor_dni) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 negotiation.getNegotiation_Id(),
                 negotiation.getStatus(),
                 negotiation.getRecordOfComunications(),
-                negotiation.getStartDate(),
+                negotiation.getStartDate(), // Seguimos usando el getter original en Java
                 negotiation.getEndDate(),
                 negotiation.getListId(),
                 negotiation.getHora(),
@@ -45,7 +45,7 @@ public class NegotiationDao {
     }
 
     public void updateNegotiation(Negotiation negotiation) {
-        jdbcTemplate.update("UPDATE Negotiation SET status=?, recordofcommunications=?, startDate=?, endDate=?, list_id=? WHERE negotiation_Id=?",
+        jdbcTemplate.update("UPDATE Negotiation SET status=?, recordofcommunications=?, message_date=?, endDate=?, list_id=? WHERE negotiation_Id=?",
                 negotiation.getStatus(),
                 negotiation.getRecordOfComunications(),
                 negotiation.getStartDate(),
@@ -66,8 +66,8 @@ public class NegotiationDao {
 
     public List<Negotiation> getMessagesByNegotiationId(String negotiation_Id) {
         try {
-            // CORREGIDO: Añadido startDate ASC antes de hora ASC
-            String sql = "SELECT * FROM Negotiation WHERE negotiation_Id=? ORDER BY startDate ASC, hora ASC";
+            // CORREGIDO: Cambiado a message_date ASC antes de hora ASC
+            String sql = "SELECT * FROM Negotiation WHERE negotiation_Id=? ORDER BY message_date ASC, hora ASC";
             return jdbcTemplate.query(sql, new NegotiationRowMapper(), negotiation_Id);
         } catch (EmptyResultDataAccessException e)  {
             return new java.util.ArrayList<>();
@@ -195,6 +195,7 @@ public class NegotiationDao {
             return null;
         }
     }
+
     // ---------------------------------------------------------
     // MÉTODOS GENERALES (Afecta al listado global)
     // ---------------------------------------------------------
@@ -225,9 +226,9 @@ public class NegotiationDao {
                     "AND NOT EXISTS (" +
                     "    SELECT 1 FROM Negotiation n2 " +
                     "    WHERE n2.negotiation_Id = n1.negotiation_Id " +
-                    "    AND (n2.startDate > n1.startDate OR (n2.startDate = n1.startDate AND n2.hora > n1.hora))" +
+                    "    AND (n2.message_date > n1.message_date OR (n2.message_date = n1.message_date AND n2.hora > n1.hora))" +
                     ") " +
-                    "ORDER BY n1.startDate DESC, n1.hora DESC LIMIT ? OFFSET ?";
+                    "ORDER BY n1.message_date DESC, n1.hora DESC LIMIT ? OFFSET ?";
             return jdbcTemplate.query(sql, new NegotiationRowMapper(), oviuserId, limit, offset);
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<>();
@@ -267,14 +268,14 @@ public class NegotiationDao {
         try {
             String sql = "WITH Ranked AS (" +
                     "  SELECT n1.*, (p.name || ' ' || p.surname) AS interlocutorName, " +
-                    "  ROW_NUMBER() OVER(PARTITION BY n1.list_id ORDER BY n1.startDate DESC, n1.hora DESC) as rn " +
+                    "  ROW_NUMBER() OVER(PARTITION BY n1.list_id ORDER BY n1.message_date DESC, n1.hora DESC) as rn " +
                     "  FROM Negotiation n1 " +
                     "  JOIN ListOfProposedCandidates l ON n1.list_id = l.list_id " +
                     "  JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
                     "  JOIN PapPati p ON l.pappati_id = p.dni " +
                     "  WHERE r.tutor_id = ? AND n1.status != 'accepted'" + // <-- AÑADIDO
                     ") " +
-                    "SELECT * FROM Ranked WHERE rn = 1 ORDER BY startDate DESC, hora DESC LIMIT ? OFFSET ?";
+                    "SELECT * FROM Ranked WHERE rn = 1 ORDER BY message_date DESC, hora DESC LIMIT ? OFFSET ?";
             return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni, limit, offset);
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<>();
@@ -297,13 +298,13 @@ public class NegotiationDao {
         try {
             String sql = "WITH Ranked AS (" +
                     "  SELECT n1.*, " +
-                    "  ROW_NUMBER() OVER(PARTITION BY n1.negotiation_Id ORDER BY n1.startDate DESC, n1.hora DESC) as rn " +
+                    "  ROW_NUMBER() OVER(PARTITION BY n1.negotiation_Id ORDER BY n1.message_date DESC, n1.hora DESC) as rn " +
                     "  FROM Negotiation n1 " +
                     "  JOIN ListOfProposedCandidates l ON n1.list_id = l.list_id " +
                     "  JOIN AssignmentRequest r ON l.request_Id = r.request_Id " +
                     "  WHERE r.tutor_id = ? AND n1.status != 'accepted'" + // <-- AÑADIDO
                     ") " +
-                    "SELECT * FROM Ranked WHERE rn = 1 ORDER BY startDate DESC, hora DESC";
+                    "SELECT * FROM Ranked WHERE rn = 1 ORDER BY message_date DESC, hora DESC";
             return jdbcTemplate.query(sql, new NegotiationRowMapper(), tutorDni);
         } catch (EmptyResultDataAccessException e) {
             return new java.util.ArrayList<>();

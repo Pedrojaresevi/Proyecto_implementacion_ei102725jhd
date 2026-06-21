@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -76,9 +77,20 @@ public class Pap_PatiController {
 
         papPati.setStatus("in progress");
 
+        // 1. Pasa el validador universal (campos nulos, formatos, etc.)
         Pap_PatiValidator pap_patiValidator = new Pap_PatiValidator();
         pap_patiValidator.validate(papPati, bindingResult);
 
+        // 2. Reglas EXCLUSIVAS para nuevos registros: Las fechas no pueden ser pasadas
+        if (papPati.getStartDate() != null && papPati.getStartDate().isBefore(LocalDate.now())) {
+            bindingResult.rejectValue("startDate", "fecha_pasada", "La fecha de inicio no puede ser anterior a hoy.");
+        }
+
+        if (papPati.getEndDate() != null && papPati.getEndDate().isBefore(LocalDate.now().plusDays(1))) {
+            bindingResult.rejectValue("endDate", "fecha_invalida", "La fecha de fin debe ser al menos el día de mañana.");
+        }
+
+        // 3. Comprobar si hay algún error (del validador o de nuestras reglas exclusivas)
         if (bindingResult.hasErrors()) {
             return "pap_pati/add";
         }

@@ -118,20 +118,14 @@ public class Pap_PatiValidator implements Validator {
         // CORRECCIÓN: "fecha_inicio" -> "startDate"
         if (papPati.getStartDate() == null) {
             errors.rejectValue("startDate", "obligatori", "Este campo es obligatorio.");
-        } else if (papPati.getStartDate().isBefore(LocalDate.now())) {
-            errors.rejectValue("startDate", "fecha_pasada", "La fecha de inicio no puede ser anterior a hoy.");
         }
 
         // CORRECCIÓN: "fecha_fin" -> "endDate"
         if (papPati.getEndDate() == null) {
             errors.rejectValue("endDate", "obligatori", "Este campo es obligatorio.");
-        } else {
-            LocalDate tomorrow = LocalDate.now().plusDays(1);
-            if (papPati.getEndDate().isBefore(tomorrow)) {
-                errors.rejectValue("endDate", "fecha_invalida", "La fecha de fin debe ser al menos el día de mañana.");
-            } else if (papPati.getStartDate() != null && papPati.getEndDate().isBefore(papPati.getStartDate())) {
-                errors.rejectValue("endDate", "incoherencia", "La fecha de fin no puede ser anterior a la fecha de inicio.");
-            }
+        } else if (papPati.getStartDate() != null && papPati.getEndDate().isBefore(papPati.getStartDate())) {
+            // Esta incoherencia no se permite ni en alta ni en edición
+            errors.rejectValue("endDate", "incoherencia", "La fecha de fin no puede ser anterior a la fecha de inicio.");
         }
 
         // Movilidad geográfica

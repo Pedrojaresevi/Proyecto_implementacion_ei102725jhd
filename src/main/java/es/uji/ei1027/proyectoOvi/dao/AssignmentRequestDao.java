@@ -158,7 +158,6 @@ public class AssignmentRequestDao  {
             return new java.util.ArrayList<>();
         }
     }
-
     public int countAssignmentRequestsByUser(String dni) {
         String sql = "SELECT COUNT(*) FROM AssignmentRequest WHERE oviuser_id=? OR tutor_id=?";
         try {

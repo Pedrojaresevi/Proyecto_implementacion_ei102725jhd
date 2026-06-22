@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Error - OVI Castelló</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-danger text-white text-center py-4">
+                    <i class="bi bi-exclamation-triangle display-1"></i>
+                    <h2 class="text-white mt-3 mb-0">¡Ups! Algo no ha salido bien</h2>
+                </div>
+
+                <div class="card-body p-4 p-md-5 text-center">
+                    <p class="lead mb-4">
+                        Hemos detectado un problema al procesar tu solicitud. No te preocupes, el sistema sigue funcionando de forma segura.
+                    </p>
+
+                    <div class="alert alert-info border-info bg-white shadow-sm text-start">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-info-circle-fill text-info fs-5 me-2"></i>
+                            <h5 class="mb-0 text-dark fw-bold">¿Qué puedes hacer?</h5>
+                        </div>
+                        <p class="mb-0 text-muted small">
+                            Puedes intentar recargar la página, volver al panel de control o intentarlo de nuevo más tarde. El equipo técnico ya ha sido notificado de la incidencia de forma interna.
+                        </p>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <a href="/dashboard" class="btn btn-lg btn-secondary px-4 rounded-pill shadow-sm">
+                            <i class="bi bi-arrow-left me-2"></i>Volver al Panel de Control
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+</body>
+</html>

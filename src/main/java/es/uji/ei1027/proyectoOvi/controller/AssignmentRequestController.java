@@ -53,9 +53,65 @@ public class AssignmentRequestController {
         this.negotiationDao = negotiationDao;
     }
 
+//    //List depediendo del rol
+//    @RequestMapping("/list")
+//    public String list(@RequestParam(defaultValue = "0") int page, Model model, HttpSession session) {
+//        UserDetails user = (UserDetails) session.getAttribute("user");
+//
+//        if (user == null) {
+//            return "redirect:/login";
+//        }
+//
+//        List<AssignmentRequest> allRequests;
+//
+//        if (user.getRole().equals("technician")) {
+//            allRequests = assignmentRequestDao.getAssignmentRequests();
+//        } else if (user.getRole().equals("oviuser")) {
+//            allRequests = assignmentRequestDao.getRequestsByOviUser(user.getDni());
+//        } else if (user.getRole().equals("tutor")) {
+//            allRequests = assignmentRequestDao.getRequestsByTutor(user.getDni());
+//        } else {
+//            allRequests = java.util.Collections.emptyList();
+//        }
+//
+//        // --- FILTRO: EXCLUIR LAS COMPLETADAS ---
+//        List<AssignmentRequest> activeRequests = allRequests.stream()
+//                .filter(req -> !"completed".equals(req.getStatus()))
+//                .collect(java.util.stream.Collectors.toList());
+//
+//        // 2. LÓGICA DE PAGINACIÓN SOBRE LAS ACTIVAS
+//        int pageSize = 6;
+//        int totalItems = activeRequests.size();
+//        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+//        if (totalPages == 0) totalPages = 1; // Evitar que totalPages sea 0
+//
+//        if (page < 0) page = 0;
+//        if (page >= totalPages) page = totalPages - 1;
+//
+//        int start = page * pageSize;
+//        int end = Math.min(start + pageSize, totalItems);
+//
+//        List<AssignmentRequest> pagedRequests = java.util.Collections.emptyList();
+//        if (start < totalItems) {
+//            pagedRequests = activeRequests.subList(start, end);
+//        }
+//
+//        model.addAttribute("assignmentRequests", pagedRequests);
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", totalPages);
+//
+//        if (user.getRole().equals("technician")) {
+//            return "redirect:/assignmentRequest/pending";
+//        } else {
+//            return "assignmentRequest/list";
+//        }
+//    }
+
     //List depediendo del rol
     @RequestMapping("/list")
-    public String list(@RequestParam(defaultValue = "0") int page, Model model, HttpSession session) {
+    public String list(@RequestParam(defaultValue = "0") int page,
+                       @RequestParam(value = "statusFilter", required = false) String statusFilter, // NUEVO PARÁMETRO
+                       Model model, HttpSession session) {
         UserDetails user = (UserDetails) session.getAttribute("user");
 
         if (user == null) {
@@ -74,12 +130,19 @@ public class AssignmentRequestController {
             allRequests = java.util.Collections.emptyList();
         }
 
-        // --- FILTRO: EXCLUIR LAS COMPLETADAS ---
+        // --- FILTRO BASE: EXCLUIR LAS COMPLETADAS ---
         List<AssignmentRequest> activeRequests = allRequests.stream()
                 .filter(req -> !"completed".equals(req.getStatus()))
                 .collect(java.util.stream.Collectors.toList());
 
-        // 2. LÓGICA DE PAGINACIÓN SOBRE LAS ACTIVAS
+        // --- NUEVO: FILTRO POR ESTADO SELECCIONADO EN EL HTML ---
+        if (statusFilter != null && !statusFilter.isEmpty()) {
+            activeRequests = activeRequests.stream()
+                    .filter(req -> statusFilter.equals(req.getStatus()))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        // 2. LÓGICA DE PAGINACIÓN SOBRE LAS ACTIVAS/FILTRADAS
         int pageSize = 6;
         int totalItems = activeRequests.size();
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
@@ -99,6 +162,7 @@ public class AssignmentRequestController {
         model.addAttribute("assignmentRequests", pagedRequests);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("statusFilter", statusFilter); // NUEVO: Para recordar la selección en el HTML y la paginación
 
         if (user.getRole().equals("technician")) {
             return "redirect:/assignmentRequest/pending";
@@ -174,6 +238,69 @@ public class AssignmentRequestController {
         return "assignmentRequest/add";
     }
 
+//    @RequestMapping(value="/add", method= RequestMethod.POST)
+//    public String processAddSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
+//                                   BindingResult bindingResult, HttpSession session, Model model) {
+//
+//        UserDetails user = (UserDetails) session.getAttribute("user");
+//
+//        // 1. COMPROBAR SESIÓN (Si se ha caducado, mandarlo al login en lugar de romper)
+//        if (user == null) {
+//            return "redirect:/login";
+//        }
+//
+//        if ("oviuser".equals(user.getRole())) {
+//            assignmentRequest.setOviuser_id(user.getDni());
+//            // Aseguramos que tutor_id esté nulo por la regla CHECK de la BD
+//            assignmentRequest.setTutor_id(null);
+//        } else if ("tutor".equals(user.getRole())) {
+//            assignmentRequest.setTutor_id(user.getDni());
+//            // Aseguramos que oviuser_id esté nulo
+//            assignmentRequest.setOviuser_id(null);
+//        }
+//
+//        // 2. GENERACIÓN DEL ID SECUENCIAL
+//        String ultimoId = assignmentRequestDao.getLastRequestId();
+//        String nuevoId;
+//
+//        if (ultimoId == null || ultimoId.isEmpty()) {
+//            nuevoId = "REQ1";
+//        } else {
+//            String numeroStr = ultimoId.substring(3);
+//            int numero = Integer.parseInt(numeroStr);
+//            numero++;
+//            nuevoId = "REQ" + numero;
+//        }
+//
+//        // 3. ASIGNAR VALORES AUTOMÁTICOS
+//        assignmentRequest.setRequest_Id(nuevoId);
+//        assignmentRequest.setStatus("in progress");
+//        assignmentRequest.setRequestDate(LocalDate.now());
+//
+//        // 4. VALIDAR Y GUARDAR
+//        AssignmentRequestValidator assignmentRequestValidator = new AssignmentRequestValidator();
+//        assignmentRequestValidator.validate(assignmentRequest, bindingResult);
+//
+//        if (bindingResult.hasErrors()) {
+//            model.addAttribute("user", user);
+//            return "assignmentRequest/add";
+//        }
+//
+//        try {
+//            assignmentRequestDao.addAssignmentRequest(assignmentRequest);
+//        } catch (DuplicateKeyException e) {
+//            model.addAttribute("user", user);
+//            bindingResult.rejectValue("request_Id", "duplicat", "Ya existe una solicitud con este ID");
+//            return "assignmentRequest/add";
+//        } catch (DataIntegrityViolationException e) {
+//            model.addAttribute("user", user);
+//            bindingResult.rejectValue("oviuser_id", "no_existe", "El oviUser no es vàlid");
+//            return "assignmentRequest/add";
+//        }
+//
+//        return "redirect:list";
+//    }
+
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
                                    BindingResult bindingResult, HttpSession session, Model model) {
@@ -234,7 +361,12 @@ public class AssignmentRequestController {
             return "assignmentRequest/add";
         }
 
-        return "redirect:list";
+        return "redirect:/assignmentRequest/success";
+    }
+
+    @RequestMapping("/success")
+    public String requestSuccess() {
+        return "assignmentRequest/success";
     }
 
     @RequestMapping(value="/update/{id}", method = RequestMethod.GET)

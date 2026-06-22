@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <title>Solicitud Registrada - OVI</title>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<main class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+      <div class="card shadow-sm border-0">
+        <div class="card-header text-white text-center py-4" style="background-color: #0d9488 !important;">
+          <i class="bi bi-file-earmark-check display-1"></i>
+          <h2 class="text-white mt-3 mb-0">¡Solicitud Registrada!</h2>
+        </div>
+
+        <div class="card-body p-4 p-md-5">
+          <p class="lead text-center mb-4">
+            Tu solicitud de asignación ha sido guardada correctamente en el sistema.
+          </p>
+
+          <div class="alert alert-warning border-warning bg-white shadow-sm mb-4">
+            <div class="d-flex align-items-center mb-2">
+              <i class="bi bi-clock-history fs-4 text-warning me-2"></i>
+              <h5 class="mb-0 text-dark fw-bold">Estado actual: <span class="badge bg-warning text-dark">In progress</span></h5>
+            </div>
+            <p class="mb-0 text-muted small">
+              La solicitud permanecerá en revisión hasta que un técnico de la plataforma proceda a evaluarla y aceptarla.
+            </p>
+          </div>
+
+          <div class="alert alert-info border-info bg-white shadow-sm">
+            <div class="d-flex align-items-center mb-3 border-bottom pb-2">
+              <i class="bi bi-envelope-paper-fill fs-4 text-info me-2"></i>
+              <h5 class="mb-0 text-dark fw-bold">¿Cuál es el siguiente paso?</h5>
+            </div>
+            <p>A partir de este momento, el procedimiento automatizado será el siguiente:</p>
+            <ol class="mb-3">
+              <li class="mb-2">Un técnico validará los requisitos profesionales y la ubicación de tu petición.</li>
+              <li>Recibirás una <strong>notificación por correo electrónico</strong> en cuanto la solicitud cambie de estado (Aceptada o Rechazada).</li>
+              <li>Si es <strong>Aceptada</strong>, podrás continuar directamente con el proceso desde la plataforma para buscar y conseguir tu asistente <strong>PAP/PATI</strong> compatible.</li>
+            </ol>
+          </div>
+
+          <div class="text-center mt-5">
+            <a href="/assignmentRequest/list" class="btn btn-lg text-white px-4" style="background-color: #0d9488; border-color: #0d9488;">
+              <i class="bi bi-arrow-left me-2"></i>Ir a mis solicitudes
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+</body>
+</html>

@@ -14,17 +14,31 @@
 
     <main class="container pb-5">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-end mb-4">
             <h1 class="mb-0 align-middle">
                 <i class="bi bi-person-plus me-2" style="font-size: 2rem; color: #0d9488; vertical-align: middle;"></i>Mis Solicitudes
             </h1>
-            <div class="d-flex gap-2">
-                <a th:href="@{/assignmentRequest/history}" class="btn btn-outline-secondary shadow-sm rounded-pill px-4">
-                    <i class="bi bi-archive me-1"></i> Historial
-                </a>
-                <a th:href="@{/assignmentRequest/add}" class="btn btn-primary shadow-sm rounded-pill px-4">
-                    <i class="bi bi-plus-lg me-1"></i> Nueva solicitud
-                </a>
+
+            <div class="d-flex flex-column align-items-end gap-3">
+                <div class="d-flex gap-2">
+                    <a th:href="@{/assignmentRequest/history}" class="btn btn-outline-secondary shadow-sm rounded-pill px-4">
+                        <i class="bi bi-archive me-1"></i> Historial
+                    </a>
+                    <a th:href="@{/assignmentRequest/add}" class="btn btn-primary shadow-sm rounded-pill px-4">
+                        <i class="bi bi-plus-lg me-1"></i> Nueva solicitud
+                    </a>
+                </div>
+
+                <form th:action="@{/assignmentRequest/list}" method="GET" class="d-flex align-items-center gap-2">
+                    <label for="statusFilter" class="form-label mb-0 fw-bold text-muted small">Filtrar estado:</label>
+                    <select name="statusFilter" id="statusFilter" class="form-select form-select-sm w-auto shadow-sm">
+                        <option value="">Todos los activos</option>
+                        <option value="in progress" th:selected="${statusFilter == 'in progress'}">En progreso (in progress)</option>
+                        <option value="accepted" th:selected="${statusFilter == 'accepted'}">Aceptado (accepted)</option>
+                        <option value="refused" th:selected="${statusFilter == 'refused'}">Rechazado (refused)</option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-dark shadow-sm">Filtrar</button>
+                </form>
             </div>
         </div>
 
@@ -108,15 +122,15 @@
             <ul class="pagination justify-content-center">
 
                 <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{/assignmentRequest/list(page=${currentPage - 1})}">&laquo;</a>
+                    <a class="page-link" th:href="@{/assignmentRequest/list(page=${currentPage - 1}, statusFilter=${statusFilter})}">&laquo;</a>
                 </li>
 
                 <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
-                    <a class="page-link" th:href="@{/assignmentRequest/list(page=${i})}" th:text="${i + 1}">1</a>
+                    <a class="page-link" th:href="@{/assignmentRequest/list(page=${i}, statusFilter=${statusFilter})}" th:text="${i + 1}">1</a>
                 </li>
 
                 <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
-                    <a class="page-link" th:href="@{/assignmentRequest/list(page=${currentPage + 1})}">&raquo;</a>
+                    <a class="page-link" th:href="@{/assignmentRequest/list(page=${currentPage + 1}, statusFilter=${statusFilter})}">&raquo;</a>
                 </li>
 
             </ul>

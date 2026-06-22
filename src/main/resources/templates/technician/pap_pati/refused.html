@@ -26,31 +26,32 @@
         <table class="table table-striped table-hover align-middle text-center">
             <thead class="table-dark">
             <tr>
-                <th>DNI</th>
                 <th>Nombre</th>
-                <th>Apellidos</th>
                 <th>Email</th>
-                <th>Teléfono</th>
-                <th>Tipo</th>
                 <th>Estado</th>
                 <th>Motivo del Rechazo</th>
+                <th class="text-center">Detalles</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="asistente: ${papPatis}">
-                <td th:text="${asistente.dni}"></td>
-                <td th:text="${asistente.name}"></td>
-                <td th:text="${asistente.surname}"></td>
+                <td th:text="${asistente.name} + ' ' + ${asistente.surname}"></td>
                 <td th:text="${asistente.email}"></td>
-                <td th:text="${asistente.phone}"></td>
-                <td th:text="${asistente.assistant_type}"></td>
-                <td><span class="badge rounded-pill bg-danger px-3 py-2">Rechazado</span></td>
+                <td>
+                    <span class="badge rounded-pill bg-danger px-3 py-2">Rechazado</span>
+                </td>
                 <td>
                     <em class="text-danger fw-semibold" th:text="${asistente.rejectReason ?: 'No especificado'}"></em>
                 </td>
+                <td class="text-center">
+                    <a th:href="@{/pap_pati/masdetalle/{id}(id=${asistente.dni}, from='refused')}"
+                       class="btn btn-secondary btn-sm px-4 py-2 shadow-sm fw-semibold">
+                        <i class="bi bi-eye-fill me-1"></i> Ver perfil
+                    </a>
+                </td>
             </tr>
             <tr th:if="${#lists.isEmpty(papPatis)}">
-                <td colspan="8" class="text-center text-muted p-4">No hay asistentes rechazados en el histórico.</td>
+                <td colspan="5" class="text-center text-muted p-4">No hay asistentes rechazados en el histórico.</td>
             </tr>
             </tbody>
         </table>
@@ -69,6 +70,7 @@
             </li>
         </ul>
     </nav>
+
     <a href="/dashboard" class="btn btn-secondary mt-3">Volver</a>
 
 </main>

@@ -56,9 +56,35 @@ public class TutorController {
     //
 
     //
+//    @RequestMapping(value="/add", method= RequestMethod.POST)
+//    public String processAddSubmit(@ModelAttribute("tutor") Tutor tutor,
+//                                   BindingResult bindingResult) {
+//        tutor.setStatus("in progress");
+//        TutorValidator tutorValidator = new TutorValidator();
+//        tutorValidator.validate(tutor, bindingResult);
+//
+//        if (bindingResult.hasErrors()) {
+//            return "tutor/add";
+//        }
+//
+//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+//        String contrasenaEncriptada = passwordEncryptor.encryptPassword(tutor.getPassword());
+//        tutor.setPassword(contrasenaEncriptada);
+//
+//        try {
+//            tutorDao.addTutor(tutor);
+//        } catch (DuplicateKeyException e) {
+//            bindingResult.rejectValue("dni", "duplicat",
+//                    "Ya existe un tutor con este DNI");
+//            return "tutor/add";
+//        }
+//
+//        return "redirect:/";
+//    }
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("tutor") Tutor tutor,
                                    BindingResult bindingResult) {
+
         tutor.setStatus("in progress");
         TutorValidator tutorValidator = new TutorValidator();
         tutorValidator.validate(tutor, bindingResult);
@@ -79,7 +105,12 @@ public class TutorController {
             return "tutor/add";
         }
 
-        return "redirect:/";
+        return "redirect:success";
+    }
+
+    @RequestMapping("/success")
+    public String registrationSuccess() {
+        return "success";
     }
     //
     @RequestMapping(value="/update/{dni}", method = RequestMethod.GET)

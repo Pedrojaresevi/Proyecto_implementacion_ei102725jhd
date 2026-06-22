@@ -97,12 +97,12 @@ public class OviUserController {
             return "oviUser/add";
         }
 
-        return "redirect:/oviUser/success";
+        return "redirect:success";
     }
 
     @RequestMapping("/success")
     public String registrationSuccess() {
-        return "oviUser/success";
+        return "success";
     }
 
     //    @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
@@ -288,6 +288,40 @@ public class OviUserController {
         model.addAttribute("totalPages", totalPages);
         return "technician/oviUser/refused"; // Nombre del nuevo HTML
     }
+//    @RequestMapping(value="/masdetalle/{dni}", method = RequestMethod.GET)
+//    public String verMasDetalle(Model model,
+//                                @PathVariable String dni,
+//                                @RequestParam(value = "from", required = false) String from,
+//                                @RequestParam(value = "tutorDni", required = false) String tutorDni,
+//                                HttpSession session) {
+//
+//        UserDetails user = (UserDetails) session.getAttribute("user");
+//        if (user == null) {
+//            return "redirect:/login";
+//        }
+//
+//        OviUser oviUser = oviUserDao.getOviUser(dni);
+//
+//        if (oviUser == null) {
+//            return "redirect:/oviUser/accepted";
+//        }
+//
+//        // LÓGICA DEL BOTÓN VOLVER DINÁMICO
+//        String volverUrl = "/dashboard"; // Ruta por defecto (fallback)
+//
+//        if ("accepted".equals(from)) {
+//            volverUrl = "/oviUser/accepted";
+//        } else if ("list_minors".equals(from) && tutorDni != null) {
+//            volverUrl = "/tutor/users/" + tutorDni;
+//        }
+//
+//        // Pasamos los atributos al modelo
+//        model.addAttribute("oviUser", oviUser);
+//        model.addAttribute("volverUrl", volverUrl); // Enviamos la URL a la vista
+//
+//        return "oviUser/masdetalle"; // Asegúrate de que coincida con tu ruta de carpetas
+//    }
+
     @RequestMapping(value="/masdetalle/{dni}", method = RequestMethod.GET)
     public String verMasDetalle(Model model,
                                 @PathVariable String dni,
@@ -311,6 +345,8 @@ public class OviUserController {
 
         if ("accepted".equals(from)) {
             volverUrl = "/oviUser/accepted";
+        } else if ("refused".equals(from)) { // <--- AÑADIR ESTA LÍNEA
+            volverUrl = "/oviUser/refused";  // <--- AÑADIR ESTA LÍNEA
         } else if ("list_minors".equals(from) && tutorDni != null) {
             volverUrl = "/tutor/users/" + tutorDni;
         }
@@ -319,8 +355,7 @@ public class OviUserController {
         model.addAttribute("oviUser", oviUser);
         model.addAttribute("volverUrl", volverUrl); // Enviamos la URL a la vista
 
-        return "oviUser/masdetalle"; // Asegúrate de que coincida con tu ruta de carpetas
+        return "oviUser/masdetalle";
     }
-
 
 }

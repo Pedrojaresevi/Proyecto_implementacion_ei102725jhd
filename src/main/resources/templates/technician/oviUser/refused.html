@@ -26,26 +26,35 @@
         <table class="table table-striped table-hover align-middle text-center">
             <thead class="table-dark">
             <tr>
-                <th>DNI</th>
                 <th>Nombre</th>
                 <th>Email</th>
-                <th>Diversidad Funcional</th>
                 <th>Estado</th>
-                <th>Motivo de Rechazo</th> </tr>
+                <th>Motivo de Rechazo</th>
+                <th class="text-center">Detalles</th>
+            </tr>
             </thead>
             <tbody>
             <tr th:each="oviUser : ${oviUsers}">
-                <td th:text="${oviUser.dni}"></td>
                 <td th:text="${oviUser.name}"></td>
                 <td th:text="${oviUser.email}"></td>
-                <td th:text="${oviUser.typeOfFunctionalDiversity}"></td>
-                <td><span class="badge rounded-pill bg-danger px-3 py-2">Rechazado</span></td>
+
+                <td>
+                    <span class="badge rounded-pill bg-danger px-3 py-2">Rechazado</span>
+                </td>
+
                 <td>
                     <em class="text-danger fw-semibold" th:text="${oviUser.rejectReason ?: 'No especificado'}"></em>
                 </td>
+
+                <td class="text-center">
+                    <a th:href="@{/oviUser/masdetalle/{dni}(dni=${oviUser.dni},from='refused')}"
+                       class="btn btn-secondary btn-sm px-4 py-2 shadow-sm fw-semibold">
+                        <i class="bi bi-eye-fill me-1"></i> Ver perfil
+                    </a>
+                </td>
             </tr>
             <tr th:if="${#lists.isEmpty(oviUsers)}">
-                <td colspan="6" class="text-center text-muted p-4">No hay usuarios rechazados en el sistema.</td>
+                <td colspan="5" class="text-center text-muted p-4">No hay usuarios rechazados en el sistema.</td>
             </tr>
             </tbody>
         </table>

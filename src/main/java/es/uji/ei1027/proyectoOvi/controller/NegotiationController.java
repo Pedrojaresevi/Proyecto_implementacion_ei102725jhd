@@ -120,19 +120,57 @@ public class NegotiationController {
         return "redirect:../list";
     }
 
+//    @RequestMapping("/user/{dni}")
+//    public String listNegotiationsByUser(Model model, @PathVariable String dni, @RequestParam(defaultValue = "1") int page) {
+//        int pageSize = 4;
+//        int offset = (page - 1) * pageSize;
+//
+//        model.addAttribute("negotiations", negotiationDao.getNegotiationsByUserPaginated(dni, pageSize, offset));
+//
+//        int totalItems = negotiationDao.countNegotiationsByUser(dni);
+//        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+//        if (totalPages == 0) totalPages = 1;
+//
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", totalPages);
+//        model.addAttribute("dniOwner", dni);
+//        model.addAttribute("rolePath", "user");
+//
+//        return "negotiation/list";
+//    }
+
     @RequestMapping("/user/{dni}")
     public String listNegotiationsByUser(Model model, @PathVariable String dni, @RequestParam(defaultValue = "1") int page) {
+        // 1. Comprobamos si el usuario es menor (si tiene tutor_id asignado)
+        boolean isMinor = false;
+        OviUser oviUser = oviUserDao.getOviUser(dni);
+        if (oviUser != null && oviUser.getTutor_id() != null && !oviUser.getTutor_id().isEmpty()) {
+            isMinor = true;
+        }
+
+        // 2. Pasamos la bandera a la vista
+        model.addAttribute("isMinor", isMinor);
+
+        // 3. Lógica para mayores de edad (o si por algún error no detecta al menor)
         int pageSize = 4;
         int offset = (page - 1) * pageSize;
 
-        model.addAttribute("negotiations", negotiationDao.getNegotiationsByUserPaginated(dni, pageSize, offset));
+        if (isMinor) {
+            // Si es menor, no le enviamos negociaciones para evitar accesos indebidos
+            model.addAttribute("negotiations", new ArrayList<Negotiation>());
+            model.addAttribute("currentPage", 1);
+            model.addAttribute("totalPages", 1);
+        } else {
+            // Si es mayor, lógica normal que tú tenías
+            model.addAttribute("negotiations", negotiationDao.getNegotiationsByUserPaginated(dni, pageSize, offset));
+            int totalItems = negotiationDao.countNegotiationsByUser(dni);
+            int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+            if (totalPages == 0) totalPages = 1;
 
-        int totalItems = negotiationDao.countNegotiationsByUser(dni);
-        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-        if (totalPages == 0) totalPages = 1;
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", totalPages);
+        }
 
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
         model.addAttribute("dniOwner", dni);
         model.addAttribute("rolePath", "user");
 

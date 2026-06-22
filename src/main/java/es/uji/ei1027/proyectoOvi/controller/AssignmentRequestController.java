@@ -1,14 +1,7 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
-import es.uji.ei1027.proyectoOvi.dao.AssignmentRequestDao;
-import es.uji.ei1027.proyectoOvi.dao.ListOfProposedCandidatesDao;
-import es.uji.ei1027.proyectoOvi.dao.NegotiationDao;
-import es.uji.ei1027.proyectoOvi.dao.PapPatiDao;
-import es.uji.ei1027.proyectoOvi.models.AssignmentRequest;
-import es.uji.ei1027.proyectoOvi.models.ListOfProposedCandidates;
-import es.uji.ei1027.proyectoOvi.models.Negotiation;
-import es.uji.ei1027.proyectoOvi.models.Pap_Pati;
-import es.uji.ei1027.proyectoOvi.models.UserDetails;
+import es.uji.ei1027.proyectoOvi.dao.*;
+import es.uji.ei1027.proyectoOvi.models.*;
 
 
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +25,7 @@ public class AssignmentRequestController {
     private PapPatiDao papPatiDao;
     private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
     private NegotiationDao negotiationDao; // Inyectamos el DAO de Negociaciones
+    private OviUserDao oviUserDao;
 
     @Autowired
     public void setAssignmentRequestDao(AssignmentRequestDao assignmentRequestDao){
@@ -52,6 +46,9 @@ public class AssignmentRequestController {
     public void setNegotiationDao(NegotiationDao negotiationDao){
         this.negotiationDao = negotiationDao;
     }
+
+    @Autowired
+    public void setOviUserDao(OviUserDao oviUserDao) { this.oviUserDao = oviUserDao;}
 
 //    //List depediendo del rol
 //    @RequestMapping("/list")
@@ -108,117 +105,151 @@ public class AssignmentRequestController {
 //    }
 
     //List depediendo del rol
+//    @RequestMapping("/list")
+//    public String list(@RequestParam(defaultValue = "0") int page,
+//                       @RequestParam(value = "statusFilter", required = false) String statusFilter, // NUEVO PARÁMETRO
+//                       Model model, HttpSession session) {
+//        UserDetails user = (UserDetails) session.getAttribute("user");
+//
+//        if (user == null) {
+//            return "redirect:/login";
+//        }
+//
+//        List<AssignmentRequest> allRequests;
+//
+//        if (user.getRole().equals("technician")) {
+//            allRequests = assignmentRequestDao.getAssignmentRequests();
+//        } else if (user.getRole().equals("oviuser")) {
+//            allRequests = assignmentRequestDao.getRequestsByOviUser(user.getDni());
+//        } else if (user.getRole().equals("tutor")) {
+//            allRequests = assignmentRequestDao.getRequestsByTutor(user.getDni());
+//        } else {
+//            allRequests = java.util.Collections.emptyList();
+//        }
+//
+//        // --- FILTRO BASE: EXCLUIR LAS COMPLETADAS ---
+//        List<AssignmentRequest> activeRequests = allRequests.stream()
+//                .filter(req -> !"completed".equals(req.getStatus()))
+//                .collect(java.util.stream.Collectors.toList());
+//
+//        // --- NUEVO: FILTRO POR ESTADO SELECCIONADO EN EL HTML ---
+//        if (statusFilter != null && !statusFilter.isEmpty()) {
+//            activeRequests = activeRequests.stream()
+//                    .filter(req -> statusFilter.equals(req.getStatus()))
+//                    .collect(java.util.stream.Collectors.toList());
+//        }
+//
+//        // 2. LÓGICA DE PAGINACIÓN SOBRE LAS ACTIVAS/FILTRADAS
+//        int pageSize = 6;
+//        int totalItems = activeRequests.size();
+//        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+//        if (totalPages == 0) totalPages = 1; // Evitar que totalPages sea 0
+//
+//        if (page < 0) page = 0;
+//        if (page >= totalPages) page = totalPages - 1;
+//
+//        int start = page * pageSize;
+//        int end = Math.min(start + pageSize, totalItems);
+//
+//        List<AssignmentRequest> pagedRequests = java.util.Collections.emptyList();
+//        if (start < totalItems) {
+//            pagedRequests = activeRequests.subList(start, end);
+//        }
+//
+//        model.addAttribute("assignmentRequests", pagedRequests);
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", totalPages);
+//        model.addAttribute("statusFilter", statusFilter); // NUEVO: Para recordar la selección en el HTML y la paginación
+//
+//        if (user.getRole().equals("technician")) {
+//            return "redirect:/assignmentRequest/pending";
+//        } else {
+//            return "assignmentRequest/list";
+//        }
+//    }
+
     @RequestMapping("/list")
-    public String list(@RequestParam(defaultValue = "0") int page,
-                       @RequestParam(value = "statusFilter", required = false) String statusFilter, // NUEVO PARÁMETRO
-                       Model model, HttpSession session) {
+    public String listRequests(Model model,
+                               @RequestParam(value = "statusFilter", required = false) String statusFilter,
+                               @RequestParam(value = "page", defaultValue = "0") int page,
+                               HttpSession session) {
         UserDetails user = (UserDetails) session.getAttribute("user");
 
         if (user == null) {
             return "redirect:/login";
         }
 
-        List<AssignmentRequest> allRequests;
+        boolean isMinor = "user".equals(user.getRole()) || "oviuser".equals(user.getRole());
+        model.addAttribute("isMinor", isMinor);
+        model.addAttribute("statusFilter", statusFilter);
 
-        if (user.getRole().equals("technician")) {
-            allRequests = assignmentRequestDao.getAssignmentRequests();
-        } else if (user.getRole().equals("oviuser")) {
-            allRequests = assignmentRequestDao.getRequestsByOviUser(user.getDni());
-        } else if (user.getRole().equals("tutor")) {
-            allRequests = assignmentRequestDao.getRequestsByTutor(user.getDni());
-        } else {
-            allRequests = java.util.Collections.emptyList();
-        }
+        int pageSize = 6;
+        List<AssignmentRequest> requestsList = new ArrayList<>();
+        int totalItems = 0;
 
-        // --- FILTRO BASE: EXCLUIR LAS COMPLETADAS ---
-        List<AssignmentRequest> activeRequests = allRequests.stream()
-                .filter(req -> !"completed".equals(req.getStatus()))
-                .collect(java.util.stream.Collectors.toList());
-
-        // --- NUEVO: FILTRO POR ESTADO SELECCIONADO EN EL HTML ---
         if (statusFilter != null && !statusFilter.isEmpty()) {
-            activeRequests = activeRequests.stream()
-                    .filter(req -> statusFilter.equals(req.getStatus()))
-                    .collect(java.util.stream.Collectors.toList());
-        }
-
-        // 2. LÓGICA DE PAGINACIÓN SOBRE LAS ACTIVAS/FILTRADAS
-        int pageSize = 6;
-        int totalItems = activeRequests.size();
-        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-        if (totalPages == 0) totalPages = 1; // Evitar que totalPages sea 0
-
-        if (page < 0) page = 0;
-        if (page >= totalPages) page = totalPages - 1;
-
-        int start = page * pageSize;
-        int end = Math.min(start + pageSize, totalItems);
-
-        List<AssignmentRequest> pagedRequests = java.util.Collections.emptyList();
-        if (start < totalItems) {
-            pagedRequests = activeRequests.subList(start, end);
-        }
-
-        model.addAttribute("assignmentRequests", pagedRequests);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("statusFilter", statusFilter); // NUEVO: Para recordar la selección en el HTML y la paginación
-
-        if (user.getRole().equals("technician")) {
-            return "redirect:/assignmentRequest/pending";
+            // Si hay un filtro explícito (in progress, accepted, refused) se busca directamente en la BD
+            int offset = page * pageSize;
+            requestsList = assignmentRequestDao.getAssignmentRequestsByUserAndStatusPaginated(user.getDni(), statusFilter, pageSize, offset);
+            totalItems = assignmentRequestDao.countAssignmentRequestsByUserAndStatus(user.getDni(), statusFilter);
         } else {
-            return "assignmentRequest/list";
-        }
-    }
+            // "Todos los activos": Debemos traer TODAS las del usuario y filtrar manualmente para EXCLUIR 'completed'
+            // Esto garantiza que 'refused', 'in progress' y 'accepted' salgan juntas, tanto para el tutor como para el menor.
+            List<AssignmentRequest> allUserRequests = assignmentRequestDao.getAssignmentRequestsByUserPaginated(user.getDni(), Integer.MAX_VALUE, 0);
+            List<AssignmentRequest> activeRequests = new ArrayList<>();
 
-    // --- NUEVO MÉTODO PARA EL HISTORIAL ---
-    @RequestMapping("/history")
-    public String history(@RequestParam(defaultValue = "0") int page, Model model, HttpSession session) {
-        UserDetails user = (UserDetails) session.getAttribute("user");
+            for (AssignmentRequest req : allUserRequests) {
+                if (!req.getStatus().equalsIgnoreCase("completed")) {
+                    activeRequests.add(req);
+                }
+            }
 
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        List<AssignmentRequest> allRequests;
-
-        if (user.getRole().equals("technician")) {
-            allRequests = assignmentRequestDao.getAssignmentRequests();
-        } else if (user.getRole().equals("oviuser")) {
-            allRequests = assignmentRequestDao.getRequestsByOviUser(user.getDni());
-        } else if (user.getRole().equals("tutor")) {
-            allRequests = assignmentRequestDao.getRequestsByTutor(user.getDni());
-        } else {
-            allRequests = java.util.Collections.emptyList();
+            // Paginación manual segura sobre la lista activa filtrada
+            totalItems = activeRequests.size();
+            int fromIndex = page * pageSize;
+            int toIndex = Math.min(fromIndex + pageSize, totalItems);
+            if (fromIndex < totalItems) {
+                requestsList = activeRequests.subList(fromIndex, toIndex);
+            }
         }
 
-        // --- FILTRO: INCLUIR SOLO LAS COMPLETADAS ---
-        List<AssignmentRequest> completedRequests = allRequests.stream()
-                .filter(req -> "completed".equals(req.getStatus()))
-                .collect(java.util.stream.Collectors.toList());
-
-        // LÓGICA DE PAGINACIÓN SOBRE LAS COMPLETADAS
-        int pageSize = 6;
-        int totalItems = completedRequests.size();
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
         if (totalPages == 0) totalPages = 1;
 
-        if (page < 0) page = 0;
-        if (page >= totalPages) page = totalPages - 1;
-
-        int start = page * pageSize;
-        int end = Math.min(start + pageSize, totalItems);
-
-        List<AssignmentRequest> pagedRequests = java.util.Collections.emptyList();
-        if (start < totalItems) {
-            pagedRequests = completedRequests.subList(start, end);
-        }
-
-        model.addAttribute("assignmentRequests", pagedRequests);
+        model.addAttribute("assignmentRequests", requestsList);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
 
-        return "assignmentRequest/history"; // Redirige a la nueva vista
+        return "assignmentRequest/list";
+    }
+
+    @RequestMapping("/history")
+    public String historyRequests(Model model,
+                                  @RequestParam(value = "page", defaultValue = "0") int page,
+                                  HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        boolean isMinor = "user".equals(user.getRole()) || "oviuser".equals(user.getRole());
+        model.addAttribute("isMinor", isMinor);
+
+        int pageSize = 6;
+        int offset = page * pageSize;
+
+        // El historial usa tu método existente filtrando estrictamente por "completed"
+        List<AssignmentRequest> completedRequests = assignmentRequestDao.getAssignmentRequestsByUserAndStatusPaginated(user.getDni(), "completed", pageSize, offset);
+        int totalItems = assignmentRequestDao.countAssignmentRequestsByUserAndStatus(user.getDni(), "completed");
+
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        model.addAttribute("assignmentRequests", completedRequests);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+
+        return "assignmentRequest/history";
     }
 
     @RequestMapping(value="/add")
@@ -442,17 +473,17 @@ public class AssignmentRequestController {
         return "redirect:../list";
     }
 
-    @RequestMapping("/proposals/{id}")
-    public String listProposals(Model model, @PathVariable String id) {
-        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-        model.addAttribute("assignmentRequest", request);
-
-        // Ahora cargamos desde ListOfProposedCandidates, no desde PapPati directamente
-        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByRequestId(id);
-        model.addAttribute("proposals", proposals);
-
-        return "assignmentRequest/proposals";
-    }
+//    @RequestMapping("/proposals/{id}")
+//    public String listProposals(Model model, @PathVariable String id) {
+//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+//        model.addAttribute("assignmentRequest", request);
+//
+//        // Ahora cargamos desde ListOfProposedCandidates, no desde PapPati directamente
+//        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByRequestId(id);
+//        model.addAttribute("proposals", proposals);
+//
+//        return "assignmentRequest/proposals";
+//    }
 
     // Metodo auxiliar para convertir experiencia a número
     private int experienciaANumero(String exp) {
@@ -677,27 +708,64 @@ public class AssignmentRequestController {
     }
 
     // --- VER CANDIDATOS PROPUESTOS ---
-    @RequestMapping(value="/proposals/{id}", method = RequestMethod.GET)
-    public String viewProposals(Model model, @PathVariable String id, @RequestParam(defaultValue = "1") int page) {
-        // 1. Datos de la solicitud original
-        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
+//    @RequestMapping(value="/proposals/{id}", method = RequestMethod.GET)
+//    public String viewProposals(Model model, @PathVariable String id, @RequestParam(defaultValue = "1") int page) {
+//        // 1. Datos de la solicitud original
+//        model.addAttribute("assignmentRequest", assignmentRequestDao.getAssignmentRequest(id));
+//
+//        // 2. Lógica de paginación
+//        int pageSize = 6;
+//        int offset = (page - 1) * pageSize;
+//
+//        // 3. Obtenemos solo los candidatos de la página actual
+//        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByRequestIdPaginated(id, pageSize, offset);
+//
+//        // 4. Calculamos total de páginas
+//        int totalItems = listOfProposedCandidatesDao.countProposalsByRequestId(id);
+//        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+//        if (totalPages == 0) totalPages = 1;
+//
+//        // 5. Mandamos todo a la vista
+//        model.addAttribute("proposals", proposals);
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", totalPages);
+//
+//        return "assignmentRequest/proposals";
+//    }
 
-        // 2. Lógica de paginación
+    @RequestMapping("/proposals/{id}")
+    public String showProposals(@PathVariable("id") String requestId, Model model, HttpSession session,
+                                @RequestParam(defaultValue = "1") int page) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) return "redirect:/login";
+
+        // Comprobamos si el usuario actual es menor usando getTutor_id()
+        boolean isMinor = false;
+        OviUser oviUser = oviUserDao.getOviUser(user.getDni());
+        if (oviUser != null && oviUser.getTutor_id() != null && !oviUser.getTutor_id().isEmpty()) {
+            isMinor = true;
+        }
+
+        // Obtenemos la solicitud de asignación concreta
+        AssignmentRequest assignmentRequest = assignmentRequestDao.getAssignmentRequest(requestId);
+
+        // Configuración de la paginación (Como en proposals.html empieza en 1: offset = (page - 1) * pageSize)
         int pageSize = 6;
         int offset = (page - 1) * pageSize;
 
-        // 3. Obtenemos solo los candidatos de la página actual
-        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByRequestIdPaginated(id, pageSize, offset);
+        // Buscamos las propuestas de candidatos asociadas a la solicitud
+        List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByRequestIdPaginated(requestId, pageSize, offset);
+        int totalItems = listOfProposedCandidatesDao.countProposalsByRequestId(requestId);
 
-        // 4. Calculamos total de páginas
-        int totalItems = listOfProposedCandidatesDao.countProposalsByRequestId(id);
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
         if (totalPages == 0) totalPages = 1;
 
-        // 5. Mandamos todo a la vista
+        // Enviamos todos los datos requeridos por proposals.html
+        model.addAttribute("assignmentRequest", assignmentRequest);
         model.addAttribute("proposals", proposals);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("isMinor", isMinor); // <-- Pasamos la bandera a proposals.html
 
         return "assignmentRequest/proposals";
     }

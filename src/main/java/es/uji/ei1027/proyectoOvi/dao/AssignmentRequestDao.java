@@ -148,4 +148,41 @@ public class AssignmentRequestDao  {
             return 0;
         }
     }
+    // --- NUEVOS MÉTODOS PARA LA PAGINACIÓN Y FILTRADO POR USUARIO/TUTOR ---
+
+    public List<AssignmentRequest> getAssignmentRequestsByUserPaginated(String dni, int limit, int offset) {
+        String sql = "SELECT * FROM AssignmentRequest WHERE oviuser_id=? OR tutor_id=? LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new AssignmentRequestRowMapper(), dni, dni, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countAssignmentRequestsByUser(String dni) {
+        String sql = "SELECT COUNT(*) FROM AssignmentRequest WHERE oviuser_id=? OR tutor_id=?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, dni, dni);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
+    public List<AssignmentRequest> getAssignmentRequestsByUserAndStatusPaginated(String dni, String status, int limit, int offset) {
+        String sql = "SELECT * FROM AssignmentRequest WHERE (oviuser_id=? OR tutor_id=?) AND status=? LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new AssignmentRequestRowMapper(), dni, dni, status, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public int countAssignmentRequestsByUserAndStatus(String dni, String status) {
+        String sql = "SELECT COUNT(*) FROM AssignmentRequest WHERE (oviuser_id=? OR tutor_id=?) AND status=?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, dni, dni, status);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
 }

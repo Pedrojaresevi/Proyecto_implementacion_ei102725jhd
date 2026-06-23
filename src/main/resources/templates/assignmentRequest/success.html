@@ -27,6 +27,28 @@
             Tu solicitud de asignación ha sido guardada correctamente en el sistema.
           </p>
 
+          <!-- NUEVO BLOQUE: Detalles de la solicitud -->
+          <div th:if="${registeredRequest != null}" class="card bg-light border-0 shadow-sm mb-4">
+            <div class="card-body">
+              <h5 class="fw-bold mb-3 border-bottom pb-2">
+                <i class="bi bi-card-text text-secondary me-2"></i>Detalles de tu petición
+              </h5>
+              <div class="row mb-2">
+                <div class="col-sm-5 text-muted">ID Solicitud:</div>
+                <div class="col-sm-7 fw-bold" th:text="${registeredRequest.request_Id}">REQ?</div>
+              </div>
+              <div class="row mb-2">
+                <div class="col-sm-5 text-muted">Tipo de servicio:</div>
+                <div class="col-sm-7" th:text="${registeredRequest.typeOfService}">-</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-5 text-muted">Localización:</div>
+                <div class="col-sm-7" th:text="${registeredRequest.serviceLocation}">-</div>
+              </div>
+            </div>
+          </div>
+          <!-- FIN DEL NUEVO BLOQUE -->
+
           <div class="alert alert-warning border-warning bg-white shadow-sm mb-4">
             <div class="d-flex align-items-center mb-2">
               <i class="bi bi-clock-history fs-4 text-warning me-2"></i>

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -179,7 +180,14 @@ public class AssignmentRequestController {
             return "redirect:/login";
         }
 
-        boolean isMinor = "user".equals(user.getRole()) || "oviuser".equals(user.getRole());
+        boolean isMinor = false;
+        // Si es un usuario final, comprobamos si realmente tiene un tutor asociado en la BD
+        if ("user".equals(user.getRole()) || "oviuser".equals(user.getRole())) {
+            OviUser oviUser = oviUserDao.getOviUser(user.getDni());
+            if (oviUser != null && oviUser.getTutor_id() != null && !oviUser.getTutor_id().isEmpty()) {
+                isMinor = true; // Solo es menor si tiene tutor_id asignado
+            }
+        }
         model.addAttribute("isMinor", isMinor);
         model.addAttribute("statusFilter", statusFilter);
 
@@ -334,7 +342,8 @@ public class AssignmentRequestController {
 
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
-                                   BindingResult bindingResult, HttpSession session, Model model) {
+                                   BindingResult bindingResult, HttpSession session, Model model,
+                                   RedirectAttributes redirectAttributes) {
 
         UserDetails user = (UserDetails) session.getAttribute("user");
 
@@ -382,6 +391,7 @@ public class AssignmentRequestController {
 
         try {
             assignmentRequestDao.addAssignmentRequest(assignmentRequest);
+            redirectAttributes.addFlashAttribute("registeredRequest", assignmentRequest);
         } catch (DuplicateKeyException e) {
             model.addAttribute("user", user);
             bindingResult.rejectValue("request_Id", "duplicat", "Ya existe una solicitud con este ID");
@@ -677,15 +687,41 @@ public class AssignmentRequestController {
         return "technician/assignmentRequest/accept";
     }
 
+//    @RequestMapping(value="/accept/execute/{id}", method = RequestMethod.GET)
+//    public String executeAccept(@PathVariable String id) {
+//        AssignmentRequest req = assignmentRequestDao.getAssignmentRequest(id);
+//        if (req != null && "in progress".equals(req.getStatus())) {
+//            req.setStatus("accepted");
+//            assignmentRequestDao.updateAssignmentRequest(req);
+//            generateAndSaveCandidates(req); // ← genera la lista
+//        }
+//        return "redirect:/assignmentRequest/list";
+//    }
+
     @RequestMapping(value="/accept/execute/{id}", method = RequestMethod.GET)
-    public String executeAccept(@PathVariable String id) {
-        AssignmentRequest req = assignmentRequestDao.getAssignmentRequest(id);
-        if (req != null && "in progress".equals(req.getStatus())) {
-            req.setStatus("accepted");
-            assignmentRequestDao.updateAssignmentRequest(req);
-            generateAndSaveCandidates(req); // ← genera la lista
+    public String executeAcceptAssignmentRequest(@PathVariable String id, Model model) {
+        AssignmentRequest assignmentRequest = assignmentRequestDao.getAssignmentRequest(id);
+
+        if (assignmentRequest != null) {
+            // 1. Cambiamos el estado a aceptado y actualizamos en la BD
+            assignmentRequest.setStatus("accepted");
+            assignmentRequestDao.updateAssignmentRequest(assignmentRequest);
+
+            // 2. Buscamos el nombre del OviUser para que el email quede más realista
+            if (assignmentRequest.getOviuser_id() != null) {
+                OviUser oviUser = oviUserDao.getOviUser(assignmentRequest.getOviuser_id());
+                if (oviUser != null) {
+                    model.addAttribute("oviUserName", oviUser.getName());
+                }
+            }
+
+            // 3. Cargamos los datos necesarios para el HTML de simulación
+            model.addAttribute("assignmentRequest", assignmentRequest);
+            model.addAttribute("actionType", "accepted");
         }
-        return "redirect:/assignmentRequest/list";
+
+        // Devolvemos directamente el nuevo HTML de simulación sin hacer redirect
+        return "technician/assignmentRequest/simulacion_email";
     }
 
     // --- RECHAZAR ---
@@ -695,16 +731,48 @@ public class AssignmentRequestController {
         return "technician/assignmentRequest/reject";
     }
 
+//    @RequestMapping(value="/reject/execute/{id}", method = RequestMethod.POST)
+//    public String executeReject(@PathVariable String id,
+//                                @RequestParam("rejectReason") String rejectReason) {
+//        AssignmentRequest req = assignmentRequestDao.getAssignmentRequest(id);
+//        if (req != null && "in progress".equals(req.getStatus())) {
+//            req.setStatus("refused");
+//            req.setRejectReason(rejectReason); // ← se guarda en BD
+//            assignmentRequestDao.updateAssignmentRequest(req);
+//        }
+//        return "redirect:/assignmentRequest/list";
+//    }
+
     @RequestMapping(value="/reject/execute/{id}", method = RequestMethod.POST)
-    public String executeReject(@PathVariable String id,
-                                @RequestParam("rejectReason") String rejectReason) {
-        AssignmentRequest req = assignmentRequestDao.getAssignmentRequest(id);
-        if (req != null && "in progress".equals(req.getStatus())) {
-            req.setStatus("refused");
-            req.setRejectReason(rejectReason); // ← se guarda en BD
-            assignmentRequestDao.updateAssignmentRequest(req);
+    public String executeRejectAssignmentRequest(@PathVariable String id,
+                                                 @RequestParam("rejectReason") String rejectReason,
+                                                 Model model) {
+        AssignmentRequest assignmentRequest = assignmentRequestDao.getAssignmentRequest(id);
+
+        if (assignmentRequest != null) {
+            // 1. Cambiamos el estado a rechazado (refused) y guardamos en la BD
+            assignmentRequest.setStatus("refused");
+            // Nota: Si tu tabla de solicitudes guarda el motivo de rechazo descomenta la línea de abajo,
+            // si no la guarda no pasa nada, se enviará igualmente al email simulado a través del Model.
+            // assignmentRequest.setRejectReason(rejectReason);
+            assignmentRequestDao.updateAssignmentRequest(assignmentRequest);
+
+            // 2. Buscamos el nombre del OviUser para el email
+            if (assignmentRequest.getOviuser_id() != null) {
+                OviUser oviUser = oviUserDao.getOviUser(assignmentRequest.getOviuser_id());
+                if (oviUser != null) {
+                    model.addAttribute("oviUserName", oviUser.getName());
+                }
+            }
+
+            // 3. Cargamos los datos en el Model
+            model.addAttribute("assignmentRequest", assignmentRequest);
+            model.addAttribute("actionType", "refused");
+            model.addAttribute("rejectReason", rejectReason);
         }
-        return "redirect:/assignmentRequest/list";
+
+        // Devolvemos directamente el nuevo HTML de simulación sin hacer redirect
+        return "technician/assignmentRequest/simulacion_email";
     }
 
     // --- VER CANDIDATOS PROPUESTOS ---

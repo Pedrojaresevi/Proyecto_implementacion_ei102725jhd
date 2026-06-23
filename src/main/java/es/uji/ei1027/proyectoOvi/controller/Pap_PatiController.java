@@ -224,15 +224,70 @@ public class Pap_PatiController {
         );
     }
 
+//    @RequestMapping("/detallesasignacion/{id}")
+//    public String viewDetail(Model model, @PathVariable String id, HttpSession session) {
+//        UserDetails user = (UserDetails) session.getAttribute("user");
+//        if (user == null) return "redirect:/login";
+//
+//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
+//        model.addAttribute("request", request);
+//
+//        //Cargamos el solicitante dinámicamente (OviUser o Tutor)
+//        if (request.getOviuser_id() != null && !request.getOviuser_id().trim().isEmpty()) {
+//            OviUser oviUser = oviUserDao.getOviUser(request.getOviuser_id());
+//            model.addAttribute("solicitante", oviUser);
+//            model.addAttribute("tipoSolicitante", "oviuser");
+//
+//        } else if (request.getTutor_id() != null && !request.getTutor_id().trim().isEmpty()) {
+//            Tutor tutor = tutorDao.getTutor(request.getTutor_id());
+//            model.addAttribute("solicitante", tutor);
+//            model.addAttribute("tipoSolicitante", "tutor");
+//        }
+//        // Lógica para cargar el chat si está completada
+//        if ("completed".equals(request.getStatus()) && "pap_pati".equals(user.getRole())) {
+//            listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni())
+//                    .stream()
+//                    .filter(p -> p.getRequest_id().equals(id))
+//                    .findFirst()
+//                    .ifPresent(p -> {
+//                        model.addAttribute("listId", p.getList_id());
+//                        // Buscamos la negociación asociada
+//                        Negotiation neg = negotiationDao.getNegotiationByListId(p.getList_id());
+//                        if (neg != null) {
+//                            model.addAttribute("negotiationId", neg.getNegotiation_Id());
+//                        }
+//                    });
+//        }
+//        return "pap_pati/detallesasignacion";
+//    }
+
     @RequestMapping("/detallesasignacion/{id}")
-    public String viewDetail(Model model, @PathVariable String id, HttpSession session) {
+    public String viewDetail(Model model,
+                             @PathVariable String id,
+                             @RequestParam(value = "from", required = false) String from, // <-- AÑADIDO: Recibir el parámetro
+                             HttpSession session) {
         UserDetails user = (UserDetails) session.getAttribute("user");
         if (user == null) return "redirect:/login";
 
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
         model.addAttribute("request", request);
 
-        //Cargamos el solicitante dinámicamente (OviUser o Tutor)
+        // --- NUEVA LÓGICA DEL BOTÓN VOLVER DINÁMICO ---
+        String volverUrl = "/dashboard"; // Ruta por defecto si no viene parámetro
+
+        if ("pending".equals(from)) {
+            volverUrl = "/assignmentRequest/pending"; // Vuelve a la tabla del Técnico
+        } else if ("list".equals(from)) {
+            volverUrl = "/assignmentRequest/list";    // Vuelve a la lista normal del usuario
+        } else if ("history".equals(from)) {
+            volverUrl = "/assignmentRequest/history"; // Por si acceden desde el historial
+        }
+
+        // Pasamos la variable al modelo para que la recoja el HTML
+        model.addAttribute("volverUrl", volverUrl);
+        // ----------------------------------------------
+
+        // Cargamos el solicitante dinámicamente (OviUser o Tutor)
         if (request.getOviuser_id() != null && !request.getOviuser_id().trim().isEmpty()) {
             OviUser oviUser = oviUserDao.getOviUser(request.getOviuser_id());
             model.addAttribute("solicitante", oviUser);
@@ -243,6 +298,7 @@ public class Pap_PatiController {
             model.addAttribute("solicitante", tutor);
             model.addAttribute("tipoSolicitante", "tutor");
         }
+
         // Lógica para cargar el chat si está completada
         if ("completed".equals(request.getStatus()) && "pap_pati".equals(user.getRole())) {
             listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni())
@@ -258,9 +314,9 @@ public class Pap_PatiController {
                         }
                     });
         }
+
         return "pap_pati/detallesasignacion";
     }
-
 
     @RequestMapping(value="/manage/{dni}", method = RequestMethod.GET)
     public String managePapPati(Model model, @PathVariable String dni) {

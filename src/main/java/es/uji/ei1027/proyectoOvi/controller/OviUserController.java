@@ -242,14 +242,30 @@ public class OviUserController {
         return "technician/oviUser/accept";
     }
 
+//    @RequestMapping(value="/accept/execute/{dni}", method = RequestMethod.GET)
+//    public String executeAcceptOviUser(@PathVariable String dni) {
+//        OviUser oviUser = oviUserDao.getOviUser(dni);
+//        if (oviUser != null) {
+//            oviUser.setStatus("accepted");
+//            oviUserDao.updateOviUser(oviUser);
+//        }
+//        return "redirect:/oviUser/pending";
+//    }
+
     @RequestMapping(value="/accept/execute/{dni}", method = RequestMethod.GET)
-    public String executeAcceptOviUser(@PathVariable String dni) {
+    public String executeAcceptOviUser(@PathVariable String dni, Model model) { // <--- Usamos Model
         OviUser oviUser = oviUserDao.getOviUser(dni);
         if (oviUser != null) {
             oviUser.setStatus("accepted");
             oviUserDao.updateOviUser(oviUser);
+
+            // Guardamos los datos directamente en el Model
+            model.addAttribute("oviUser", oviUser);
+            model.addAttribute("actionType", "accepted");
         }
-        return "redirect:/oviUser/pending";
+
+        // CARGAMOS EL HTML DIRECTAMENTE (Sin hacer redirect)
+        return "technician/oviUser/simulacion_email";
     }
 
     @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
@@ -258,16 +274,36 @@ public class OviUserController {
         return "technician/oviUser/reject";
     }
 
-    // 1. MODIFICAR: Cambiar a POST y recibir el 'rejectReason'
+//    // 1. MODIFICAR: Cambiar a POST y recibir el 'rejectReason'
+//    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
+//    public String executeRejectOviUser(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason) {
+//        OviUser oviUser = oviUserDao.getOviUser(dni);
+//        if (oviUser != null) {
+//            oviUser.setStatus("refused");
+//            oviUser.setRejectReason(rejectReason); // Asignamos el motivo
+//            oviUserDao.updateOviUser(oviUser);
+//        }
+//        return "redirect:/oviUser/pending"; // Redirige a la lista de rechazados
+//    }
+
     @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
-    public String executeRejectOviUser(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason) {
+    public String executeRejectOviUser(@PathVariable String dni,
+                                       @RequestParam("rejectReason") String rejectReason,
+                                       Model model) { // <--- Usamos Model
         OviUser oviUser = oviUserDao.getOviUser(dni);
         if (oviUser != null) {
             oviUser.setStatus("refused");
-            oviUser.setRejectReason(rejectReason); // Asignamos el motivo
+            oviUser.setRejectReason(rejectReason);
             oviUserDao.updateOviUser(oviUser);
+
+            // Guardamos los datos directamente en el Model
+            model.addAttribute("oviUser", oviUser);
+            model.addAttribute("actionType", "refused");
+            model.addAttribute("rejectReason", rejectReason);
         }
-        return "redirect:/oviUser/pending"; // Redirige a la lista de rechazados
+
+        // CARGAMOS EL HTML DIRECTAMENTE (Sin hacer redirect)
+        return "technician/oviUser/simulacion_email";
     }
 
     // 2. AÑADIR: Endpoint para la nueva vista de rechazados

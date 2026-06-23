@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Correo Enviado - OVI Solicitudes</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow border-0">
+
+                <div class="card-header text-white text-center py-3" style="background-color: #0d9488;">
+                    <h4 class="mb-0"><i class="bi bi-send-check-fill me-2"></i>Simulación de Correo Electrónico (Solicitud)</h4>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <p class="text-center mb-4 text-muted">
+                        El sistema ha procesado la resolución de la solicitud y ha enviado la siguiente notificación al usuario:
+                    </p>
+
+                    <div class="border rounded p-4 bg-white shadow-sm mb-4" style="border-left: 5px solid #0d9488 !important;">
+
+                        <div class="row border-bottom pb-2 mb-3">
+                            <div class="col-sm-3 fw-bold text-muted">Para:</div>
+                            <div class="col-sm-9">
+                                <span th:text="${oviUserName != null ? oviUserName : assignmentRequest.oviuser_id}">Usuario</span>
+                                <span class="text-muted small">(Ref. Solicitud: <span th:text="${assignmentRequest.request_Id}"></span>)</span>
+                            </div>
+                        </div>
+
+                        <div class="row border-bottom pb-2 mb-4">
+                            <div class="col-sm-3 fw-bold text-muted">Asunto:</div>
+                            <div class="col-sm-9 fw-bold">
+                                Resolución de solicitud de asistente OVI -
+                                <span th:if="${actionType == 'accepted'}" class="text-success">ACEPTADA</span>
+                                <span th:if="${actionType == 'refused'}" class="text-danger">RECHAZADA</span>
+                            </div>
+                        </div>
+
+                        <div class="text-dark">
+                            <p>Hola <strong th:text="${oviUserName != null ? oviUserName : 'Usuario'}"></strong>,</p>
+
+                            <div th:if="${actionType == 'accepted'}">
+                                <p>Te informamos que tu solicitud de asignación de asistente con referencia <strong th:text="${assignmentRequest.request_Id}"></strong> ha sido <strong>aprobada y aceptada</strong> por nuestro equipo técnico.</p>
+                                <p>Hemos iniciado el procedimiento para buscar y proponerte los candidatos (PAP/PATI) que mejor se adapten a tus necesidades y a la ubicación solicitada (<em th:text="${assignmentRequest.serviceLocation}">Ubicación</em>).</p>
+                                <p>Pronto podrás ver los candidatos sugeridos desde tu panel de control para comenzar el proceso de selección.</p>
+                            </div>
+
+                            <div th:if="${actionType == 'refused'}">
+                                <p>Lamentamos informarte que tu solicitud de asignación de asistente con referencia <strong th:text="${assignmentRequest.request_Id}"></strong> ha sido <strong>rechazada</strong> tras la evaluación técnica.</p>
+                                <p>El motivo de la denegación indicado por el técnico es el siguiente:</p>
+                                <blockquote class="blockquote fs-6 border-start border-danger border-4 ps-3 py-2 bg-light">
+                                    <em th:text="${rejectReason}">Motivo del rechazo...</em>
+                                </blockquote>
+                                <p>Si lo consideras oportuno, puedes revisar los datos y formular una nueva solicitud desde la plataforma modificando los requisitos necesarios.</p>
+                            </div>
+
+                            <p class="mt-4 mb-0">Atentamente,<br>El equipo de la Oficina de Vida Independiente.</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="/assignmentRequest/pending" class="btn btn-secondary px-4">
+                            <i class="bi bi-list-task me-2"></i>Volver a Gestión de Solicitudes
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

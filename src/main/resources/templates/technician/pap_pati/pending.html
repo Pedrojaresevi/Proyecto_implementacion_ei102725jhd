@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <title>Solicitudes de PAP/PATI Pendientes</title>
     <meta charset="UTF-8" />
@@ -26,37 +26,29 @@
         <table class="table table-striped table-hover align-middle text-center">
             <thead class="table-dark">
             <tr>
-                <th>DNI</th>
                 <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Fecha de Nacimiento</th>
-                <th>Dirección</th>
-                <th>Teléfono</th>
                 <th>Email</th>
-                <th>Formación</th>
-                <th>Experiencia</th>
-                <th>Tipo Asistente</th>
-                <th>Habilidades</th>
                 <th>Estado</th>
+                <th class="text-center">Detalles</th>
                 <th class="text-center">Acciones</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="pap_pati: ${allpap_pati}">
-                <td th:text="${pap_pati.dni}"></td>
-                <td th:text="${pap_pati.name}"></td>
-                <td th:text="${pap_pati.surname}"></td>
-                <td th:text="${pap_pati.dateOfBirth}"></td>
-                <td th:text="${pap_pati.address}"></td>
-                <td th:text="${pap_pati.phone}"></td>
+                <td th:text="${pap_pati.name} + ' ' + ${pap_pati.surname}"></td>
                 <td th:text="${pap_pati.email}"></td>
-                <td th:text="${pap_pati.specificTraining}"></td>
-                <td th:text="${pap_pati.typeOfExperience}"></td>
-                <td th:text="${pap_pati.assistant_type}"></td>
-                <td th:text="${pap_pati.skills}"></td>
+
                 <td>
                     <span class="badge rounded-pill bg-warning text-dark px-3 py-2">En progreso</span>
                 </td>
+
+                <td class="text-center">
+                    <a th:href="@{/pap_pati/masdetalle/{id}(id=${pap_pati.dni}, from='pending')}"
+                       class="btn btn-secondary btn-sm px-4 py-2 shadow-sm fw-semibold">
+                        <i class="bi bi-eye-fill me-1"></i> Ver perfil
+                    </a>
+                </td>
+
                 <td class="text-center">
                     <div class="d-flex gap-1 justify-content-center">
                         <a th:href="@{/pap_pati/accept/{dni}(dni=${pap_pati.dni})}"
@@ -66,8 +58,9 @@
                     </div>
                 </td>
             </tr>
+
             <tr th:if="${#lists.isEmpty(allpap_pati)}">
-                <td colspan="13" class="text-center text-muted p-4">No hay solicitudes pendientes.</td>
+                <td colspan="5" class="text-center text-muted p-4">No hay solicitudes pendientes.</td>
             </tr>
             </tbody>
         </table>

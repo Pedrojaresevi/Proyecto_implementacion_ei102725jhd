@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Correo Enviado (Tutor) - OVI</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow border-0">
+
+                <div class="card-header text-white text-center py-3" style="background-color: #0d9488;">
+                    <h4 class="mb-0"><i class="bi bi-send-check-fill me-2"></i>Simulación de Correo Electrónico (Tutor)</h4>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <p class="text-center mb-4 text-muted">
+                        El sistema ha procesado la acción y ha enviado automáticamente el siguiente correo al usuario:
+                    </p>
+
+                    <div class="border rounded p-4 bg-white shadow-sm mb-4" style="border-left: 5px solid #0d9488 !important;">
+
+                        <div class="row border-bottom pb-2 mb-3">
+                            <div class="col-sm-3 fw-bold text-muted">Para:</div>
+                            <div class="col-sm-9">
+                                <span th:text="${tutor.name}">Nombre del Tutor</span>
+                                <span class="text-muted small">(DNI: <span th:text="${tutor.dni}"></span>)</span>
+                            </div>
+                        </div>
+
+                        <div class="row border-bottom pb-2 mb-4">
+                            <div class="col-sm-3 fw-bold text-muted">Asunto:</div>
+                            <div class="col-sm-9 fw-bold">
+                                Resolución de alta de Tutor legal en plataforma OVI -
+                                <span th:if="${actionType == 'accepted'}" class="text-success">ACEPTADA</span>
+                                <span th:if="${actionType == 'refused'}" class="text-danger">RECHAZADA</span>
+                            </div>
+                        </div>
+
+                        <div class="text-dark">
+                            <p>Hola <strong th:text="${tutor.name}"></strong>,</p>
+
+                            <div th:if="${actionType == 'accepted'}">
+                                <p>Nos complace informarte que tu registro como <strong>Tutor legal</strong> ha sido <strong>revisado y aprobado</strong> satisfactoriamente por nuestro equipo técnico.</p>
+                                <p>A partir de este momento, ya tienes habilitadas todas las funciones en la plataforma para acceder, gestionar los perfiles de los usuarios menores o dependientes a tu cargo, y realizar el seguimiento de sus solicitudes de asistentes.</p>
+                            </div>
+
+                            <div th:if="${actionType == 'refused'}">
+                                <p>Lamentamos informarte que tu registro como <strong>Tutor legal</strong> ha sido <strong>rechazado</strong> tras la revisión técnica de la documentación aportada.</p>
+                                <p>El equipo ha indicado el siguiente motivo en la resolución:</p>
+                                <blockquote class="blockquote fs-6 border-start border-danger border-4 ps-3 py-2 bg-light">
+                                    <em th:text="${rejectReason}">Motivo del rechazo escrito por el técnico...</em>
+                                </blockquote>
+                            </div>
+
+                            <p class="mt-4 mb-0">Atentamente,<br>El equipo de la Oficina de Vida Independiente.</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a href="/tutor/pending" class="btn btn-secondary px-4">
+                            <i class="bi bi-list-task me-2"></i>Volver a Tutores Pendientes
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

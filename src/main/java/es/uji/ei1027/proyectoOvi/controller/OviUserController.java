@@ -324,6 +324,7 @@ public class OviUserController {
         model.addAttribute("totalPages", totalPages);
         return "technician/oviUser/refused"; // Nombre del nuevo HTML
     }
+
 //    @RequestMapping(value="/masdetalle/{dni}", method = RequestMethod.GET)
 //    public String verMasDetalle(Model model,
 //                                @PathVariable String dni,
@@ -347,6 +348,8 @@ public class OviUserController {
 //
 //        if ("accepted".equals(from)) {
 //            volverUrl = "/oviUser/accepted";
+//        } else if ("refused".equals(from)) { // <--- AÑADIR ESTA LÍNEA
+//            volverUrl = "/oviUser/refused";  // <--- AÑADIR ESTA LÍNEA
 //        } else if ("list_minors".equals(from) && tutorDni != null) {
 //            volverUrl = "/tutor/users/" + tutorDni;
 //        }
@@ -355,7 +358,7 @@ public class OviUserController {
 //        model.addAttribute("oviUser", oviUser);
 //        model.addAttribute("volverUrl", volverUrl); // Enviamos la URL a la vista
 //
-//        return "oviUser/masdetalle"; // Asegúrate de que coincida con tu ruta de carpetas
+//        return "oviUser/masdetalle";
 //    }
 
     @RequestMapping(value="/masdetalle/{dni}", method = RequestMethod.GET)
@@ -381,17 +384,18 @@ public class OviUserController {
 
         if ("accepted".equals(from)) {
             volverUrl = "/oviUser/accepted";
-        } else if ("refused".equals(from)) { // <--- AÑADIR ESTA LÍNEA
-            volverUrl = "/oviUser/refused";  // <--- AÑADIR ESTA LÍNEA
+        } else if ("refused".equals(from)) {
+            volverUrl = "/oviUser/refused";
+        } else if ("pending".equals(from)) { // <--- AÑADIDA ESTA NUEVA CONDICIÓN
+            volverUrl = "/oviUser/pending";  // <--- AÑADIDA ESTA NUEVA CONDICIÓN
         } else if ("list_minors".equals(from) && tutorDni != null) {
             volverUrl = "/tutor/users/" + tutorDni;
         }
 
         // Pasamos los atributos al modelo
         model.addAttribute("oviUser", oviUser);
-        model.addAttribute("volverUrl", volverUrl); // Enviamos la URL a la vista
+        model.addAttribute("volverUrl", volverUrl);
 
         return "oviUser/masdetalle";
     }
-
 }

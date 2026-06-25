@@ -293,14 +293,16 @@ public class TutorController {
     }
 
     @RequestMapping(value="/accept/execute/{dni}", method = RequestMethod.GET)
-    public String executeAcceptTutor(@PathVariable String dni) {
+    public String executeAcceptTutor(@PathVariable String dni, Model model) {
         Tutor tutor = tutorDao.getTutor(dni);
         if (tutor != null) {
             tutor.setStatus("accepted");
             tutorDao.updateTutor(tutor);
+
+            model.addAttribute("tutor", tutor);
+            model.addAttribute("actionType", "accepted");
         }
-        return "redirect:/tutor/pending";
-    }
+        return "technician/tutor/simulacion_email";    }
 
     @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
     public String confirmRejectTutor(Model model, @PathVariable String dni) {
@@ -308,25 +310,30 @@ public class TutorController {
         return "technician/tutor/reject";
     }
 
-    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.GET)
-    public String executeRejectTutor(@PathVariable String dni) {
-        Tutor tutor = tutorDao.getTutor(dni);
-        if (tutor != null) {
-            tutor.setStatus("refused");
-            tutorDao.updateTutor(tutor);
-        }
-        return "redirect:/tutor/pending";
-    }
+//    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.GET)
+//    public String executeRejectTutor(@PathVariable String dni) {
+//        Tutor tutor = tutorDao.getTutor(dni);
+//        if (tutor != null) {
+//            tutor.setStatus("refused");
+//            tutorDao.updateTutor(tutor);
+//        }
+//        return "redirect:/tutor/pending";
+//    }
     @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
-    public String executeRejectTutor(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason) {
+    public String executeRejectTutor(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason,Model model) {
         Tutor tutor = tutorDao.getTutor(dni);
         if (tutor != null) {
             tutor.setStatus("refused");
             tutor.setRejectReason(rejectReason);
             tutorDao.updateTutor(tutor);
+
+            model.addAttribute("tutor", tutor);
+            model.addAttribute("actionType", "refused");
+            model.addAttribute("rejectReason", rejectReason);
         }
-        return "redirect:/tutor/pending";
+        return "technician/tutor/simulacion_email";
     }
+
     @RequestMapping("/refused")
     public String listRefusedTutors(Model model, @RequestParam(defaultValue = "1") int page) {
         int pageSize = 6;

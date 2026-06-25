@@ -483,44 +483,86 @@ public class Pap_PatiController {
 //        return "pap_pati/masdetalle";
 //    }
 
-    // Busca este método en tu Pap_PatiController.java y añade el bloque "else if"
-    @RequestMapping(value="/masdetalle/{id}", method = RequestMethod.GET)
-    public String verMasDetalle(Model model,
-                                @PathVariable String id,
-                                @RequestParam(required = false) String requestId,
-                                @RequestParam(value = "from", required = false) String from,
-                                HttpSession session) {
+//    // Busca este método en tu Pap_PatiController.java y añade el bloque "else if"
+//    @RequestMapping(value="/masdetalle/{id}", method = RequestMethod.GET)
+//    public String verMasDetalle(Model model,
+//                                @PathVariable String id,
+//                                @RequestParam(required = false) String requestId,
+//                                @RequestParam(value = "from", required = false) String from,
+//                                HttpSession session) {
+//
+//        UserDetails user = (UserDetails) session.getAttribute("user");
+//        if (user == null) {
+//            return "redirect:/login";
+//        }
+//
+//        Pap_Pati candidato = pap_patiDao.getPap_Pati(id);
+//
+//        if (candidato == null) {
+//            return "redirect:/pap_pati/list";
+//        }
+//        String volverUrl = "/dashboard";
+//
+//        if (from != null) {
+//            String origen = from.trim();
+//
+//            if ("proposals".equals(origen)) {
+//                if (requestId != null && !requestId.isEmpty()) {
+//                    volverUrl = "/assignmentRequest/proposals/" + requestId.trim();
+//                }
+//            } else if ("accepted".equals(origen)) {
+//                volverUrl = "/pap_pati/accepted";
+//            } else if ("refused".equals(origen)) { // <--- AÑADE ESTA CONDICIÓN
+//                volverUrl = "/pap_pati/refused";
+//            }
+//        }
+//
+//        model.addAttribute("pap_pati", candidato);
+//        model.addAttribute("requestId", requestId);
+//        model.addAttribute("volverUrl", volverUrl);
+//
+//        return "pap_pati/masdetalle";
+//    }
+@RequestMapping(value="/masdetalle/{id}", method = RequestMethod.GET)
+public String verMasDetalle(Model model,
+                            @PathVariable String id,
+                            @RequestParam(required = false) String requestId,
+                            @RequestParam(value = "from", required = false) String from,
+                            HttpSession session) {
 
-        UserDetails user = (UserDetails) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/login";
-        }
-
-        Pap_Pati candidato = pap_patiDao.getPap_Pati(id);
-
-        if (candidato == null) {
-            return "redirect:/pap_pati/list";
-        }
-        String volverUrl = "/dashboard";
-
-        if (from != null) {
-            String origen = from.trim();
-
-            if ("proposals".equals(origen)) {
-                if (requestId != null && !requestId.isEmpty()) {
-                    volverUrl = "/assignmentRequest/proposals/" + requestId.trim();
-                }
-            } else if ("accepted".equals(origen)) {
-                volverUrl = "/pap_pati/accepted";
-            } else if ("refused".equals(origen)) { // <--- AÑADE ESTA CONDICIÓN
-                volverUrl = "/pap_pati/refused";
-            }
-        }
-
-        model.addAttribute("pap_pati", candidato);
-        model.addAttribute("requestId", requestId);
-        model.addAttribute("volverUrl", volverUrl);
-
-        return "pap_pati/masdetalle";
+    UserDetails user = (UserDetails) session.getAttribute("user");
+    if (user == null) {
+        return "redirect:/login";
     }
+
+    Pap_Pati candidato = pap_patiDao.getPap_Pati(id);
+
+    if (candidato == null) {
+        return "redirect:/pap_pati/list";
+    }
+
+    String volverUrl = "/dashboard";
+
+    if (from != null) {
+        String origen = from.trim();
+
+        if ("proposals".equals(origen)) {
+            if (requestId != null && !requestId.isEmpty()) {
+                volverUrl = "/assignmentRequest/proposals/" + requestId.trim();
+            }
+        } else if ("accepted".equals(origen)) {
+            volverUrl = "/pap_pati/accepted";
+        } else if ("refused".equals(origen)) {
+            volverUrl = "/pap_pati/refused";
+        } else if ("pending".equals(origen)) { // <--- AÑADIDA ESTA NUEVA CONDICIÓN
+            volverUrl = "/pap_pati/pending";
+        }
+    }
+
+    model.addAttribute("pap_pati", candidato);
+    model.addAttribute("requestId", requestId);
+    model.addAttribute("volverUrl", volverUrl);
+
+    return "pap_pati/masdetalle";
+}
 }

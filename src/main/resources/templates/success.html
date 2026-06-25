@@ -20,10 +20,11 @@
         <div class="card-header bg-success text-white text-center py-4">
           <i class="bi bi-check-circle-fill display-1"></i>
           <h2 class="text-white mt-3 mb-0">¡Registro Completado!</h2>
-      </div>
+          <h5 class="text-white-50 mt-2" th:if="${tipoPerfil != null}" th:text="'Perfil: ' + ${tipoPerfil}"></h5>
+        </div>
 
         <div class="card-body p-4 p-md-5">
-          <p class="lead text-center text-secondary mb-4">
+          <p class="text-muted lead text-center mb-4">
             Tu solicitud de registro ha sido recibida correctamente y se encuentra en estado <strong>Pendiente de revisión</strong>.
           </p>
 
@@ -33,7 +34,9 @@
               <h5 class="mb-0 text-dark">Simulación de Correo Enviado</h5>
             </div>
             <p class="mb-2"><strong>Asunto:</strong> Información sobre tu proceso de alta en OVI</p>
-            <p>Hola,</p>
+
+            <p>Hola <strong th:text="${nombreUsuario}">Usuario</strong> (DNI/NIE: <span th:text="${dniUsuario}">---</span>),</p>
+
             <p>Hemos recibido tus datos correctamente. A partir de este momento, el procedimiento a seguir es el siguiente:</p>
             <ol class="mb-3">
               <li>Un técnico de nuestra plataforma revisará tu documentación.</li>
@@ -45,7 +48,7 @@
 
           <div class="text-center mt-5">
             <a href="/login" class="btn btn-primary btn-lg px-4">
-              </i>Ir a Iniciar Sesión
+              Ir a Iniciar Sesión
             </a>
           </div>
         </div>

@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.jasypt.util.password.BasicPasswordEncryptor;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +50,30 @@ public class OviUserController {
         return "oviUser/add";
     }
 
+//    @PostMapping("/add")
+//    public String addOviUser(@ModelAttribute("oviUser") OviUser oviUser,
+//                             BindingResult bindingResult,
+//                             RedirectAttributes redirectAttributes) {
+//        if (bindingResult.hasErrors()) {
+//            return "oviUser/add";
+//        }
+//        oviUserDao.addOviUser(oviUser);
+//
+//        // Guardamos los datos identificativos en el "Flash" para la redirección
+//        redirectAttributes.addFlashAttribute("tipoPerfil", "Usuario OVI");
+//        redirectAttributes.addFlashAttribute("nombreUsuario", oviUser.getName());
+//        redirectAttributes.addFlashAttribute("dniUsuario", oviUser.getDni());
+//
+//        return "redirect:/oviUser/success";
+//    }
+
+    @GetMapping("/success")
+    public String registrationSuccess() {
+        // Spring pasa automáticamente los atributos flash al modelo aquí
+        return "success";
+    }
+
+
 //    @RequestMapping(value="/add", method= RequestMethod.POST)
 //    public String processAddSubmit(@ModelAttribute("oviUser") OviUser oviUser,
 //                                   BindingResult bindingResult) {
@@ -58,9 +83,53 @@ public class OviUserController {
 //        return "redirect:list";
 //    }
 
+//    @RequestMapping(value="/add", method=RequestMethod.POST)
+//    public String processAddSubmit(@ModelAttribute("oviUser") OviUser oviUser,
+//                                   BindingResult bindingResult, Model model) {
+//
+//        if (oviUser.getTutor_id() != null && oviUser.getTutor_id().trim().isEmpty()) {
+//            oviUser.setTutor_id(null);
+//        }
+//
+//        OviUserValidator oviUserValidator = new OviUserValidator();
+//        oviUserValidator.validate(oviUser, bindingResult);
+//
+//        if (bindingResult.hasErrors()) {
+//            cargarListasDesplegables(model); // Recargamos si hay error
+//            return "oviUser/add";
+//        }
+//
+//        // 3. TERCERO: Lógica de negocio (Contraseña y guardado en BD)
+//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+//        String contrasenyaEncriptada = passwordEncryptor.encryptPassword(oviUser.getPassword());
+//        oviUser.setPassword(contrasenyaEncriptada);
+//
+//        oviUser.setStatus("in progress");
+//
+//        try {
+//            oviUserDao.addOviUser(oviUser);
+//        } catch (DuplicateKeyException e) {
+//            bindingResult.rejectValue("dni", "duplicat",
+//                    "Ya existe un usuario con este DNI");
+//            return "oviUser/add";
+//        } catch (DataIntegrityViolationException e) {
+//            // AÑADE ESTA LÍNEA PARA VER EL ERROR REAL EN LA CONSOLA DE SPRING BOOT
+//            System.out.println("ERROR REAL EN LA BD: " + e.getMessage());
+//            e.printStackTrace();
+//
+//            bindingResult.rejectValue("tutor_id", "no_existe",
+//                    "El tutor introducido no existe en el sistema");
+//            return "oviUser/add";
+//        }
+//
+//        return "redirect:success";
+//    }
+
     @RequestMapping(value="/add", method=RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("oviUser") OviUser oviUser,
-                                   BindingResult bindingResult, Model model) {
+                                   BindingResult bindingResult,
+                                   Model model,
+                                   RedirectAttributes redirectAttributes) { // <-- 1. AÑADIDO AQUÍ
 
         if (oviUser.getTutor_id() != null && oviUser.getTutor_id().trim().isEmpty()) {
             oviUser.setTutor_id(null);
@@ -86,31 +155,42 @@ public class OviUserController {
         } catch (DuplicateKeyException e) {
             bindingResult.rejectValue("dni", "duplicat",
                     "Ya existe un usuario con este DNI");
+            cargarListasDesplegables(model); // Sugerencia: recargar también aquí las listas para evitar errores visuales
             return "oviUser/add";
         } catch (DataIntegrityViolationException e) {
-            // AÑADE ESTA LÍNEA PARA VER EL ERROR REAL EN LA CONSOLA DE SPRING BOOT
             System.out.println("ERROR REAL EN LA BD: " + e.getMessage());
             e.printStackTrace();
 
             bindingResult.rejectValue("tutor_id", "no_existe",
                     "El tutor introducido no existe en el sistema");
+            cargarListasDesplegables(model); // Sugerencia: recargar también aquí las listas
             return "oviUser/add";
         }
+
+        // <-- 2. AÑADIDO AQUÍ: Guardamos los datos antes de redirigir
+        redirectAttributes.addFlashAttribute("tipoPerfil", "Usuario OVI");
+        redirectAttributes.addFlashAttribute("nombreUsuario", oviUser.getName());
+        redirectAttributes.addFlashAttribute("dniUsuario", oviUser.getDni());
 
         return "redirect:success";
     }
 
-    @RequestMapping("/success")
-    public String registrationSuccess() {
-        return "success";
-    }
-
-    //    @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
-//    public String editOviUser(Model model, @PathVariable String id) {
-//        model.addAttribute("oviUser", oviUserDao.getOviUser(id));
-//
-//        return "oviUser/update";
+//    @RequestMapping("/success")
+//    public String registrationSuccess() {
+//        return "success";
 //    }
+//    @RequestMapping("/success")
+//    public String registrationSuccess(Model model) {
+//        model.addAttribute("tipoPerfil", "Usuario OVI");
+//        return "success";
+//    }
+
+//    //    @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
+////    public String editOviUser(Model model, @PathVariable String id) {
+////        model.addAttribute("oviUser", oviUserDao.getOviUser(id));
+////
+////        return "oviUser/update";
+////    }
     // --- MÉTODO AUXILIAR PARA CARGAR LOS DESPLEGABLES ---
     private void cargarListasDesplegables(Model model) {
         // Pon aquí EXACTAMENTE las mismas opciones que quieres en tu sistema

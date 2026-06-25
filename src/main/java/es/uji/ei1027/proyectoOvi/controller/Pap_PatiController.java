@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.jasypt.util.password.BasicPasswordEncryptor;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -71,6 +72,27 @@ public class Pap_PatiController {
         return "pap_pati/add";
     }
 
+//    @PostMapping("/add")
+//    public String addPapPati(@ModelAttribute("pap_pati") Pap_Pati pap_pati,
+//                             BindingResult bindingResult,
+//                             RedirectAttributes redirectAttributes) {
+//        if (bindingResult.hasErrors()) {
+//            return "pap_pati/add";
+//        }
+//        pap_patiDao.addPap_Pati(pap_pati);
+//
+//        redirectAttributes.addFlashAttribute("tipoPerfil", "Asistente " + pap_pati.getAssistant_type());
+//        redirectAttributes.addFlashAttribute("nombreUsuario", pap_pati.getName() + " " + pap_pati.getSurname());
+//        redirectAttributes.addFlashAttribute("dniUsuario", pap_pati.getDni());
+//
+//        return "redirect:/pap_pati/success";
+//    }
+
+    @GetMapping("/success")
+    public String registrationSuccess() {
+        return "success";
+    }
+
 //    @RequestMapping(value="/add", method= RequestMethod.POST)
 //    public String processAddSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
 //                                   BindingResult bindingResult) {
@@ -108,9 +130,48 @@ public class Pap_PatiController {
 //        return "redirect:/";
 //    }
 
+//    @RequestMapping(value="/add", method= RequestMethod.POST)
+//    public String processAddSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
+//                                   BindingResult bindingResult) {
+//
+//        papPati.setStatus("in progress");
+//
+//        // 1. Pasa el validador universal (campos nulos, formatos, etc.)
+//        Pap_PatiValidator pap_patiValidator = new Pap_PatiValidator();
+//        pap_patiValidator.validate(papPati, bindingResult);
+//
+//        // 2. Reglas EXCLUSIVAS para nuevos registros: Las fechas no pueden ser pasadas
+//        if (papPati.getStartDate() != null && papPati.getStartDate().isBefore(LocalDate.now())) {
+//            bindingResult.rejectValue("startDate", "fecha_pasada", "La fecha de inicio no puede ser anterior a hoy.");
+//        }
+//
+//        if (papPati.getEndDate() != null && papPati.getEndDate().isBefore(LocalDate.now().plusDays(1))) {
+//            bindingResult.rejectValue("endDate", "fecha_invalida", "La fecha de fin debe ser al menos el día de mañana.");
+//        }
+//
+//        // 3. Comprobar si hay algún error (del validador o de nuestras reglas exclusivas)
+//        if (bindingResult.hasErrors()) {
+//            return "pap_pati/add";
+//        }
+//
+//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+//        String contrasenaEncriptada = passwordEncryptor.encryptPassword(papPati.getPassword());
+//        papPati.setPassword(contrasenaEncriptada);
+//
+//        try {
+//            pap_patiDao.addPap_Pati(papPati);
+//        } catch (DuplicateKeyException e) {
+//            bindingResult.rejectValue("dni", "duplicat", "Ya existe un Pap/Pati con este DNI");
+//            return "pap_pati/add";
+//        }
+//
+//        return "redirect:success";
+//    }
+
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
-                                   BindingResult bindingResult) {
+                                   BindingResult bindingResult,
+                                   RedirectAttributes redirectAttributes) { // <-- 1. AÑADIDO AQUÍ
 
         papPati.setStatus("in progress");
 
@@ -143,13 +204,24 @@ public class Pap_PatiController {
             return "pap_pati/add";
         }
 
+        // <-- 2. AÑADIDO AQUÍ: Guardamos los datos efímeros en el "Flash" antes de redirigir
+        redirectAttributes.addFlashAttribute("tipoPerfil", "Asistente " + papPati.getAssistant_type());
+        redirectAttributes.addFlashAttribute("nombreUsuario", papPati.getName() + " " + papPati.getSurname());
+        redirectAttributes.addFlashAttribute("dniUsuario", papPati.getDni());
+
         return "redirect:success";
     }
 
-    @RequestMapping("/success")
-    public String registrationSuccess() {
-        return "success";
-    }
+//    @RequestMapping("/success")
+//    public String registrationSuccess() {
+//        return "success";
+//    }
+
+//    @RequestMapping("/success")
+//    public String registrationSuccess(Model model) {
+//        model.addAttribute("tipoPerfil", "Asistente PAP/PATI");
+//        return "success";
+//    }
 
     @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
     public String editPapPati(Model model, @PathVariable String id) {

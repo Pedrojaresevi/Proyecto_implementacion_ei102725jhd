@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.jasypt.util.password.BasicPasswordEncryptor;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,8 +55,28 @@ public class TutorController {
         model.addAttribute("tutor", new Tutor());
         return "tutor/add";
     }
-    //
 
+
+//    @PostMapping("/add")
+//    public String addTutor(@ModelAttribute("tutor") Tutor tutor,
+//                           BindingResult bindingResult,
+//                           RedirectAttributes redirectAttributes) {
+//        if (bindingResult.hasErrors()) {
+//            return "tutor/add";
+//        }
+//        tutorDao.addTutor(tutor);
+//
+//        redirectAttributes.addFlashAttribute("tipoPerfil", "Tutor");
+//        redirectAttributes.addFlashAttribute("nombreUsuario", tutor.getName());
+//        redirectAttributes.addFlashAttribute("dniUsuario", tutor.getDni());
+//
+//        return "redirect:/tutor/success";
+//    }
+
+    @GetMapping("/success")
+    public String registrationSuccess() {
+        return "success";
+    }
     //
 //    @RequestMapping(value="/add", method= RequestMethod.POST)
 //    public String processAddSubmit(@ModelAttribute("tutor") Tutor tutor,
@@ -81,9 +103,37 @@ public class TutorController {
 //
 //        return "redirect:/";
 //    }
+//    @RequestMapping(value="/add", method= RequestMethod.POST)
+//    public String processAddSubmit(@ModelAttribute("tutor") Tutor tutor,
+//                                   BindingResult bindingResult) {
+//
+//        tutor.setStatus("in progress");
+//        TutorValidator tutorValidator = new TutorValidator();
+//        tutorValidator.validate(tutor, bindingResult);
+//
+//        if (bindingResult.hasErrors()) {
+//            return "tutor/add";
+//        }
+//
+//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
+//        String contrasenaEncriptada = passwordEncryptor.encryptPassword(tutor.getPassword());
+//        tutor.setPassword(contrasenaEncriptada);
+//
+//        try {
+//            tutorDao.addTutor(tutor);
+//        } catch (DuplicateKeyException e) {
+//            bindingResult.rejectValue("dni", "duplicat",
+//                    "Ya existe un tutor con este DNI");
+//            return "tutor/add";
+//        }
+//
+//        return "redirect:success";
+//    }
+
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("tutor") Tutor tutor,
-                                   BindingResult bindingResult) {
+                                   BindingResult bindingResult,
+                                   RedirectAttributes redirectAttributes) { // <-- 1. AÑADIDO AQUÍ
 
         tutor.setStatus("in progress");
         TutorValidator tutorValidator = new TutorValidator();
@@ -105,13 +155,24 @@ public class TutorController {
             return "tutor/add";
         }
 
+        // <-- 2. AÑADIDO AQUÍ: Guardamos los datos antes de hacer la redirección
+        redirectAttributes.addFlashAttribute("tipoPerfil", "Tutor");
+        redirectAttributes.addFlashAttribute("nombreUsuario", tutor.getName());
+        redirectAttributes.addFlashAttribute("dniUsuario", tutor.getDni());
+
         return "redirect:success";
     }
 
-    @RequestMapping("/success")
-    public String registrationSuccess() {
-        return "success";
-    }
+//    @RequestMapping("/success")
+//    public String registrationSuccess() {
+//        return "success";
+//    }
+//    @RequestMapping("/success")
+//    public String registrationSuccess(Model model) {
+//        model.addAttribute("tipoPerfil", "Tutor");
+//        return "success";
+//    }
+
     //
     @RequestMapping(value="/update/{dni}", method = RequestMethod.GET)
     public String editTutor(Model model, @PathVariable String dni) {

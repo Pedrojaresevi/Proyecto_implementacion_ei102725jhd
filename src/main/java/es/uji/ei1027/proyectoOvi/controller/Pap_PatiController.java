@@ -362,13 +362,16 @@ public class Pap_PatiController {
     }
 
     @RequestMapping(value="/accept/execute/{dni}", method = RequestMethod.GET)
-    public String executeAcceptPapPati(@PathVariable String dni) {
-        Pap_Pati papPati = pap_patiDao.getPap_Pati(dni);
-        if (papPati != null) {
-            papPati.setStatus("accepted");
-            pap_patiDao.updatePap_Pati(papPati);
+    public String executeAcceptPapPati(@PathVariable String dni,Model model) {
+        Pap_Pati pap_pati = pap_patiDao.getPap_Pati(dni);
+        if (pap_pati != null) {
+            pap_pati.setStatus("accepted");
+            pap_patiDao.updatePap_Pati(pap_pati);
+
+            model.addAttribute("pap_pati", pap_pati);
+            model.addAttribute("actionType", "accepted");
         }
-        return "redirect:/pap_pati/pending";
+        return "technician/pap_pati/simulacion_email";
     }
 
     @RequestMapping(value="/reject/{dni}", method = RequestMethod.GET)
@@ -379,17 +382,20 @@ public class Pap_PatiController {
 
 
     @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
-    public String executeRejectPapPati(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason) {
+    public String executeRejectPapPati(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason,Model model) {
 
         Pap_Pati pap_pati = pap_patiDao.getPap_Pati(dni);
 
         if (pap_pati != null) {
             pap_pati.setStatus("refused");
             pap_pati.setRejectReason(rejectReason);
-
             pap_patiDao.updatePap_Pati(pap_pati);
+
+            model.addAttribute("pap_pati", pap_pati);
+            model.addAttribute("actionType", "refused");
+            model.addAttribute("rejectReason", rejectReason);
         }
-        return "redirect:/pap_pati/pending";
+        return "technician/pap_pati/simulacion_email";
     }
 
     @RequestMapping("/refused")

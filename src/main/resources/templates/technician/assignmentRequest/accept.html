@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
 <head>
     <title>Confirmar Solicitud</title>
     <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">
@@ -25,7 +25,7 @@
             <div class="d-flex justify-content-end gap-2">
                 <a th:href="@{/assignmentRequest/accept/execute/{id}(id=${assignmentRequest.request_Id})}"
                    class="btn btn-success">Confirmar</a>
-                <a th:href="@{/assignmentRequest/list}" class="btn btn-secondary">Cancelar</a>
+                <a th:href="@{/assignmentRequest/pending}" class="btn btn-secondary">Cancelar</a>
             </div>
         </div>
     </div>

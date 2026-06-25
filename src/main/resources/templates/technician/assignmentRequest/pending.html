@@ -53,16 +53,11 @@
                 </td>
 
                 <td class="text-center">
-                    <div class="d-flex justify-content-center gap-2">
-                        <a th:href="@{/assignmentRequest/update/{id}(id=${request.request_Id})}"
-                           class="btn btn-warning btn-sm">
-                            Editar
-                        </a>
-
-                        <a th:href="@{/assignmentRequest/delete/{id}(id=${request.request_Id})}"
-                           class="btn btn-danger btn-sm">
-                            Borrar
-                        </a>
+                    <div class="d-flex gap-1 justify-content-center">
+                        <a th:href="@{/assignmentRequest/accept/{id}(id=${request.request_Id})}"
+                           class="btn btn-success btn-sm">Aceptar</a>
+                        <a th:href="@{/assignmentRequest/reject/{id}(id=${request.request_Id})}"
+                           class="btn btn-danger btn-sm">Rechazar</a>
                     </div>
                 </td>
             </tr>

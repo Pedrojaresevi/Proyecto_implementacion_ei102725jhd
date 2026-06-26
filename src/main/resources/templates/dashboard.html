@@ -139,6 +139,7 @@
                     <hr class="flex-grow-1 my-0 opacity-25">
                 </div>
             </div>
+
             <div class="col-md-4 mb-4">
                 <div class="card h-100 border-danger shadow-sm">
                     <div class="card-body text-center">
@@ -167,7 +168,7 @@
                             Consulta el histórico de tutores cuyo registro o solicitud fue denegada por la OVI.
                         </p>
                         <a th:href="@{/tutor/refused}" class="btn btn-danger w-100 rounded-pill shadow-sm">
-                            Ver tutores  rechazados
+                            Ver tutores rechazados
                         </a>
                     </div>
                 </div>
@@ -198,20 +199,7 @@
                 </h4>
             </div>
 
-            <div class="col-md-4 col-sm-6">
-                <div class="card h-100 border-primary shadow-sm">
-                    <div class="card-body text-center">
-                        <div class="mb-3">
-                            <i class="bi bi-person-plus" style="font-size: 2rem; color: #0d6efd;"></i>
-                        </div>
-                        <h5 class="card-title">Asignar Menores a Tutor</h5>
-                        <p class="card-text small text-muted">Vincula y registra de forma directa a usuarios menores bajo la guardia de un tutor legal.</p>
-                        <a th:href="@{/tutor/add-minor}" class="btn btn-primary text-white w-100">Añadir Menor</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-8 col-12">
+            <div class="col-md-6 col-12">
                 <div class="card h-100 shadow-sm border-primary">
                     <div class="card-body">
                         <h5 class="card-title"><i class="bi bi-file-earmark-text me-2 text-primary"></i>Ver contratos de un usuario concreto</h5>
@@ -227,6 +215,39 @@
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-12">
+                <div class="card h-100 shadow-sm border-primary">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="bi bi-hash me-2 text-primary"></i>Ver contratos por solicitud</h5>
+                        <p class="card-text text-muted small">Introduce el ID de la solicitud de asignación para consultar sus contratos.</p>
+
+                        <form th:action="@{/contract/searchByRequest}" method="get">
+                            <label for="requestIdSearchInput" class="visually-hidden">ID de solicitud</label>
+
+                            <div class="input-group">
+                                <input type="text" id="requestIdSearchInput" name="requestId" class="form-control" placeholder="Introduce el ID (ej. REQ1)" required />
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-search me-1"></i>Buscar contratos
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-12">
+                <div class="card h-100 border-primary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-plus" style="font-size: 2rem; color: #0d6efd;"></i>
+                        </div>
+                        <h5 class="card-title">Asignar Menores a Tutor</h5>
+                        <p class="card-text small text-muted">Vincula y registra de forma directa a usuarios menores bajo la guardia de un tutor legal.</p>
+                        <a th:href="@{/tutor/add-minor}" class="btn btn-primary text-white w-100">Añadir Menor</a>
                     </div>
                 </div>
             </div>

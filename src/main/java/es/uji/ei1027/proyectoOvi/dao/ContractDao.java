@@ -144,6 +144,36 @@ public class ContractDao {
             return 0;
         }
     }
+    // 10. OBTENER CONTRATOS POR REQUEST_ID
+    public List<Contract> getContractsByRequestId(String requestId) {
+        String sql = "SELECT * FROM Contract WHERE request_id = ?";
+        try {
+            return jdbcTemplate.query(sql, new ContractRowMapper(), requestId);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    // 11. OBTENER CONTRATOS POR REQUEST_ID PAGINADOS
+    public List<Contract> getContractsByRequestIdPaginated(String requestId, int limit, int offset) {
+        String sql = "SELECT * FROM Contract WHERE request_id = ? LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new ContractRowMapper(), requestId, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    // 12. CONTAR CONTRATOS POR REQUEST_ID
+    public int countContractsByRequestId(String requestId) {
+        String sql = "SELECT COUNT(*) FROM Contract WHERE request_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, requestId);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
+
     public int finalizeExpiredContracts() {
         String sql = "UPDATE Contract SET status = 'finalized' WHERE status != 'finalized' AND enddate < CURRENT_DATE";
         return jdbcTemplate.update(sql);

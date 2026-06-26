@@ -305,7 +305,27 @@ public class ContractController {
     }
 
     // =========================================================================
-    // 5. GET: Mostrar la pantalla de confirmación antes de eliminar
+    // 5. GET: Buscar contratos por ID de solicitud de asignación (Exclusivo del Técnico/Administrador)
+    // =========================================================================
+    @RequestMapping(value = "/searchByRequest", method = RequestMethod.GET)
+    public String searchContractsByRequest(@RequestParam("requestId") String requestId, Model model, jakarta.servlet.http.HttpSession session) {
+
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("contracts", contractDao.getContractsByRequestId(requestId));
+        model.addAttribute("currentPage", 1);
+        model.addAttribute("totalPages", 1);
+        model.addAttribute("dniOwner", requestId);
+        model.addAttribute("rolePath", "technician");
+
+        return "contract/list";
+    }
+
+    // =========================================================================
+    // 6. GET: Mostrar la pantalla de confirmación antes de eliminar
     // =========================================================================
     @RequestMapping(value = "/delete/{contract_Id}", method = RequestMethod.GET)
     public String confirmDeleteContract(@PathVariable("contract_Id") String contractId, Model model, jakarta.servlet.http.HttpSession session) {

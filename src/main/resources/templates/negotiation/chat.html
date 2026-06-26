@@ -92,14 +92,21 @@
 
         <div class="card-footer bg-white p-3 border-0 shadow rounded-bottom-4">
 
+            <div th:if="${readOnly != null and readOnly}"
+                 class="alert alert-info text-center m-0 fw-bold shadow-sm">
+                <i class="bi bi-eye-fill me-2"></i>
+                <span>Vista de solo lectura — No puedes enviar mensajes.</span>
+            </div>
+
             <div th:if="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' or #strings.toLowerCase(#strings.trim(negotiationStatus)) == 'refused'}"
+                 th:unless="${readOnly != null and readOnly}"
                  class="alert text-center m-0 fw-bold shadow-sm"
                  th:classappend="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' ? 'alert-success text-success' : 'alert-danger text-danger'}">
                 <i th:class="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' ? 'bi bi-check-circle-fill me-2' : 'bi bi-x-circle-fill me-2'}"></i>
                 <span>Esta negociación ha sido <span th:text="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' ? 'ACEPTADA' : 'RECHAZADA'}"></span>. El chat está en modo solo lectura.</span>
             </div>
 
-            <div th:unless="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' or #strings.toLowerCase(#strings.trim(negotiationStatus)) == 'refused'}">
+            <div th:unless="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' or #strings.toLowerCase(#strings.trim(negotiationStatus)) == 'refused' or (readOnly != null and readOnly)}">
 
                 <div class="d-flex justify-content-end gap-2 mb-3">
                     <form th:action="@{/negotiation/cancel/execute/{id}(id=${negotiationId})}" method="post" class="m-0">

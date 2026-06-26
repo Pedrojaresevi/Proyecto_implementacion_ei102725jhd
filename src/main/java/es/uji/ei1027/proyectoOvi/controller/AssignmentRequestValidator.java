@@ -68,20 +68,16 @@ public class AssignmentRequestValidator implements Validator {
         }
 
         // Validación de las habilidades requeridas
-        if (assignmentRequest.getRequiredSkills() == null || assignmentRequest.getTypeOfService().trim().isEmpty()) {
+        if (assignmentRequest.getRequiredSkills() == null || assignmentRequest.getRequiredSkills().trim().isEmpty()) {
             errors.rejectValue("requiredSkills", "obligatori", "Hay que introducir al menos una skill");
         }
 
-        // 3. Validación exclusiva Oviuser / Tutor
+        // 3. Validación: debe haber al menos oviuser o tutor
         boolean hasOviuser = assignmentRequest.getOviuser_id() != null && !assignmentRequest.getOviuser_id().trim().equals("");
         boolean hasTutor = assignmentRequest.getTutor_id() != null && !assignmentRequest.getTutor_id().trim().equals("");
 
         if (!hasOviuser && !hasTutor) {
-            // Usamos reject global para que el mensaje no salga dos veces
             errors.reject("obligatori", "Cal assignar la petició a un oviuser o a un tutor");
-        } else if (hasOviuser && hasTutor) {
-            // Usamos reject global para que el mensaje no salga dos veces
-            errors.reject("exclusiu", "La petició no pot ser d'un oviuser i d'un tutor alhora");
         }
     }
 }

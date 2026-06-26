@@ -360,6 +360,7 @@ public class NegotiationController {
 
     @RequestMapping("/chat/{negotiationId}")
     public String openChat(@PathVariable("negotiationId") String negotiationId,
+                           @RequestParam(defaultValue = "false") boolean readOnly,
                            Model model,
                            HttpSession session) {
 
@@ -422,12 +423,18 @@ public class NegotiationController {
         // Pasamos el estado con el nombre exacto que requiere el chat.html
         model.addAttribute("negotiationStatus", negotiationBase.getStatus());
 
-        // Construimos la URL de retorno inteligente según el rol del usuario logeado
-        String rolePath = userLogeado.getRole().toLowerCase();
-        if ("pappati".equals(rolePath)) {
-            rolePath = "pap_pati";
+        // Si es modo solo lectura (admin), forzamos un backUrl distinto
+        if (readOnly) {
+            model.addAttribute("readOnly", true);
+            model.addAttribute("backUrl", "/assignmentRequest/adminNegotiations");
+        } else {
+            // Construimos la URL de retorno inteligente según el rol del usuario logeado
+            String rolePath = userLogeado.getRole().toLowerCase();
+            if ("pappati".equals(rolePath)) {
+                rolePath = "pap_pati";
+            }
+            model.addAttribute("backUrl", "/negotiation/" + rolePath + "/" + userLogeado.getDni());
         }
-        model.addAttribute("backUrl", "/negotiation/" + rolePath + "/" + userLogeado.getDni());
 
         return "negotiation/chat";
     }

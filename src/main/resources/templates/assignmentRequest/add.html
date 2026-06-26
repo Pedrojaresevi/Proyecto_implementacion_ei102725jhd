@@ -28,13 +28,11 @@
       <label class="control-label col-sm-2 fw-bold">Tipo de Servicio:</label>
       <div class="col-sm-10">
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" id="tipoPAP" name="typeOfService" value="PAP"
-                 th:checked="${assignmentRequest.typeOfService == 'PAP'}">
+          <input class="form-check-input" type="radio" id="tipoPAP" th:field="*{typeOfService}" value="PAP">
           <label class="form-check-label fw-normal" for="tipoPAP">PAP</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" id="tipoPATI" name="typeOfService" value="PATI"
-                 th:checked="${assignmentRequest.typeOfService == 'PATI'}">
+          <input class="form-check-input" type="radio" id="tipoPATI" th:field="*{typeOfService}" value="PATI">
           <label class="form-check-label fw-normal" for="tipoPATI">PATI</label>
         </div>
         <div th:if="${#fields.hasErrors('typeOfService')}" th:errors="*{typeOfService}" class="text-danger d-block mt-1"></div>
@@ -60,13 +58,9 @@
     <div class="form-group row mb-3">
       <label for="serviceLocation" class="control-label col-sm-2">Ubicación (Provincia):</label>
       <div class="col-sm-4">
-        <select class="form-select" id="serviceLocation" name="serviceLocation">
-          <option value="" disabled selected>Seleccione una provincia...</option>
-          <option th:each="provincia : ${provincias}"
-                  th:value="${provincia}"
-                  th:text="${provincia}"
-                  th:selected="${provincia == assignmentRequest.serviceLocation}">
-          </option>
+        <select class="form-select" id="serviceLocation" th:field="*{serviceLocation}">
+          <option value="" disabled>Seleccione una provincia...</option>
+          <option th:each="provincia : ${provincias}" th:value="${provincia}" th:text="${provincia}"></option>
         </select>
         <div th:if="${#fields.hasErrors('serviceLocation')}" th:errors="*{serviceLocation}" class="text-danger"></div>
       </div>
@@ -79,13 +73,9 @@
     <div class="form-group row mb-3">
       <label for="requiredTraining" class="control-label col-sm-2">Formación requerida:</label>
       <div class="col-sm-10">
-        <select class="form-select" id="requiredTraining" name="requiredTraining">
-          <option value="" disabled selected>Seleccione la formación mínima...</option>
-          <option th:each="training : ${formacionesDisponibles}"
-                  th:value="${training}"
-                  th:text="${training}"
-                  th:selected="${training == assignmentRequest.requiredTraining}">
-          </option>
+        <select class="form-select" id="requiredTraining" th:field="*{requiredTraining}">
+          <option value="" disabled>Seleccione la formación mínima...</option>
+          <option th:each="training : ${formacionesDisponibles}" th:value="${training}" th:text="${training}"></option>
         </select>
         <div th:if="${#fields.hasErrors('requiredTraining')}" th:errors="*{requiredTraining}" class="text-danger"></div>
       </div>
@@ -94,15 +84,26 @@
     <div class="form-group row mb-3">
       <label for="requiredExperience" class="control-label col-sm-2">Experiencia necesaria:</label>
       <div class="col-sm-4">
-        <select class="form-select" id="requiredExperience" name="requiredExperience">
-          <option value="" disabled selected>Seleccione años de experiencia...</option>
-          <option th:each="anyo : ${anyosExperiencia}"
-                  th:value="${anyo}"
-                  th:text="${anyo}"
-                  th:selected="${anyo == assignmentRequest.requiredExperience}">
-          </option>
+        <select class="form-select" id="requiredExperience" th:field="*{requiredExperience}">
+          <option value="" disabled>Seleccione años de experiencia...</option>
+          <option th:each="anyo : ${anyosExperiencia}" th:value="${anyo}" th:text="${anyo}"></option>
         </select>
         <div th:if="${#fields.hasErrors('requiredExperience')}" th:errors="*{requiredExperience}" class="text-danger"></div>
+      </div>
+    </div>
+
+    <div th:if="${user.role == 'tutor'}" class="form-group row mb-3">
+      <label for="oviuserSelect" class="control-label col-sm-2 fw-bold">Usuario OVI:</label>
+      <div class="col-sm-4">
+        <select class="form-select" id="oviuserSelect" name="oviuser_id" required>
+          <option value="" disabled selected>Seleccione un usuario OVI...</option>
+          <option th:each="ovi : ${oviUsers}"
+                  th:value="${ovi.dni}"
+                  th:text="${ovi.dni} + ' - ' + ${ovi.name}"
+                  th:selected="${ovi.dni == assignmentRequest.oviuser_id}">
+          </option>
+        </select>
+        <div th:if="${#fields.hasErrors('oviuser_id')}" th:errors="*{oviuser_id}" class="text-danger"></div>
       </div>
     </div>
 

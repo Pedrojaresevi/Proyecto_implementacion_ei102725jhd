@@ -17,8 +17,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -29,6 +31,7 @@ public class AssignmentRequestController {
     private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
     private NegotiationDao negotiationDao; // Inyectamos el DAO de Negociaciones
     private OviUserDao oviUserDao;
+    private TutorDao tutorDao;
 
     @Autowired
     public void setAssignmentRequestDao(AssignmentRequestDao assignmentRequestDao){
@@ -52,6 +55,9 @@ public class AssignmentRequestController {
 
     @Autowired
     public void setOviUserDao(OviUserDao oviUserDao) { this.oviUserDao = oviUserDao;}
+
+    @Autowired
+    public void setTutorDao(TutorDao tutorDao) { this.tutorDao = tutorDao;}
 
 //    //List depediendo del rol
 //    @RequestMapping("/list")
@@ -262,7 +268,7 @@ public class AssignmentRequestController {
         return "assignmentRequest/history";
     }
 
-    @RequestMapping(value="/add")
+    @RequestMapping(value="/add", method=RequestMethod.GET)
     public String addAssignmentRequest(Model model, HttpSession session) {
         UserDetails user = (UserDetails) session.getAttribute("user");
 
@@ -270,12 +276,16 @@ public class AssignmentRequestController {
             return "redirect:/login";
         }
 
-        // ¡ESTA ES LA LÍNEA QUE FALTABA! Le pasamos el usuario a la vista
+        // Le pasamos el usuario a la vista
         model.addAttribute("user", user);
-
         model.addAttribute("assignmentRequest", new AssignmentRequest());
 
-        // Ambos roles van al mismo formulario
+        // Si es tutor, cargar sus usuarios OVI asignados para el desplegable
+        if ("tutor".equals(user.getRole())) {
+            List<OviUser> oviUsers = oviUserDao.getOviUsersByTutor(user.getDni());
+            model.addAttribute("oviUsers", oviUsers);
+        }
+
         return "assignmentRequest/add";
     }
 
@@ -349,19 +359,19 @@ public class AssignmentRequestController {
 
         UserDetails user = (UserDetails) session.getAttribute("user");
 
-        // 1. COMPROBAR SESIÓN (Si se ha caducado, mandarlo al login en lugar de romper)
+        // 1. COMPROBAR SESIÓN
         if (user == null) {
             return "redirect:/login";
         }
 
-        if ("oviuser".equals(user.getRole())) {
+        // AQUÍ ESTÁ LA CORRECCIÓN CLAVE PARA QUE COJA BIEN EL DNI
+        if ("oviuser".equals(user.getRole()) || "user".equals(user.getRole())) {
             assignmentRequest.setOviuser_id(user.getDni());
             // Aseguramos que tutor_id esté nulo por la regla CHECK de la BD
             assignmentRequest.setTutor_id(null);
         } else if ("tutor".equals(user.getRole())) {
             assignmentRequest.setTutor_id(user.getDni());
-            // Aseguramos que oviuser_id esté nulo
-            assignmentRequest.setOviuser_id(null);
+            // El oviuser_id viene del desplegable del formulario
         }
 
         // 2. GENERACIÓN DEL ID SECUENCIAL
@@ -388,6 +398,9 @@ public class AssignmentRequestController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", user);
+            if ("tutor".equals(user.getRole())) {
+                model.addAttribute("oviUsers", oviUserDao.getOviUsersByTutor(user.getDni()));
+            }
             return "assignmentRequest/add";
         }
 
@@ -400,7 +413,7 @@ public class AssignmentRequestController {
             return "assignmentRequest/add";
         } catch (DataIntegrityViolationException e) {
             model.addAttribute("user", user);
-            bindingResult.rejectValue("oviuser_id", "no_existe", "El oviUser no es vàlid");
+            bindingResult.rejectValue("oviuser_id", "no_existe", "El usuario especificado no es válido");
             return "assignmentRequest/add";
         }
 
@@ -531,27 +544,33 @@ public class AssignmentRequestController {
 
                 // 1. Ubicación / movilidad
                 if (request.getServiceLocation() != null) {
+                    String location = request.getServiceLocation().trim().toLowerCase();
                     boolean ciudadOk = pap.getAddress() != null &&
-                            pap.getAddress().toLowerCase()
-                                    .contains(request.getServiceLocation().toLowerCase());
+                            pap.getAddress().toLowerCase().contains(location);
                     boolean movilidadOk = pap.getGeographicMobility() != null &&
-                            pap.getGeographicMobility().toLowerCase()
-                                    .contains(request.getServiceLocation().toLowerCase());
+                            pap.getGeographicMobility().toLowerCase().contains(location);
                     if (ciudadOk || movilidadOk) score += 20f;
                 }
 
-                // 2. Habilidades
-                if (pap.getSkills() != null && request.getRequiredSkills() != null &&
-                        pap.getSkills().toLowerCase()
-                                .contains(request.getRequiredSkills().toLowerCase())) {
-                    score += 20f;
+                // 2. Habilidades (CON TRIM Y SEPARACIÓN POR COMAS)
+                if (pap.getSkills() != null && request.getRequiredSkills() != null) {
+                    String candSkills = pap.getSkills().toLowerCase();
+                    String[] reqSkills = request.getRequiredSkills().split(",");
+
+                    for (String reqSkill : reqSkills) {
+                        if (candSkills.contains(reqSkill.trim().toLowerCase())) {
+                            score += 20f;
+                            break;
+                        }
+                    }
                 }
 
                 // 3. Formación específica
-                if (pap.getSpecificTraining() != null && request.getRequiredTraining() != null &&
-                        pap.getSpecificTraining().toLowerCase()
-                                .contains(request.getRequiredTraining().toLowerCase())) {
-                    score += 20f;
+                if (pap.getSpecificTraining() != null && request.getRequiredTraining() != null) {
+                    String reqTraining = request.getRequiredTraining().trim().toLowerCase();
+                    if (pap.getSpecificTraining().toLowerCase().contains(reqTraining)) {
+                        score += 20f;
+                    }
                 }
 
                 // 4. Experiencia: el candidato cumple si tiene >= experiencia requerida
@@ -651,32 +670,42 @@ public class AssignmentRequestController {
         }
 
         // Proximidad geográfica (20 puntos)
-        if (candidate.getAddress() != null && req.getServiceLocation() != null
-                && (candidate.getAddress().toLowerCase().contains(req.getServiceLocation().toLowerCase())
-                || (candidate.getGeographicMobility() != null
-                && candidate.getGeographicMobility().toLowerCase()
-                .contains(req.getServiceLocation().toLowerCase())))) {
-            score += 20;
+        if (candidate.getAddress() != null && req.getServiceLocation() != null) {
+            String location = req.getServiceLocation().trim().toLowerCase();
+            if (candidate.getAddress().toLowerCase().contains(location) ||
+                    (candidate.getGeographicMobility() != null && candidate.getGeographicMobility().toLowerCase().contains(location))) {
+                score += 20;
+            }
         }
 
         // Formación específica (20 puntos)
-        if (candidate.getSpecificTraining() != null && req.getRequiredTraining() != null
-                && candidate.getSpecificTraining().toLowerCase()
-                .contains(req.getRequiredTraining().toLowerCase())) {
-            score += 20;
+        if (candidate.getSpecificTraining() != null && req.getRequiredTraining() != null) {
+            String reqTraining = req.getRequiredTraining().trim().toLowerCase();
+            if (candidate.getSpecificTraining().toLowerCase().contains(reqTraining)) {
+                score += 20;
+            }
         }
 
         // Tipo de experiencia (20 puntos)
-        if (candidate.getTypeOfExperience() != null && req.getRequiredExperience() != null
-                && candidate.getTypeOfExperience().equals(req.getRequiredExperience())) {
-            score += 20;
+        if (candidate.getTypeOfExperience() != null && req.getRequiredExperience() != null) {
+            if (candidate.getTypeOfExperience().trim().equals(req.getRequiredExperience().trim())) {
+                score += 20;
+            }
         }
 
-        // Habilidades (20 puntos)
-        if (candidate.getSkills() != null && req.getRequiredSkills() != null
-                && candidate.getSkills().toLowerCase()
-                .contains(req.getRequiredSkills().toLowerCase())) {
-            score += 20;
+        // Habilidades (20 puntos) - APLICANDO EL TRIM A LAS CADENAS
+        if (candidate.getSkills() != null && req.getRequiredSkills() != null) {
+            String candSkills = candidate.getSkills().toLowerCase();
+            // Separamos las habilidades requeridas por comas
+            String[] reqSkills = req.getRequiredSkills().split(",");
+
+            for (String reqSkill : reqSkills) {
+                // Limpiamos los espacios con trim() antes de buscar
+                if (candSkills.contains(reqSkill.trim().toLowerCase())) {
+                    score += 20;
+                    break; // Sumamos los puntos si coincide al menos una de las habilidades requeridas
+                }
+            }
         }
 
         return score; // Máximo 100, mínimo 20 (por el filtro OR del DAO)
@@ -967,6 +996,75 @@ public class AssignmentRequestController {
 
         // 3. Redirigir a la vista del Chat
         return "redirect:/negotiation/chat/" + negotiationId;
+    }
+
+    // =========================================================================
+    // ADMIN: Listar solicitudes en negociación (para técnicos)
+    // =========================================================================
+    @RequestMapping("/adminNegotiations")
+    public String listAdminNegotiations(Model model, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null || !"technician".equals(user.getRole())) {
+            return "redirect:/login";
+        }
+
+        List<AssignmentRequest> requests = assignmentRequestDao.getAssignmentRequestsByStatus("in negotiation");
+
+        Map<String, List<String>> requestNegotiations = new HashMap<>();
+        Map<String, String> negotiationStatuses = new HashMap<>();
+        Map<String, String> firstNegotiationId = new HashMap<>();
+
+        for (AssignmentRequest req : requests) {
+            List<String> negIds = negotiationDao.getNegotiationIdsByRequestId(req.getRequest_Id());
+            requestNegotiations.put(req.getRequest_Id(), negIds);
+
+            if (!negIds.isEmpty()) {
+                firstNegotiationId.put(req.getRequest_Id(), negIds.get(0));
+                Negotiation neg = negotiationDao.getNegotiation(negIds.get(0));
+                if (neg != null) {
+                    negotiationStatuses.put(req.getRequest_Id(), neg.getStatus());
+                }
+            }
+        }
+
+        model.addAttribute("requests", requests);
+        model.addAttribute("requestNegotiations", requestNegotiations);
+        model.addAttribute("negotiationStatuses", negotiationStatuses);
+        model.addAttribute("firstNegotiationId", firstNegotiationId);
+
+        return "assignmentRequest/adminNegotiations";
+    }
+
+    // =========================================================================
+    // DETALLE DE SOLICITUD (para admin)
+    // =========================================================================
+    @RequestMapping("/detail/{id}")
+    public String viewDetail(@PathVariable("id") String requestId, Model model, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(requestId);
+        if (request == null) {
+            return "redirect:/assignmentRequest/adminNegotiations";
+        }
+
+        model.addAttribute("request", request);
+
+        // Nombre del usuario OVI
+        if (request.getOviuser_id() != null) {
+            OviUser oviUser = oviUserDao.getOviUser(request.getOviuser_id());
+            model.addAttribute("oviUserName", oviUser != null ? oviUser.getName() : null);
+        }
+
+        // Nombre del tutor
+        if (request.getTutor_id() != null) {
+            Tutor tutor = tutorDao.getTutor(request.getTutor_id());
+            model.addAttribute("tutorName", tutor != null ? tutor.getName() : null);
+        }
+
+        return "assignmentRequest/detail";
     }
 
 }

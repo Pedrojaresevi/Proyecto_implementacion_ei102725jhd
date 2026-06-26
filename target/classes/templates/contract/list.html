@@ -53,8 +53,12 @@
 
                 <td class="text-center">
                     <div class="d-flex justify-content-center gap-2">
-                        <a th:href="@{/contract/update/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-warning btn-sm">Editar</a>
-                        <a th:href="@{/contract/delete/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-danger btn-sm">Eliminar</a>
+                        <a th:if="${!isMinor}" th:href="@{/contract/update/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-warning btn-sm">Editar</a>
+                        <a th:if="${!isMinor}" th:href="@{/contract/delete/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-danger btn-sm">Eliminar</a>
+
+                        <span th:if="${isMinor}" class="text-muted small">
+                            <i class="bi bi-lock-fill"></i> Solo lectura
+                        </span>
                     </div>
                 </td>
             </tr>

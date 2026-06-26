@@ -161,53 +161,6 @@ public class ContractController {
     // =========================================================================
     // 3. GET: Listar los contratos filtrados por la persona logueada (CON PAGINACIÓN)
     // =========================================================================
-//    @RequestMapping(value = "/list", method = RequestMethod.GET)
-//    public String listContracts(Model model,
-//                                @RequestParam(defaultValue = "1") int page,
-//                                jakarta.servlet.http.HttpSession session) {
-//
-//        // 1. Obtenemos el usuario conectado desde la sesión
-//        UserDetails user = (UserDetails) session.getAttribute("user");
-//        if (user == null) {
-//            return "redirect:/login";
-//        }
-//
-//        String dni = user.getDni();
-//        String role = user.getRole();
-//
-//        // 2. Configuración de la paginación (6 items por página)
-//        int pageSize = 6;
-//        int offset = (page - 1) * pageSize;
-//
-//        // 3. Filtrar los contratos en el DAO usando el DNI y la paginación
-//        List<Contract> contracts = contractDao.getContractsByUserPaginated(dni, pageSize, offset);
-//
-//        // 4. Calcular el total de páginas
-//        int totalItems = contractDao.countContractsByUser(dni);
-//        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-//        if (totalPages == 0) {
-//            totalPages = 1;
-//        }
-//
-//        // 5. Enviamos las variables necesarias para la vista
-//        model.addAttribute("contracts", contracts);
-//        model.addAttribute("currentPage", page);
-//        model.addAttribute("totalPages", totalPages);
-//        model.addAttribute("dniOwner", dni);
-//
-//        // 6. Mapeamos el 'rolePath' para la construcción de rutas de navegación
-//        String rolePath = "user";
-//        if ("tutor".equals(role)) {
-//            rolePath = "tutor";
-//        } else if ("pap_pati".equals(role)) {
-//            rolePath = "pap_pati";
-//        } else if ("technician".equals(role)) {
-//            rolePath = "technician";
-//        }
-//        model.addAttribute("rolePath", rolePath);
-//
-//        return "contract/list";
-//    }
 
 //    @RequestMapping("/list")
 //    public String listContracts(Model model, HttpSession session, @RequestParam(defaultValue = "1") int page) {
@@ -215,6 +168,9 @@ public class ContractController {
 //        if (user == null) {
 //            return "redirect:/login";
 //        }
+//
+//        // >>> NUEVA LÍNEA AÑADIDA: Finaliza automáticamente los contratos vencidos antes de listarlos
+//        contractDao.finalizeExpiredContracts();
 //
 //        String dniToQuery = user.getDni();
 //        boolean isMinor = false;
@@ -258,12 +214,14 @@ public class ContractController {
         OviUser oviUser = oviUserDao.getOviUser(user.getDni());
         if (oviUser != null && oviUser.getTutor_id() != null && !oviUser.getTutor_id().isEmpty()) {
             isMinor = true;
-            dniToQuery = oviUser.getTutor_id(); // <-- Cambiamos el DNI objetivo por el de su tutor
+            // COMENTADO/ELIMINADO: No cambiamos el DNI por el del tutor para que la BBDD filtre solo sus propios contratos
+            // dniToQuery = oviUser.getTutor_id();
         }
 
         int pageSize = 6;
         int offset = (page - 1) * pageSize;
 
+        // Al usar el DNI del menor, esta consulta traerá solo los registros donde ar.oviuser_id = menorDni
         List<Contract> contracts = contractDao.getContractsByUserPaginated(dniToQuery, pageSize, offset);
         int totalItems = contractDao.countContractsByUser(dniToQuery);
 

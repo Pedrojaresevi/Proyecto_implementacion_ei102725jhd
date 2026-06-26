@@ -59,8 +59,8 @@
         <input type="hidden" th:field="*{password}" />
 
         <button type="submit" class="btn btn-primary mt-3">Actualizar Perfil</button>
-        <a th:href="@{/tutor/accepted}" class="btn btn-secondary mt-3 ms-2">Volver</a>
-    </form>
+        <a th:href="${session.user != null and session.user.role == 'technician' ? '/tutor/accepted' : '/dashboard'}"
+           class="btn btn-secondary mt-3 ms-2">Volver</a>    </form>
 </main>
 </body>
 </html>

@@ -125,7 +125,8 @@
         <input type="hidden" th:field="*{password}" />
 
         <button type="submit" class="btn btn-primary mt-3">Actualizar Perfil</button>
-        <a th:href="@{/oviUser/accepted}" class="btn btn-secondary mt-3 ms-2">Volver</a>
+        <a th:href="${session.user != null and session.user.role == 'technician' ? '/oviUser/accepted' : '/dashboard'}"
+           class="btn btn-secondary mt-3 ms-2">Volver</a>
     </form>
 </main>
 </body>

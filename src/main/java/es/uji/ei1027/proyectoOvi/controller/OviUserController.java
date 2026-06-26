@@ -237,17 +237,51 @@ public class OviUserController {
 //
 //        return "redirect:list";
 //    }
+//    @RequestMapping(value="/update", method=RequestMethod.POST)
+//    public String processUpdateSubmit(@ModelAttribute("oviUser") OviUser oviUser,
+//                                      BindingResult bindingResult, Model model) {
+//        OviUserValidator oviUserValidator = new OviUserValidator();
+//        oviUserValidator.validate(oviUser, bindingResult);
+//
+//        if (bindingResult.hasErrors()) {
+//            List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
+//            model.addAttribute("statusList", statusList);
+//            cargarListasDesplegables(model); // Recargamos si hay error al editar
+//
+//            return "oviUser/update";
+//        }
+//
+//        if (oviUser.getTutor_id() != null && oviUser.getTutor_id().trim().isEmpty()) {
+//            oviUser.setTutor_id(null);
+//        }
+//
+//        try {
+//            oviUserDao.updateOviUser(oviUser);
+//        } catch (DataIntegrityViolationException e) {
+//            List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
+//            model.addAttribute("statusList", statusList);
+//            cargarListasDesplegables(model); // Recargamos si falla la base de datos
+//
+//            bindingResult.rejectValue("tutor_id", "noExiste",
+//                    "El ID de tutor introducido no existe en el sistema");
+//            return "oviUser/update";
+//        }
+//
+//        return "redirect:/oviUser/accepted";
+//    }
+
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String processUpdateSubmit(@ModelAttribute("oviUser") OviUser oviUser,
-                                      BindingResult bindingResult, Model model) {
+                                      BindingResult bindingResult,
+                                      Model model,
+                                      HttpSession session) { // <-- 1. AÑADIDO AQUÍ
         OviUserValidator oviUserValidator = new OviUserValidator();
         oviUserValidator.validate(oviUser, bindingResult);
 
         if (bindingResult.hasErrors()) {
             List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
             model.addAttribute("statusList", statusList);
-            cargarListasDesplegables(model); // Recargamos si hay error al editar
-
+            cargarListasDesplegables(model);
             return "oviUser/update";
         }
 
@@ -260,14 +294,19 @@ public class OviUserController {
         } catch (DataIntegrityViolationException e) {
             List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
             model.addAttribute("statusList", statusList);
-            cargarListasDesplegables(model); // Recargamos si falla la base de datos
+            cargarListasDesplegables(model);
 
             bindingResult.rejectValue("tutor_id", "noExiste",
                     "El ID de tutor introducido no existe en el sistema");
             return "oviUser/update";
         }
 
-        return "redirect:/oviUser/accepted";
+        // 2. MODIFICACIÓN: Redirección condicional según el rol
+        UserDetails loggedUser = (UserDetails) session.getAttribute("user");
+        if (loggedUser != null && "technician".equals(loggedUser.getRole())) {
+            return "redirect:/oviUser/accepted"; // Si es técnico, vuelve a la gestión global
+        }
+        return "redirect:/dashboard"; // Si es el propio usuario OVI, vuelve a su panel
     }
 
     // 1. Muestra la pantalla de confirmación (GET)

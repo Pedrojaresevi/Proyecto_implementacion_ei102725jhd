@@ -182,18 +182,55 @@ public class TutorController {
         return "tutor/update";
     }
     //
+//    @RequestMapping(value="/update", method=RequestMethod.POST)
+//    public String processUpdateSubmit(@ModelAttribute("tutor") Tutor tutor,
+//                                      BindingResult bindingResult, Model model) {
+//        TutorValidator tutorValidator = new TutorValidator();
+//        tutorValidator.validate(tutor, bindingResult);
+//
+//        if (bindingResult.hasErrors()) {
+//            return "tutor/update";
+//        }
+//        tutorDao.updateTutor(tutor);
+//
+//        return "redirect:/tutor/accepted";
+//    }
+
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String processUpdateSubmit(@ModelAttribute("tutor") Tutor tutor,
-                                      BindingResult bindingResult, Model model) {
+                                      BindingResult bindingResult,
+                                      Model model,
+                                      HttpSession session) {
+        // 1. Control de sesión: verificar si el usuario está autenticado
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        // 2. Control de seguridad: el tutor solo edita su propio DNI, el técnico edita cualquiera
+        if (!"technician".equals(user.getRole()) && !user.getDni().equals(tutor.getDni())) {
+            return "redirect:/dashboard";
+        }
+
+        // 3. Validación de los campos del formulario
         TutorValidator tutorValidator = new TutorValidator();
         tutorValidator.validate(tutor, bindingResult);
 
         if (bindingResult.hasErrors()) {
+            List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
+            model.addAttribute("statusList", statusList);
             return "tutor/update";
         }
+
+        // 4. Actualización en la base de datos
         tutorDao.updateTutor(tutor);
 
-        return "redirect:/tutor/accepted";
+        // 5. Redirección dinámica según el rol
+        if ("technician".equals(user.getRole())) {
+            return "redirect:/tutor/accepted"; // Si es técnico, vuelve al listado de tutores aceptados
+        } else {
+            return "redirect:/dashboard";      // Si es el propio Tutor, vuelve a su pantalla de inicio
+        }
     }
 
     // 1. Muestra la pantalla roja de confirmación (GET)

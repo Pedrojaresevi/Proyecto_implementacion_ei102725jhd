@@ -241,6 +241,21 @@
 
         <div class="row g-4">
             <div class="col-md-4">
+                <div class="card h-100 border-secondary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-gear" style="font-size: 2rem; color: #6c757d;"></i>
+                        </div>
+                        <h5 class="card-title">Mis Datos Personales</h5>
+                        <p class="card-text small text-muted">Actualiza tu información personal, dirección y datos de contacto.</p>
+                        <a th:href="@{'/oviUser/update/' + ${user.dni}}" class="btn btn-secondary w-100">
+                            Modificar Perfil
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
                 <div class="card h-100 border-primary shadow-sm">
                     <div class="card-body text-center">
                         <div class="mb-3">
@@ -293,6 +308,20 @@
         </h2>
 
         <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-secondary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-gear" style="font-size: 2rem; color: #6c757d;"></i>
+                        </div>
+                        <h5 class="card-title">Mis Datos Personales</h5>
+                        <p class="card-text small text-muted">Actualiza tu información de perfil y correo electrónico.</p>
+                        <a th:href="@{'/tutor/update/' + ${user.dni}}" class="btn btn-secondary w-100">
+                            Modificar Perfil
+                        </a>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-4">
                 <div class="card h-100 border-primary shadow-sm">
                     <div class="card-body text-center">
@@ -357,6 +386,20 @@
     <div th:if="${user.role == 'pap_pati'}" class="mt-4">
         <h2 class="h3 mb-4 text-primary">Mi Gestión como asistente</h2>
         <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-secondary shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-person-gear" style="font-size: 2rem; color: #6c757d;"></i>
+                        </div>
+                        <h5 class="card-title">Mis Datos Personales</h5>
+                        <p class="card-text small text-muted">Actualiza tu información personal, formación y experiencia profesional.</p>
+                        <a th:href="@{'/pap_pati/update/' + ${user.dni}}" class="btn btn-secondary w-100">
+                            Modificar Perfil
+                        </a>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-4">
                 <div class="card h-100 border-primary shadow-sm">
                     <div class="card-body text-center">

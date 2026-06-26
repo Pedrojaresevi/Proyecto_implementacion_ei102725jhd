@@ -231,18 +231,57 @@ public class Pap_PatiController {
         return "pap_pati/update";
     }
 
+//    @RequestMapping(value="/update", method=RequestMethod.POST)
+//    public String processUpdateSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
+//                                      BindingResult bindingResult, Model model) {
+//        Pap_PatiValidator pap_patiValidator = new Pap_PatiValidator();
+//        pap_patiValidator.validate(papPati, bindingResult);
+//
+//        if (bindingResult.hasErrors()) {
+//            return "pap_pati/update";
+//        }
+//        pap_patiDao.updatePap_Pati(papPati);
+//
+//        return "redirect:/pap_pati/accepted";
+//    }
+
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String processUpdateSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
-                                      BindingResult bindingResult, Model model) {
+                                      BindingResult bindingResult,
+                                      Model model,
+                                      HttpSession session) {
+        // 1. Control de sesión: verificar si el usuario está autenticado
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        // 2. Control de seguridad: un usuario común solo puede editar su propio perfil.
+        // Solo el técnico ("technician") puede editar perfiles ajenos.
+        if (!"technician".equals(user.getRole()) && !user.getDni().equals(papPati.getDni())) {
+            return "redirect:/dashboard"; // Redirigir si intenta saltarse la seguridad
+        }
+
+        // 3. Validación de los campos del formulario
         Pap_PatiValidator pap_patiValidator = new Pap_PatiValidator();
         pap_patiValidator.validate(papPati, bindingResult);
 
         if (bindingResult.hasErrors()) {
+            // Si hay errores, volvemos a cargar la lista de estados para el desplegable y recargamos la vista
+            List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
+            model.addAttribute("statusList", statusList);
             return "pap_pati/update";
         }
+
+        // 4. Actualización en la base de datos
         pap_patiDao.updatePap_Pati(papPati);
 
-        return "redirect:/pap_pati/accepted";
+        // 5. Redirección dinámica según el rol de quien edita
+        if ("technician".equals(user.getRole())) {
+            return "redirect:/pap_pati/accepted"; // Si es el técnico, vuelve a la gestión de aprobados
+        } else {
+            return "redirect:/dashboard";         // Si es el propio PAP/PATI, vuelve a su panel principal
+        }
     }
 
     // 1. Muestra la pantalla roja de confirmación (GET)

@@ -35,6 +35,7 @@
                     <option value="">Todos los activos</option>
                     <option value="in progress" th:selected="${statusFilter == 'in progress'}">En progreso (in progress)</option>
                     <option value="accepted" th:selected="${statusFilter == 'accepted'}">Aceptado (accepted)</option>
+                    <option value="in negotiation" th:selected="${statusFilter == 'in negotiation'}">En negociación (in negotiation)</option>
                     <option value="refused" th:selected="${statusFilter == 'refused'}">Rechazado (refused)</option>
                 </select>
                 <button type="submit" class="btn btn-sm btn-dark shadow-sm">Filtrar</button>
@@ -74,8 +75,9 @@
                 <td>
                     <span th:text="${assignmentRequest.status}"
                           th:class="${assignmentRequest.status == 'in progress' ? 'badge rounded-pill bg-warning text-dark px-3 py-2' :
+                                   (assignmentRequest.status == 'in negotiation' ? 'badge rounded-pill bg-primary px-3 py-2' :
                                    (assignmentRequest.status == 'accepted' ? 'badge rounded-pill bg-success px-3 py-2' :
-                                   (assignmentRequest.status == 'completed' ? 'badge rounded-pill bg-info text-dark px-3 py-2' : 'badge rounded-pill bg-danger px-3 py-2'))}">
+                                   (assignmentRequest.status == 'completed' ? 'badge rounded-pill bg-info text-dark px-3 py-2' : 'badge rounded-pill bg-danger px-3 py-2')))}">
                     </span>
                     <div th:if="${assignmentRequest.status == 'refused' and assignmentRequest.rejectReason != null}"
                          class="text-muted small mt-1">
@@ -93,7 +95,7 @@
                                class="btn btn-danger btn-sm">Eliminar</a>
                         </div>
 
-                        <div th:if="${assignmentRequest.status == 'accepted'}">
+                        <div th:if="${assignmentRequest.status == 'accepted' or assignmentRequest.status == 'in negotiation'}">
                             <a th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id})}"
                                class="btn btn-sm btn-primary px-3 shadow-sm">
                                 <i class="bi bi-people-fill me-1"></i> Candidatos
@@ -113,7 +115,7 @@
                         <div th:if="${assignmentRequest.status == 'in progress'}">
                             <span class="text-muted small"><i class="bi bi-eye"></i> En progreso (Solo lectura)</span>
                         </div>
-                        <div th:if="${assignmentRequest.status == 'accepted'}">
+                        <div th:if="${assignmentRequest.status == 'accepted' or assignmentRequest.status == 'in negotiation'}">
                             <a th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id})}"
                                class="btn btn-sm btn-info px-3 shadow-sm text-dark">
                                 <i class="bi bi-people-fill me-1"></i> Ver Candidatos

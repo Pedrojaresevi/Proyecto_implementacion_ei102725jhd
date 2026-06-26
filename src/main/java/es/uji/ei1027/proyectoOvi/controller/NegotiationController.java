@@ -552,18 +552,7 @@ public class NegotiationController {
             negotiationDao.updateNegotiation(negotiation);
         }
 
-        // 2. Liberamos la solicitud (mantenemos tu lógica para que vuelva a estar 'accepted')
-        ListOfProposedCandidates proposal = listOfProposedCandidatesDao.getListOfProposedCandidates(listId);
-        if (proposal != null) {
-            String requestId = proposal.getRequest_id();
-            AssignmentRequest req = assignmentRequestDao.getAssignmentRequest(requestId);
-            if (req != null) {
-                req.setStatus("accepted");
-                assignmentRequestDao.updateAssignmentRequest(req);
-            }
-        }
-
-        // 3. ¡REDIRECCIÓN DINÁMICA A LA LISTA DE CHATS!
+        // 2. ¡REDIRECCIÓN DINÁMICA A LA LISTA DE CHATS!
         // Determinamos el rolePath basándonos en el tipo de usuario en sesión
         String rolePath = user.getRole().toLowerCase();
         if ("pappati".equals(rolePath)) {

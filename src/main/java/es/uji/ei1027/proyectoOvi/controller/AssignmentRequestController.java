@@ -17,7 +17,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/assignmentRequest")
@@ -707,6 +709,8 @@ public class AssignmentRequestController {
             assignmentRequest.setStatus("accepted");
             assignmentRequestDao.updateAssignmentRequest(assignmentRequest);
 
+            generateAndSaveCandidates(assignmentRequest);
+
             // 2. Buscamos el nombre del OviUser para que el email quede más realista
             if (assignmentRequest.getOviuser_id() != null) {
                 OviUser oviUser = oviUserDao.getOviUser(assignmentRequest.getOviuser_id());
@@ -828,12 +832,22 @@ public class AssignmentRequestController {
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
         if (totalPages == 0) totalPages = 1;
 
+        // Determinar qué propuestas ya tienen una negociación iniciada
+        Set<String> listIdsWithNegotiation = new HashSet<>();
+        for (ListOfProposedCandidates proposal : proposals) {
+            Negotiation negotiation = negotiationDao.getNegotiationByListId(proposal.getList_id());
+            if (negotiation != null && "in progress".equals(negotiation.getStatus())) {
+                listIdsWithNegotiation.add(proposal.getList_id());
+            }
+        }
+
         // Enviamos todos los datos requeridos por proposals.html
         model.addAttribute("assignmentRequest", assignmentRequest);
         model.addAttribute("proposals", proposals);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("isMinor", isMinor); // <-- Pasamos la bandera a proposals.html
+        model.addAttribute("listIdsWithNegotiation", listIdsWithNegotiation);
 
         return "assignmentRequest/proposals";
     }
@@ -937,17 +951,17 @@ public class AssignmentRequestController {
         String negotiationId = "NEG-" + listId;
         negotiation.setNegotiation_Id(negotiationId);
         negotiation.setListId(listId);
-        negotiation.setStatus("In progress");
+        negotiation.setStatus("in progress");
         negotiation.setStartDate(new java.util.Date());
         negotiation.setHora(java.time.LocalTime.now());
         negotiation.setRecordOfComunications("Inicio de negociaciones con el candidato " + candidateId);
 
         negotiationDao.addNegotiation(negotiation);
 
-        // 2. Pasar la solicitud a estado 'completed'
+        // 2. Pasar la solicitud a estado 'in negotiation'
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(requestId);
         if (request != null) {
-            request.setStatus("completed");
+            request.setStatus("in negotiation");
             assignmentRequestDao.updateAssignmentRequest(request);
         }
 

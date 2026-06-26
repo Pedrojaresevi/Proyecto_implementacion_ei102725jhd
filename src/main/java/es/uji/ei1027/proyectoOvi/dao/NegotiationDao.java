@@ -517,4 +517,20 @@ public class NegotiationDao {
         jdbcTemplate.update(sql, endDate, negotiationId);
     }
 
+    public void updateNegotiationStatus(String negotiationId, String status) {
+        String sql = "UPDATE Negotiation SET status = ? WHERE negotiation_id = ?";
+        jdbcTemplate.update(sql, status, negotiationId);
+    }
+
+    public List<String> getNegotiationIdsByRequestId(String requestId) {
+        try {
+            String sql = "SELECT DISTINCT n.negotiation_Id FROM Negotiation n " +
+                    "JOIN ListOfProposedCandidates l ON n.list_id = l.list_id " +
+                    "WHERE l.request_id = ?";
+            return jdbcTemplate.queryForList(sql, String.class, requestId);
+        } catch (EmptyResultDataAccessException e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
 }

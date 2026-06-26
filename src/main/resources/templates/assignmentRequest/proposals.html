@@ -65,7 +65,7 @@
           </td>
 
           <td class="text-center">
-            <form th:if="${!isMinor}" th:action="@{/assignmentRequest/confirmCandidate}" method="post" class="m-0 d-flex justify-content-center">
+            <form th:if="${!isMinor and !listIdsWithNegotiation.contains(proposal.list_id)}" th:action="@{/assignmentRequest/confirmCandidate}" method="post" class="m-0 d-flex justify-content-center">
               <input type="hidden" name="requestId" th:value="${assignmentRequest.request_Id}" />
               <input type="hidden" name="candidateId" th:value="${proposal.pappati_id}" />
               <input type="hidden" name="list_id" th:value="${proposal.list_id}" />
@@ -74,6 +74,10 @@
                 <i class="bi bi-chat-dots me-1"></i> Iniciar Negociación
               </button>
             </form>
+
+            <span th:if="${!isMinor and listIdsWithNegotiation.contains(proposal.list_id)}" class="text-muted fw-semibold small">
+              <i class="bi bi-check-circle-fill me-1 text-success"></i> Ya estás en una negociación con este candidato
+            </span>
 
             <button th:if="${isMinor}" class="btn btn-secondary btn-sm px-4 py-2 shadow-sm fw-semibold text-white" disabled>
               <i class="bi bi-lock-fill me-1"></i> Operación no permitida

@@ -108,16 +108,19 @@ public class PapPatiDao {
     public List<Pap_Pati> getProposalsForRequest(String requestId) {
         try {
             String sql = "SELECT p.* " +
-                    "FROM PapPati p, AssignmentRequest r " +
-                    "WHERE r.request_Id = ? " +
-                    "AND p.status = 'accepted' " +
+                    "FROM PapPati p " +
+                    "JOIN AssignmentRequest r ON r.request_Id = ? " +
+                    "WHERE p.status = 'accepted' " +
+                    "AND p.assistant_type = r.typeOfService " +
+                    // 1. CONDICIÓN OBLIGATORIA: Que las fechas se solapen (no hace falta que cubra todo)
+                    "AND p.startDate <= r.requiredEndAvailability " +
+                    "AND p.endDate >= r.requiredStartAvailability " +
                     "AND (" +
-                    "  (p.startDate <= r.requiredStartAvailability AND p.endDate >= r.requiredEndAvailability) " +
-                    "  OR (p.address ILIKE '%' || r.serviceLocation || '%' " +
+                    "  (p.address ILIKE '%' || r.serviceLocation || '%' " +
                     "      OR p.geographicMobility ILIKE '%' || r.serviceLocation || '%') " +
                     "  OR p.specificTraining ILIKE '%' || r.requiredTraining || '%' " +
                     "  OR p.typeOfExperience = r.requiredExperience " +
-                    "  OR p.skills ILIKE '%' || r.requiredSkills || '%' " +
+                    "  OR string_to_array(replace(p.skills, ', ', ','), ',') && string_to_array(replace(r.requiredSkills, ', ', ','), ',')" +
                     ")";
 
             return jdbcTemplate.query(sql, new Pap_PatiRowMapper(), requestId);

@@ -20,6 +20,7 @@ public class ContractController {
     private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
     private PapPatiDao papPatiDao;
     private OviUserDao oviUserDao;
+    private AssignmentRequestDao assignmentRequestDao;
 
     @Autowired
     public void setContractDao(ContractDao contractDao) {
@@ -43,6 +44,11 @@ public class ContractController {
 
     @Autowired
     public void setOviUserDao(OviUserDao oviUserDao) { this.oviUserDao = oviUserDao;}
+
+    @Autowired
+    public void setAssignmentRequestDao(AssignmentRequestDao assignmentRequestDao) {
+        this.assignmentRequestDao = assignmentRequestDao;
+    }
 
     // =========================================================================
     // 1. GET: Preparar el formulario de creación de contrato (Desde Negociación)
@@ -114,6 +120,21 @@ public class ContractController {
 
         // Cerrar la negociación pasando el estado a 'accepted' y fijando el enddate
         negotiationDao.closeNegotiation(negotiationId, new java.util.Date());
+
+        // Rechazar el resto de negociaciones activas de esta misma solicitud
+        List<String> negotiationIds = negotiationDao.getNegotiationIdsByRequestId(contract.getRequest_Id());
+        for (String negId : negotiationIds) {
+            if (!negId.equals(negotiationId)) {
+                negotiationDao.updateNegotiationStatus(negId, "refused");
+            }
+        }
+
+        // Actualizar la solicitud a estado 'completed'
+        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(contract.getRequest_Id());
+        if (request != null) {
+            request.setStatus("completed");
+            assignmentRequestDao.updateAssignmentRequest(request);
+        }
 
         // -------------------------------------------------------------
         // REDIRECCIÓN DINÁMICA SEGÚN EL ROL

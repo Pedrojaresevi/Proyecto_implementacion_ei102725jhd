@@ -144,4 +144,8 @@ public class ContractDao {
             return 0;
         }
     }
+    public int finalizeExpiredContracts() {
+        String sql = "UPDATE Contract SET status = 'finalized' WHERE status != 'finalized' AND enddate < CURRENT_DATE";
+        return jdbcTemplate.update(sql);
+    }
 }

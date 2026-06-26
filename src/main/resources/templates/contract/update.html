@@ -20,8 +20,7 @@
 
     <hr class="mb-4 text-muted">
 
-    <form class="form-horizontal" th:action="@{/contract/update}" th:object="${contract}" method="post">
-
+    <form th:action="@{/contract/update/{id}(id=${contract.contract_Id})}" th:object="${contract}" method="post" class="form-horizontal">
         <h5 class="text-primary text-opacity-75 mb-3 fw-bold">1. Fechas del Contrato</h5>
 
         <div class="form-group row mb-3">
@@ -84,9 +83,10 @@
             </div>
         </div>
 
-        <a th:href="@{/contract/list}" class="btn btn-secondary">
-            Volver
-        </a>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Actualizar Contrato</button>
+            <a th:href="@{/contract/list}" class="btn btn-secondary">Volver</a>
+        </div>
     </form>
 </main>
 </body>

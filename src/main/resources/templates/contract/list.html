@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <title>Gestionar Contratos</title>
     <meta charset="UTF-8" />
@@ -26,13 +26,13 @@
         <table class="table table-striped table-hover align-middle text-center">
             <thead class="table-dark">
             <tr>
-                <th>Contract Id</th>
-                <th>Request Id</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
+                <th>ID contrato</th>
+                <th>ID Solicitud</th>
+                <th>Fecha Inicio</th>
+                <th>Fecha Fin</th>
+                <th>Estado</th>
                 <th>Lugar PDF</th>
-                <th>PAP/PATI Id</th>
+                <th>ID PAP/PATI</th>
                 <th th:if="${session.user.role == 'oviuser' or session.user.role == 'tutor'}">Acciones</th>
             </tr>
             </thead>

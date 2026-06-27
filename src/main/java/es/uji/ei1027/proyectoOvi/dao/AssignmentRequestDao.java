@@ -20,11 +20,11 @@ public class AssignmentRequestDao  {
     }
 
     public void addAssignmentRequest(AssignmentRequest assignmentRequest) {
-        jdbcTemplate.update("INSERT INTO AssignmentRequest VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+        jdbcTemplate.update("INSERT INTO AssignmentRequest VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 assignmentRequest.getRequest_Id(), assignmentRequest.getRequestDate(), assignmentRequest.getTypeOfService(),
                 assignmentRequest.getRequiredStartAvailability(), assignmentRequest.getRequiredEndAvailability(), assignmentRequest.getServiceLocation(),
                 assignmentRequest.getRequiredTraining(), assignmentRequest.getRequiredExperience(), assignmentRequest.getRequiredSkills(),
-                assignmentRequest.getOviuser_id(),assignmentRequest.getStatus(), assignmentRequest.getTutor_id());
+                assignmentRequest.getOviuser_id(),assignmentRequest.getStatus(), assignmentRequest.getTutor_id(), null);
     }
 
     public void deleteAssignmentRequest(AssignmentRequest assignmentRequest) {
@@ -66,7 +66,7 @@ public class AssignmentRequestDao  {
     public List<AssignmentRequest> getRequestsByOviUser(String oviuserId) {
         try {
             return jdbcTemplate.query(
-                    "SELECT * FROM AssignmentRequest WHERE oviuser_id=? ORDER BY request_id",
+                    "SELECT * FROM AssignmentRequest WHERE oviuser_id=? ORDER BY SUBSTRING(request_id FROM 4)::INTEGER DESC",
                     new AssignmentRequestRowMapper(),
                     oviuserId
             );
@@ -78,7 +78,7 @@ public class AssignmentRequestDao  {
     public List<AssignmentRequest> getRequestsByTutor(String tutorId) {
         try {
             return jdbcTemplate.query(
-                    "SELECT * FROM AssignmentRequest WHERE tutor_id=?",
+                    "SELECT * FROM AssignmentRequest WHERE tutor_id=? ORDER BY SUBSTRING(request_id FROM 4)::INTEGER DESC",
                     new AssignmentRequestRowMapper(),
                     tutorId
             );
@@ -91,7 +91,8 @@ public class AssignmentRequestDao  {
         try {
             String sql = "SELECT ar.* FROM assignmentrequest ar " +
                     "JOIN listofproposedcandidates lp ON ar.request_id = lp.request_id " +
-                    "WHERE lp.pappati_id = ?";
+                    "WHERE lp.pappati_id = ? " +
+                    "ORDER BY SUBSTRING(ar.request_id FROM 4)::INTEGER DESC";
 
             return jdbcTemplate.query(sql, new AssignmentRequestRowMapper(), pappatiId);
         } catch (EmptyResultDataAccessException e) {
@@ -132,7 +133,7 @@ public class AssignmentRequestDao  {
     }
 
     public List<AssignmentRequest> getAssignmentRequestsByStatusPaginated(String status, int limit, int offset) {
-        String sql = "SELECT * FROM AssignmentRequest WHERE status=? LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM AssignmentRequest WHERE status=? ORDER BY SUBSTRING(request_id FROM 4)::INTEGER DESC LIMIT ? OFFSET ?";
         try {
             return jdbcTemplate.query(sql, new AssignmentRequestRowMapper(), status, limit, offset);
         } catch (EmptyResultDataAccessException e) {
@@ -151,7 +152,7 @@ public class AssignmentRequestDao  {
     // --- NUEVOS MÉTODOS PARA LA PAGINACIÓN Y FILTRADO POR USUARIO/TUTOR ---
 
     public List<AssignmentRequest> getAssignmentRequestsByUserPaginated(String dni, int limit, int offset) {
-        String sql = "SELECT * FROM AssignmentRequest WHERE oviuser_id=? OR tutor_id=? LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM AssignmentRequest WHERE oviuser_id=? OR tutor_id=? ORDER BY SUBSTRING(request_id FROM 4)::INTEGER DESC LIMIT ? OFFSET ?";
         try {
             return jdbcTemplate.query(sql, new AssignmentRequestRowMapper(), dni, dni, limit, offset);
         } catch (EmptyResultDataAccessException e) {
@@ -168,7 +169,7 @@ public class AssignmentRequestDao  {
     }
 
     public List<AssignmentRequest> getAssignmentRequestsByUserAndStatusPaginated(String dni, String status, int limit, int offset) {
-        String sql = "SELECT * FROM AssignmentRequest WHERE (oviuser_id=? OR tutor_id=?) AND status=? LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM AssignmentRequest WHERE (oviuser_id=? OR tutor_id=?) AND status=? ORDER BY SUBSTRING(request_id FROM 4)::INTEGER DESC LIMIT ? OFFSET ?";
         try {
             return jdbcTemplate.query(sql, new AssignmentRequestRowMapper(), dni, dni, status, limit, offset);
         } catch (EmptyResultDataAccessException e) {

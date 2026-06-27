@@ -330,7 +330,11 @@ public class ContractController {
             return "redirect:/login";
         }
 
-        // 2. Si el formulario contiene campos incorrectos o fechas inválidas, recargamos la vista
+        // 2. Validar campos antes de actualizar
+        ContractValidator contractValidator = new ContractValidator();
+        contractValidator.validate(contract, bindingResult);
+
+        // 3. Si el formulario contiene campos incorrectos o fechas inválidas, recargamos la vista
         if (bindingResult.hasErrors()) {
             String rolePath = "user";
             if ("tutor".equals(user.getRole())) {
@@ -351,6 +355,16 @@ public class ContractController {
 
         // Forzamos que el ID del objeto coincida fielmente con el parámetro de la URL
         contract.setContract_Id(contractId);
+
+        // Recalcular estado según la fecha de fin
+        Contract original = contractDao.getContract(contractId);
+        if (contract.getEndDate() != null) {
+            if (contract.getEndDate().before(new java.util.Date())) {
+                contract.setStatus("finalized");
+            } else if ("finalized".equals(contract.getStatus()) || "finalized".equals(original.getStatus())) {
+                contract.setStatus("in progress");
+            }
+        }
 
         // Mandamos la orden UPDATE a tu base de datos
         contractDao.updateContract(contract);

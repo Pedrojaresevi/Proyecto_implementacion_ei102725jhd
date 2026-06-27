@@ -279,6 +279,8 @@ public class AssignmentRequestController {
         // Le pasamos el usuario a la vista
         model.addAttribute("user", user);
         model.addAttribute("assignmentRequest", new AssignmentRequest());
+        model.addAttribute("todayMin", LocalDate.now());
+        model.addAttribute("tomorrowMin", LocalDate.now().plusDays(1));
 
         // Si es tutor, cargar sus usuarios OVI asignados para el desplegable
         if ("tutor".equals(user.getRole())) {
@@ -355,7 +357,8 @@ public class AssignmentRequestController {
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
                                    BindingResult bindingResult, HttpSession session, Model model,
-                                   RedirectAttributes redirectAttributes) {
+                                   RedirectAttributes redirectAttributes,
+                                   @RequestParam(value = "requiredSkills", required = false) String[] requiredSkillsValues) {
 
         UserDetails user = (UserDetails) session.getAttribute("user");
 
@@ -392,12 +395,21 @@ public class AssignmentRequestController {
         assignmentRequest.setStatus("in progress");
         assignmentRequest.setRequestDate(LocalDate.now());
 
-        // 4. VALIDAR Y GUARDAR
+        // 4. CONCATENAR SKILLS SELECCIONADAS
+        if (requiredSkillsValues != null && requiredSkillsValues.length > 0) {
+            assignmentRequest.setRequiredSkills(String.join(", ", requiredSkillsValues));
+        } else {
+            assignmentRequest.setRequiredSkills(null);
+        }
+
+        // 5. VALIDAR Y GUARDAR
         AssignmentRequestValidator assignmentRequestValidator = new AssignmentRequestValidator();
         assignmentRequestValidator.validate(assignmentRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", user);
+            model.addAttribute("todayMin", LocalDate.now());
+            model.addAttribute("tomorrowMin", LocalDate.now().plusDays(1));
             if ("tutor".equals(user.getRole())) {
                 model.addAttribute("oviUsers", oviUserDao.getOviUsersByTutor(user.getDni()));
             }
@@ -409,10 +421,14 @@ public class AssignmentRequestController {
             redirectAttributes.addFlashAttribute("registeredRequest", assignmentRequest);
         } catch (DuplicateKeyException e) {
             model.addAttribute("user", user);
+            model.addAttribute("todayMin", LocalDate.now());
+            model.addAttribute("tomorrowMin", LocalDate.now().plusDays(1));
             bindingResult.rejectValue("request_Id", "duplicat", "Ya existe una solicitud con este ID");
             return "assignmentRequest/add";
         } catch (DataIntegrityViolationException e) {
             model.addAttribute("user", user);
+            model.addAttribute("todayMin", LocalDate.now());
+            model.addAttribute("tomorrowMin", LocalDate.now().plusDays(1));
             bindingResult.rejectValue("oviuser_id", "no_existe", "El usuario especificado no es válido");
             return "assignmentRequest/add";
         }
@@ -439,6 +455,8 @@ public class AssignmentRequestController {
                     .collect(java.util.stream.Collectors.toList());
         }
         model.addAttribute("habilidadesSeleccionadas", habilidadesSeleccionadas);
+        model.addAttribute("todayMin", LocalDate.now());
+        model.addAttribute("tomorrowMin", LocalDate.now().plusDays(1));
 
         return "assignmentRequest/update";
     }
@@ -464,9 +482,17 @@ public class AssignmentRequestController {
 
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String processUpdateSubmit(@ModelAttribute("assignmentRequest") AssignmentRequest assignmentRequest,
-                                      BindingResult bindingResult, Model model) {
+                                      BindingResult bindingResult, Model model,
+                                      @RequestParam(value = "requiredSkills", required = false) String[] requiredSkillsValues) {
 
-        // 1. CORRECCIÓN: Convertir cadenas vacías en null para la Base de Datos
+        // 1. CONCATENAR SKILLS SELECCIONADAS
+        if (requiredSkillsValues != null && requiredSkillsValues.length > 0) {
+            assignmentRequest.setRequiredSkills(String.join(", ", requiredSkillsValues));
+        } else {
+            assignmentRequest.setRequiredSkills(null);
+        }
+
+        // 2. CORRECCIÓN: Convertir cadenas vacías en null para la Base de Datos
         if (assignmentRequest.getOviuser_id() != null && assignmentRequest.getOviuser_id().trim().isEmpty()) {
             assignmentRequest.setOviuser_id(null);
         }
@@ -483,6 +509,8 @@ public class AssignmentRequestController {
         assignmentRequestValidator.validate(assignmentRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("todayMin", LocalDate.now());
+            model.addAttribute("tomorrowMin", LocalDate.now().plusDays(1));
             return "assignmentRequest/update";
         }
 

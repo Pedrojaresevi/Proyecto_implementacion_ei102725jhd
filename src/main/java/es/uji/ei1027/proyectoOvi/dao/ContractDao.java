@@ -80,7 +80,8 @@ public class ContractDao {
         String sql = "SELECT c.* " +
                 "FROM Contract c " +
                 "JOIN AssignmentRequest ar ON c.request_id = ar.request_id " +
-                "WHERE c.pappati_id = ? OR ar.oviuser_id = ? OR ar.tutor_id = ?";
+                "WHERE c.pappati_id = ? OR ar.oviuser_id = ? OR ar.tutor_id = ? " +
+                "ORDER BY SUBSTRING(c.contract_id FROM 4)::INTEGER DESC";
         try {
             return jdbcTemplate.query(sql, new ContractRowMapper(), dni, dni, dni); // Usa tu archivo externo
         } catch (EmptyResultDataAccessException e) {
@@ -124,6 +125,7 @@ public class ContractDao {
                 "FROM Contract c " +
                 "JOIN AssignmentRequest ar ON c.request_id = ar.request_id " +
                 "WHERE c.pappati_id = ? OR ar.oviuser_id = ? OR ar.tutor_id = ? " +
+                "ORDER BY SUBSTRING(c.contract_id FROM 4)::INTEGER DESC " +
                 "LIMIT ? OFFSET ?";
         try {
             return jdbcTemplate.query(sql, new ContractRowMapper(), dni, dni, dni, limit, offset);
@@ -146,7 +148,7 @@ public class ContractDao {
     }
     // 10. OBTENER CONTRATOS POR REQUEST_ID
     public List<Contract> getContractsByRequestId(String requestId) {
-        String sql = "SELECT * FROM Contract WHERE request_id = ?";
+        String sql = "SELECT * FROM Contract WHERE request_id = ? ORDER BY SUBSTRING(contract_id FROM 4)::INTEGER DESC";
         try {
             return jdbcTemplate.query(sql, new ContractRowMapper(), requestId);
         } catch (EmptyResultDataAccessException e) {
@@ -156,7 +158,7 @@ public class ContractDao {
 
     // 11. OBTENER CONTRATOS POR REQUEST_ID PAGINADOS
     public List<Contract> getContractsByRequestIdPaginated(String requestId, int limit, int offset) {
-        String sql = "SELECT * FROM Contract WHERE request_id = ? LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM Contract WHERE request_id = ? ORDER BY SUBSTRING(contract_id FROM 4)::INTEGER DESC LIMIT ? OFFSET ?";
         try {
             return jdbcTemplate.query(sql, new ContractRowMapper(), requestId, limit, offset);
         } catch (EmptyResultDataAccessException e) {

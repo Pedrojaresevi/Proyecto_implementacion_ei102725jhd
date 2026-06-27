@@ -108,7 +108,7 @@
 
             <div th:unless="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' or #strings.toLowerCase(#strings.trim(negotiationStatus)) == 'refused' or (readOnly != null and readOnly)}">
 
-                <div class="d-flex justify-content-end gap-2 mb-3">
+                <div th:if="${session.user.role == 'oviuser' or session.user.role == 'tutor'}" class="d-flex justify-content-end gap-2 mb-3">
                     <form th:action="@{/negotiation/cancel/execute/{id}(id=${negotiationId})}" method="post" class="m-0">
                         <input type="hidden" name="listId" th:value="${listId}">
                         <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill fw-bold shadow-sm">

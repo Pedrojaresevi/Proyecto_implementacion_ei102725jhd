@@ -53,13 +53,13 @@
 
                             <!-- Mensaje si es ACEPTADO -->
                             <div th:if="${actionType == 'accepted'}">
-                                <p>Nos complace informarte que tu registro como OVI User ha sido <strong>revisado y aprobado</strong> satisfactoriamente por nuestro equipo técnico.</p>
+                                <p>Nos complace informarte que tu registro como Usuario OVI ha sido <strong>revisado y aprobado</strong> satisfactoriamente por nuestro equipo técnico.</p>
                                 <p>A partir de este momento, ya tienes habilitadas todas las funciones para entrar a la plataforma y gestionar tus solicitudes de asignación de asistentes.</p>
                             </div>
 
                             <!-- Mensaje si es RECHAZADO -->
                             <div th:if="${actionType == 'refused'}">
-                                <p>Lamentamos informarte que tu registro como OVI User ha sido <strong>rechazado</strong> tras la revisión técnica.</p>
+                                <p>Lamentamos informarte que tu registro como Usuario OVI ha sido <strong>rechazado</strong> tras la revisión técnica.</p>
                                 <p>El equipo ha indicado el siguiente motivo en la resolución:</p>
                                 <blockquote class="blockquote fs-6 border-start border-danger border-4 ps-3 py-2 bg-light">
                                     <em th:text="${rejectReason}">Motivo del rechazo escrito por el técnico...</em>

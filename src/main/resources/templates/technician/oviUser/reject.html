@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <title>Confirmar Rechazo de OVI User</title>
+    <title>CConfirmar Rechazo de Usuario OVI</title>
     <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -14,10 +14,10 @@
 <div class="container mt-5">
     <div class="card shadow-sm border-0">
         <div class="card-header bg-danger text-white">
-            <h4 class="mb-0">Confirmar Rechazo de OVI User</h4>
+            <h4 class="mb-0">Confirmar Rechazo de Usuario OVI</h4>
         </div>
         <div class="card-body">
-            <p>Estás a punto de <strong>rechazar</strong> al OVI user <strong th:text="${oviUser.name}"></strong> con DNI <strong th:text="${oviUser.dni}"></strong>.</p>
+            <p>Estás a punto de <strong>rechazar</strong> al usuario OVI <strong th:text="${oviUser.name}"></strong> con DNI <strong th:text="${oviUser.dni}"></strong>.</p>
 
             <form th:action="@{/oviUser/reject/execute/{dni}(dni=${oviUser.dni})}" method="post">
 

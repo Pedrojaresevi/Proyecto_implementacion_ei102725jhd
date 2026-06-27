@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Detalle de Solicitud</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="https://ovicastello.org/wp-content/uploads/2020/08/cropped-LOGO_Mesa-de-trabajo-1.png" type="image/png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/proyecte.css}"/>
+
+    <style>
+        body { background-color: #f8f9fa; }
+        .card-custom {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+        .card-custom:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08);
+        }
+        .icon-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-size: 1.25rem;
+        }
+        .bg-primary-subtle { background-color: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+        .label-text {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .data-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #212529;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/base :: navbar}"></div>
+
+<main class="container py-5">
+
+    <div class="card card-custom mb-4 overflow-hidden">
+        <div class="card-body p-4 p-md-5 d-flex flex-column flex-md-row align-items-center">
+            <i class="bi bi-file-earmark-text text-secondary me-md-4 mb-3 mb-md-0" style="font-size: 5rem; line-height: 1;"></i>
+            <div class="text-center text-md-start">
+                <h1 class="fw-bold mb-1 text-dark">Solicitud <span th:text="${request.request_Id}"></span></h1>
+                <p class="text-muted fs-5 mb-2">
+                    <i class="bi bi-calendar3 me-2"></i><span th:text="${request.requestDate}"></span>
+                </p>
+                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle px-3 py-2 rounded-pill fs-6 fw-normal me-2">
+                    <i class="bi bi-person-badge me-1"></i> <span th:text="${request.typeOfService}"></span>
+                </span>
+                <span th:text="${request.status}"
+                      th:class="${request.status == 'in progress' ? 'badge rounded-pill bg-warning text-dark px-3 py-2' :
+                                 (request.status == 'in negotiation' ? 'badge rounded-pill bg-primary px-3 py-2' :
+                                 (request.status == 'accepted' ? 'badge rounded-pill bg-success px-3 py-2' :
+                                 (request.status == 'completed' ? 'badge rounded-pill bg-info text-dark px-3 py-2' : 'badge rounded-pill bg-danger px-3 py-2')))}">
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card card-custom h-100">
+                <div class="card-body p-4 p-md-5">
+                    <h4 class="fw-bold mb-4 d-flex align-items-center">
+                        <div class="icon-circle bg-primary-subtle">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        Usuarios Vinculados
+                    </h4>
+
+                    <div class="d-flex flex-column gap-4">
+                        <div>
+                            <div class="label-text text-muted">Usuario OVI</div>
+                            <div class="data-text">
+                                <i class="bi bi-person-circle me-2 text-muted"></i>
+                                <span th:text="${request.oviuser_id}"></span>
+                                <span th:if="${oviUserName != null}" class="text-muted fw-normal"> — <span th:text="${oviUserName}"></span></span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="label-text text-muted">Tutor</div>
+                            <div class="data-text">
+                                <i class="bi bi-shield me-2 text-muted"></i>
+                                <span th:if="${request.tutor_id != null}" th:text="${request.tutor_id}"></span>
+                                <span th:if="${request.tutor_id == null}" class="text-muted fw-normal">No tiene tutor asignado</span>
+                                <span th:if="${tutorName != null}" class="text-muted fw-normal"> — <span th:text="${tutorName}"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card card-custom h-100">
+                <div class="card-body p-4 p-md-5">
+                    <h4 class="fw-bold mb-4 d-flex align-items-center">
+                        <div class="icon-circle bg-primary-subtle">
+                            <i class="bi bi-card-checklist"></i>
+                        </div>
+                        Detalles del Servicio
+                    </h4>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="label-text text-muted">Localización</div>
+                            <div class="data-text">
+                                <i class="bi bi-geo-alt me-2 text-muted"></i>
+                                <span th:text="${request.serviceLocation}"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="label-text text-muted">Tipo de Servicio</div>
+                            <div class="data-text">
+                                <i class="bi bi-person-badge me-2 text-muted"></i>
+                                <span th:text="${request.typeOfService}"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="label-text text-muted">Fecha Inicio Disponibilidad</div>
+                            <div class="data-text">
+                                <i class="bi bi-calendar-plus me-2 text-muted"></i>
+                                <span th:text="${request.requiredStartAvailability}"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="label-text text-muted">Fecha Fin Disponibilidad</div>
+                            <div class="data-text">
+                                <i class="bi bi-calendar-minus me-2 text-muted"></i>
+                                <span th:text="${request.requiredEndAvailability}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card card-custom">
+                <div class="card-body p-4 p-md-5">
+                    <h4 class="fw-bold mb-4 d-flex align-items-center">
+                        <div class="icon-circle bg-primary-subtle">
+                            <i class="bi bi-briefcase-fill"></i>
+                        </div>
+                        Requisitos Profesionales
+                    </h4>
+
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="label-text text-muted">Formación Requerida</div>
+                            <div class="data-text" th:text="${request.requiredTraining}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="label-text text-muted">Experiencia Requerida</div>
+                            <div class="data-text" th:text="${request.requiredExperience}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="label-text text-muted">Habilidades Requeridas</div>
+                            <div class="data-text" th:text="${request.requiredSkills}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="/assignmentRequest/adminNegotiations" class="btn btn-secondary mt-3">Volver</a>
+    </div>
+
+</main>
+</body>
+</html>

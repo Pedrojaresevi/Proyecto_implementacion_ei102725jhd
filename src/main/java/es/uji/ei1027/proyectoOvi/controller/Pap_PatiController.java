@@ -410,8 +410,8 @@ public class Pap_PatiController {
             model.addAttribute("tipoSolicitante", "tutor");
         }
 
-        // Lógica para cargar el chat si está completada
-        if ("completed".equals(request.getStatus()) && "pap_pati".equals(user.getRole())) {
+        // Lógica para cargar el chat si está completada o en negociación
+        if (("completed".equals(request.getStatus()) || "in negotiation".equals(request.getStatus())) && "pap_pati".equals(user.getRole())) {
             listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni())
                     .stream()
                     .filter(p -> p.getRequest_id().equals(id))

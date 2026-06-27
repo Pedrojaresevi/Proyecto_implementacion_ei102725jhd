@@ -33,7 +33,7 @@
                 <th>Status</th>
                 <th>Lugar PDF</th>
                 <th>PAP/PATI Id</th>
-                <th>Acciones</th>
+                <th th:if="${session.user.role == 'oviuser' or session.user.role == 'tutor'}">Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -51,12 +51,12 @@
                 <td th:text="${contract.placeWhereThePDFIsGonnaBeSaved}"></td>
                 <td th:text="${contract.pappati_id}"></td>
 
-                <td class="text-center">
+                <td th:if="${session.user.role == 'oviuser' or session.user.role == 'tutor'}" class="text-center">
                     <div class="d-flex justify-content-center gap-2">
-                        <a th:if="${!isMinor}" th:href="@{/contract/update/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-warning btn-sm">Editar</a>
-                        <a th:if="${!isMinor}" th:href="@{/contract/delete/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-danger btn-sm">Eliminar</a>
+                        <a th:if="${isMinor != null and !isMinor}" th:href="@{/contract/update/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-warning btn-sm">Editar</a>
+                        <a th:if="${isMinor != null and !isMinor}" th:href="@{/contract/delete/{contract_Id}(contract_Id=${contract.contract_Id})}" class="btn btn-danger btn-sm">Eliminar</a>
 
-                        <span th:if="${isMinor}" class="text-muted small">
+                        <span th:if="${isMinor == true}" class="text-muted small">
                             <i class="bi bi-lock-fill"></i> Solo lectura
                         </span>
                     </div>
@@ -64,7 +64,7 @@
             </tr>
 
             <tr th:if="${#lists.isEmpty(contracts)}">
-                <td colspan="8" class="text-center text-muted p-4">No hay contratos registrados.</td>
+                <td th:attr="colspan=${session.user.role == 'oviuser' or session.user.role == 'tutor' ? 8 : 7}" class="text-center text-muted p-4">No hay contratos registrados.</td>
             </tr>
             </tbody>
         </table>

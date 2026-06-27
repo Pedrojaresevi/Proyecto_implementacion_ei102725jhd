@@ -66,8 +66,9 @@
                     <strong>Estado de la Solicitud:</strong>
                     <p>
                         <span th:text="${request.status}"
-                              class="badge"
-                              th:classappend="${request.status == 'completed' ? 'bg-success' : 'bg-warning text-dark'}">
+                              th:class="${request.status == 'in progress' ? 'badge rounded-pill bg-warning text-dark px-3 py-2' :
+                                     (request.status == 'in negotiation' ? 'badge rounded-pill bg-primary text-white px-3 py-2' :
+                                     'badge rounded-pill bg-success px-3 py-2')}">
                         </span>
                     </p>
                 </div>
@@ -115,8 +116,8 @@
 
     <div class="d-flex gap-2 mt-4">
         <a th:if="${negotiationId != null}"
-           th:href="@{/negotiation/chat/{negotiationId}(negotiationId=${negotiationId})}"
-           class="btn btn-primary">
+           th:href="@{/negotiation/chat/{negotiationId}(negotiationId=${negotiationId}, requestId=${request.request_Id})}"
+           class="btn btn-primary mt-3">
             <i class="bi bi-chat-dots me-2"></i>Ir a la negociación
         </a>
 

@@ -158,45 +158,6 @@ public class ContractController {
         return "redirect:/dashboard";
     }
 
-    // =========================================================================
-    // 3. GET: Listar los contratos filtrados por la persona logueada (CON PAGINACIÓN)
-    // =========================================================================
-
-//    @RequestMapping("/list")
-//    public String listContracts(Model model, HttpSession session, @RequestParam(defaultValue = "1") int page) {
-//        UserDetails user = (UserDetails) session.getAttribute("user");
-//        if (user == null) {
-//            return "redirect:/login";
-//        }
-//
-//        // >>> NUEVA LÍNEA AÑADIDA: Finaliza automáticamente los contratos vencidos antes de listarlos
-//        contractDao.finalizeExpiredContracts();
-//
-//        String dniToQuery = user.getDni();
-//        boolean isMinor = false;
-//
-//        OviUser oviUser = oviUserDao.getOviUser(user.getDni());
-//        if (oviUser != null && oviUser.getTutor_id() != null && !oviUser.getTutor_id().isEmpty()) {
-//            isMinor = true;
-//            dniToQuery = oviUser.getTutor_id(); // <-- Cambiamos el DNI objetivo por el de su tutor
-//        }
-//
-//        int pageSize = 6;
-//        int offset = (page - 1) * pageSize;
-//
-//        List<Contract> contracts = contractDao.getContractsByUserPaginated(dniToQuery, pageSize, offset);
-//        int totalItems = contractDao.countContractsByUser(dniToQuery);
-//
-//        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-//        if (totalPages == 0) totalPages = 1;
-//
-//        model.addAttribute("contracts", contracts);
-//        model.addAttribute("currentPage", page);
-//        model.addAttribute("totalPages", totalPages);
-//        model.addAttribute("isMinor", isMinor); // <-- Bandera booleana para ocultar los botones en el HTML
-//
-//        return "contract/list";
-//    }
 
     @RequestMapping("/list")
     public String listContracts(Model model, HttpSession session, @RequestParam(defaultValue = "1") int page) {
@@ -353,48 +314,6 @@ public class ContractController {
         return "contract/update";
     }
 
-    // =========================================================================
-    // 8. POST: Recibir las modificaciones y actualizar los datos en BBDD
-    // =========================================================================
-//    @RequestMapping(value = "/update/{contract_Id}", method = RequestMethod.POST)
-//    public String processUpdateSubmit(@PathVariable("contract_Id") String contractId,
-//                                      @ModelAttribute("contract") Contract contract,
-//                                      BindingResult bindingResult,
-//                                      jakarta.servlet.http.HttpSession session,
-//                                      Model model) {
-//
-//        // 1. Validamos sesión
-//        UserDetails user = (UserDetails) session.getAttribute("user");
-//        if (user == null) {
-//            return "redirect:/login";
-//        }
-//
-//        // 2. Si el formulario contiene campos incorrectos, recargamos el modelo y la vista
-//        if (bindingResult.hasErrors()) {
-//            String rolePath = "user";
-//            if ("tutor".equals(user.getRole())) {
-//                rolePath = "tutor";
-//            } else if ("pap_pati".equals(user.getRole())) {
-//                rolePath = "pap_pati";
-//            } else if ("technician".equals(user.getRole())) {
-//                rolePath = "technician";
-//            }
-//
-//            model.addAttribute("user", user);
-//            model.addAttribute("dniOwner", user.getDni());
-//            model.addAttribute("rolePath", rolePath);
-//            return "contract/update";
-//        }
-//
-//        // Forzamos que el ID del objeto coincida fielmente con el parámetro de la URL
-//        contract.setContract_Id(contractId);
-//
-//        // Mandamos la orden UPDATE a tu base de datos
-//        contractDao.updateContract(contract);
-//
-//        // Retornamos de forma fluida a la lista
-//        return "redirect:/contract/list";
-//    }
 // =========================================================================
     // 8. POST: Recibir las modificaciones y actualizar los datos en BBDD
     // =========================================================================

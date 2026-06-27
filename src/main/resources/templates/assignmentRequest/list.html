@@ -117,8 +117,8 @@
                         </div>
                         <div th:if="${assignmentRequest.status == 'accepted' or assignmentRequest.status == 'in negotiation'}">
                             <a th:href="@{/assignmentRequest/proposals/{id}(id=${assignmentRequest.request_Id})}"
-                               class="btn btn-sm btn-info px-3 shadow-sm text-dark">
-                                <i class="bi bi-people-fill me-1"></i> Ver Candidatos
+                               class="btn btn-sm btn-primary px-3 shadow-sm">
+                                <i class="bi bi-people-fill me-1"></i> Candidatos
                             </a>
                         </div>
                         <div th:if="${assignmentRequest.status == 'completed'}">

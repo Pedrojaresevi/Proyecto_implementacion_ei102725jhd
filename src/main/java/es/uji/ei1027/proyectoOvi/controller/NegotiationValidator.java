@@ -23,11 +23,11 @@ public class NegotiationValidator implements Validator {
         List<String> valors = Arrays.asList("accepted", "refused", "in progress");
         if (!valors.contains(negotiation.getStatus()))
             errors.rejectValue("status", "valor incorrecte",
-                    "Deu ser: accepted,refused o in progress");
+                    "Debe ser: accepted, refused o in progress");
         //
         if (negotiation.getListId() == null || negotiation.getListId().trim().equals(""))
             errors.rejectValue("list_id","obligatori",
-                    "Cal introduir un valor");
+                    "Hay que introducir un valor");
 
         if (negotiation.getStartDate() == null)
             errors.rejectValue("startDate", "obligatori", "Hay que introducir una fecha de inicio");

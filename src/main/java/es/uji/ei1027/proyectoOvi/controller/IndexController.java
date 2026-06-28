@@ -19,12 +19,10 @@ public class IndexController {
         
         UserDetails user = (UserDetails) session.getAttribute("user");
 
-        
         if (user == null) {
             return "redirect:/login";
         }
 
-        
         model.addAttribute("user", user);
         return "dashboard";
     }

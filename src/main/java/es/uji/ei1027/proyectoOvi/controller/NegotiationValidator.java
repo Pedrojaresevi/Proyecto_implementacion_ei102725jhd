@@ -17,6 +17,7 @@ public class NegotiationValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         Negotiation negotiation = (Negotiation) obj;
+
         if (negotiation.getNegotiation_Id() == null || negotiation.getNegotiation_Id().trim().equals(""))
             errors.rejectValue("negotiation_Id", "obligatorio", "Cal introduir un valor");
         
@@ -38,7 +39,6 @@ public class NegotiationValidator implements Validator {
         if (negotiation.getRecordOfComunications() == null || negotiation.getRecordOfComunications().trim().equals(""))
             errors.rejectValue("recordOfComunications","obligatorio",
                     "Hay que introducir el registro de comunicaciones");
-
     }
 }
 

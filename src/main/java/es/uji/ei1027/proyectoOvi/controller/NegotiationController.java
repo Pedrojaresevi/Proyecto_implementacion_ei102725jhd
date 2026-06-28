@@ -18,7 +18,7 @@ public class NegotiationController {
     private NegotiationDao negotiationDao;
     private OviUserDao oviUserDao;
     private PapPatiDao papPatiDao;
-    private TutorDao tutorDao; // <-- AÑADIDO: Atributo para el DAO del Tutor
+    private TutorDao tutorDao;
     private AssignmentRequestDao assignmentRequestDao;
     private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
 
@@ -33,7 +33,7 @@ public class NegotiationController {
     }
 
     @Autowired
-    public void setTutorDao(TutorDao tutorDao){ // <-- AÑADIDO: Inyección de TutorDao
+    public void setTutorDao(TutorDao tutorDao){
         this.tutorDao = tutorDao;
     }
 

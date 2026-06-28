@@ -34,22 +34,7 @@ public class TutorController {
         this.oviUserDao = oviUserDao;
     }
 
-    @RequestMapping("/list")
-    public String listTutors(Model model, @RequestParam(defaultValue = "1") int page) {
-        int pageSize = 6;
-        int offset = (page - 1) * pageSize;
-
-        model.addAttribute("tutors", tutorDao.getTutorsPaginated(pageSize, offset));
-
-        int totalItems = tutorDao.countTutors();
-        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
-        if (totalPages == 0) totalPages = 1;
-
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", totalPages);
-        return "tutor/list";
-    }
-    //
+    
     @RequestMapping(value="/add")
     public String addTutor(Model model) {
         model.addAttribute("tutor", new Tutor());
@@ -57,83 +42,15 @@ public class TutorController {
     }
 
 
-//    @PostMapping("/add")
-//    public String addTutor(@ModelAttribute("tutor") Tutor tutor,
-//                           BindingResult bindingResult,
-//                           RedirectAttributes redirectAttributes) {
-//        if (bindingResult.hasErrors()) {
-//            return "tutor/add";
-//        }
-//        tutorDao.addTutor(tutor);
-//
-//        redirectAttributes.addFlashAttribute("tipoPerfil", "Tutor");
-//        redirectAttributes.addFlashAttribute("nombreUsuario", tutor.getName());
-//        redirectAttributes.addFlashAttribute("dniUsuario", tutor.getDni());
-//
-//        return "redirect:/tutor/success";
-//    }
-
     @GetMapping("/success")
     public String registrationSuccess() {
         return "success";
     }
     //
-//    @RequestMapping(value="/add", method= RequestMethod.POST)
-//    public String processAddSubmit(@ModelAttribute("tutor") Tutor tutor,
-//                                   BindingResult bindingResult) {
-//        tutor.setStatus("in progress");
-//        TutorValidator tutorValidator = new TutorValidator();
-//        tutorValidator.validate(tutor, bindingResult);
-//
-//        if (bindingResult.hasErrors()) {
-//            return "tutor/add";
-//        }
-//
-//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
-//        String contrasenaEncriptada = passwordEncryptor.encryptPassword(tutor.getPassword());
-//        tutor.setPassword(contrasenaEncriptada);
-//
-//        try {
-//            tutorDao.addTutor(tutor);
-//        } catch (DuplicateKeyException e) {
-//            bindingResult.rejectValue("dni", "duplicat",
-//                    "Ya existe un tutor con este DNI");
-//            return "tutor/add";
-//        }
-//
-//        return "redirect:/";
-//    }
-//    @RequestMapping(value="/add", method= RequestMethod.POST)
-//    public String processAddSubmit(@ModelAttribute("tutor") Tutor tutor,
-//                                   BindingResult bindingResult) {
-//
-//        tutor.setStatus("in progress");
-//        TutorValidator tutorValidator = new TutorValidator();
-//        tutorValidator.validate(tutor, bindingResult);
-//
-//        if (bindingResult.hasErrors()) {
-//            return "tutor/add";
-//        }
-//
-//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
-//        String contrasenaEncriptada = passwordEncryptor.encryptPassword(tutor.getPassword());
-//        tutor.setPassword(contrasenaEncriptada);
-//
-//        try {
-//            tutorDao.addTutor(tutor);
-//        } catch (DuplicateKeyException e) {
-//            bindingResult.rejectValue("dni", "duplicat",
-//                    "Ya existe un tutor con este DNI");
-//            return "tutor/add";
-//        }
-//
-//        return "redirect:success";
-//    }
-
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("tutor") Tutor tutor,
                                    BindingResult bindingResult,
-                                   RedirectAttributes redirectAttributes) { // <-- 1. AÑADIDO AQUÍ
+                                   RedirectAttributes redirectAttributes) {
 
         tutor.setStatus("in progress");
         TutorValidator tutorValidator = new TutorValidator();
@@ -155,7 +72,6 @@ public class TutorController {
             return "tutor/add";
         }
 
-        // <-- 2. AÑADIDO AQUÍ: Guardamos los datos antes de hacer la redirección
         redirectAttributes.addFlashAttribute("tipoPerfil", "Tutor");
         redirectAttributes.addFlashAttribute("nombreUsuario", tutor.getName());
         redirectAttributes.addFlashAttribute("dniUsuario", tutor.getDni());
@@ -163,17 +79,6 @@ public class TutorController {
         return "redirect:success";
     }
 
-//    @RequestMapping("/success")
-//    public String registrationSuccess() {
-//        return "success";
-//    }
-//    @RequestMapping("/success")
-//    public String registrationSuccess(Model model) {
-//        model.addAttribute("tipoPerfil", "Tutor");
-//        return "success";
-//    }
-
-    //
     @RequestMapping(value="/update/{dni}", method = RequestMethod.GET)
     public String editTutor(Model model, @PathVariable String dni) {
         model.addAttribute("tutor", tutorDao.getTutor(dni));
@@ -182,20 +87,6 @@ public class TutorController {
         return "tutor/update";
     }
     //
-//    @RequestMapping(value="/update", method=RequestMethod.POST)
-//    public String processUpdateSubmit(@ModelAttribute("tutor") Tutor tutor,
-//                                      BindingResult bindingResult, Model model) {
-//        TutorValidator tutorValidator = new TutorValidator();
-//        tutorValidator.validate(tutor, bindingResult);
-//
-//        if (bindingResult.hasErrors()) {
-//            return "tutor/update";
-//        }
-//        tutorDao.updateTutor(tutor);
-//
-//        return "redirect:/tutor/accepted";
-//    }
-
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String processUpdateSubmit(@ModelAttribute("tutor") Tutor tutor,
                                       BindingResult bindingResult,
@@ -288,7 +179,6 @@ public class TutorController {
         return "technician/add_minor";
     }
 
-    // AÑADE 'Model model' A LOS PARÁMETROS AQUÍ
     @RequestMapping(value="/add-minor", method = RequestMethod.POST)
     public String processAddMinorSubmit(@ModelAttribute("oviUser") OviUser oviUser,
                                         BindingResult bindingResult, Model model) {
@@ -408,15 +298,6 @@ public class TutorController {
         return "technician/tutor/reject";
     }
 
-//    @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.GET)
-//    public String executeRejectTutor(@PathVariable String dni) {
-//        Tutor tutor = tutorDao.getTutor(dni);
-//        if (tutor != null) {
-//            tutor.setStatus("refused");
-//            tutorDao.updateTutor(tutor);
-//        }
-//        return "redirect:/tutor/pending";
-//    }
     @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
     public String executeRejectTutor(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason,Model model) {
         Tutor tutor = tutorDao.getTutor(dni);

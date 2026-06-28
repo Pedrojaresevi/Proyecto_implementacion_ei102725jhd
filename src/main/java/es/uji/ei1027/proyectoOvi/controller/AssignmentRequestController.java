@@ -289,14 +289,6 @@ public class AssignmentRequestController {
         return "redirect:list";
     }
 
-//    @RequestMapping(value="/delete/{id}")
-//    public String processDelete(@PathVariable String id) {
-//        listOfProposedCandidatesDao.deleteCandidatesByRequestId(id);
-//        assignmentRequestDao.deleteAssignmentRequest(id);
-//        return "redirect:../list";
-//    }
-
-
     // 1. PETICIÓN GET: Muestra la pantalla de confirmación compartiendo el ID
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
     public String confirmDelete(@PathVariable String id, Model model, HttpSession session) {
@@ -331,74 +323,6 @@ public class AssignmentRequestController {
             case "5 años o más":    return 5;
             default:                return 0;
         }
-    }
-
-    @RequestMapping(value="/accept/execute/{id}")
-    public String acceptAndMatch(@PathVariable String id) {
-        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-
-        if (request != null && !"accepted".equals(request.getStatus())) {
-            request.setStatus("accepted");
-            assignmentRequestDao.updateAssignmentRequest(request);
-
-            listOfProposedCandidatesDao.deleteCandidatesByRequestId(id);
-
-            List<Pap_Pati> compatibles = papPatiDao.getProposalsForRequest(id);
-            int counter = 1;
-
-            for (Pap_Pati pap : compatibles) {
-                float score = 0f;
-                if (request.getServiceLocation() != null) {
-                    String location = request.getServiceLocation().trim().toLowerCase();
-                    boolean ciudadOk = pap.getAddress() != null &&
-                            pap.getAddress().toLowerCase().contains(location);
-                    boolean movilidadOk = pap.getGeographicMobility() != null &&
-                            pap.getGeographicMobility().toLowerCase().contains(location);
-                    if (ciudadOk || movilidadOk) score += 20f;
-                }
-
-                if (pap.getSkills() != null && request.getRequiredSkills() != null) {
-                    String candSkills = pap.getSkills().toLowerCase();
-                    String[] reqSkills = request.getRequiredSkills().split(",");
-
-                    for (String reqSkill : reqSkills) {
-                        if (candSkills.contains(reqSkill.trim().toLowerCase())) {
-                            score += 20f;
-                            break;
-                        }
-                    }
-                }
-
-                if (pap.getSpecificTraining() != null && request.getRequiredTraining() != null) {
-                    String reqTraining = request.getRequiredTraining().trim().toLowerCase();
-                    if (pap.getSpecificTraining().toLowerCase().contains(reqTraining)) {
-                        score += 20f;
-                    }
-                }
-
-                int expCandidato = experienciaANumero(pap.getTypeOfExperience());
-                int expRequerida = experienciaANumero(request.getRequiredExperience());
-                if (expCandidato >= expRequerida) {
-                    score += 20f;
-                }
-                score += 20f;
-                try {
-                    ListOfProposedCandidates proposal = new ListOfProposedCandidates();
-                    proposal.setList_id("L-" + id + "-" + counter);
-                    proposal.setRequest_id(id);
-                    proposal.setPappati_id(pap.getDni());
-                    proposal.setProposalDate(new java.util.Date());
-                    proposal.setSuitabilityScore(score);
-
-                    listOfProposedCandidatesDao.addListOfProposedCandidates(proposal);
-                    counter++;
-                } catch (DuplicateKeyException e) {
-                    counter++;
-                    continue;
-                }
-            }
-        }
-        return "redirect:/assignmentRequest/list";
     }
 
     @ModelAttribute("provincias")

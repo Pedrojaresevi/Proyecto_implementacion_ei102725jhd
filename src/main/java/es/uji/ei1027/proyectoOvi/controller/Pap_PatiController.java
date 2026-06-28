@@ -72,106 +72,15 @@ public class Pap_PatiController {
         return "pap_pati/add";
     }
 
-//    @PostMapping("/add")
-//    public String addPapPati(@ModelAttribute("pap_pati") Pap_Pati pap_pati,
-//                             BindingResult bindingResult,
-//                             RedirectAttributes redirectAttributes) {
-//        if (bindingResult.hasErrors()) {
-//            return "pap_pati/add";
-//        }
-//        pap_patiDao.addPap_Pati(pap_pati);
-//
-//        redirectAttributes.addFlashAttribute("tipoPerfil", "Asistente " + pap_pati.getAssistant_type());
-//        redirectAttributes.addFlashAttribute("nombreUsuario", pap_pati.getName() + " " + pap_pati.getSurname());
-//        redirectAttributes.addFlashAttribute("dniUsuario", pap_pati.getDni());
-//
-//        return "redirect:/pap_pati/success";
-//    }
-
     @GetMapping("/success")
     public String registrationSuccess() {
         return "success";
     }
 
-//    @RequestMapping(value="/add", method= RequestMethod.POST)
-//    public String processAddSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
-//                                   BindingResult bindingResult) {
-//
-//        papPati.setStatus("in progress");
-//
-//        // 1. Pasa el validador universal (campos nulos, formatos, etc.)
-//        Pap_PatiValidator pap_patiValidator = new Pap_PatiValidator();
-//        pap_patiValidator.validate(papPati, bindingResult);
-//
-//        // 2. Reglas EXCLUSIVAS para nuevos registros: Las fechas no pueden ser pasadas
-//        if (papPati.getStartDate() != null && papPati.getStartDate().isBefore(LocalDate.now())) {
-//            bindingResult.rejectValue("startDate", "fecha_pasada", "La fecha de inicio no puede ser anterior a hoy.");
-//        }
-//
-//        if (papPati.getEndDate() != null && papPati.getEndDate().isBefore(LocalDate.now().plusDays(1))) {
-//            bindingResult.rejectValue("endDate", "fecha_invalida", "La fecha de fin debe ser al menos el día de mañana.");
-//        }
-//
-//        // 3. Comprobar si hay algún error (del validador o de nuestras reglas exclusivas)
-//        if (bindingResult.hasErrors()) {
-//            return "pap_pati/add";
-//        }
-//
-//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
-//        String contrasenaEncriptada = passwordEncryptor.encryptPassword(papPati.getPassword());
-//        papPati.setPassword(contrasenaEncriptada);
-//
-//        try {
-//            pap_patiDao.addPap_Pati(papPati);
-//        } catch (DuplicateKeyException e) {
-//            bindingResult.rejectValue("dni", "duplicat", "Ya existe un Pap/Pati con este DNI");
-//            return "pap_pati/add";
-//        }
-//        return "redirect:/";
-//    }
-
-//    @RequestMapping(value="/add", method= RequestMethod.POST)
-//    public String processAddSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
-//                                   BindingResult bindingResult) {
-//
-//        papPati.setStatus("in progress");
-//
-//        // 1. Pasa el validador universal (campos nulos, formatos, etc.)
-//        Pap_PatiValidator pap_patiValidator = new Pap_PatiValidator();
-//        pap_patiValidator.validate(papPati, bindingResult);
-//
-//        // 2. Reglas EXCLUSIVAS para nuevos registros: Las fechas no pueden ser pasadas
-//        if (papPati.getStartDate() != null && papPati.getStartDate().isBefore(LocalDate.now())) {
-//            bindingResult.rejectValue("startDate", "fecha_pasada", "La fecha de inicio no puede ser anterior a hoy.");
-//        }
-//
-//        if (papPati.getEndDate() != null && papPati.getEndDate().isBefore(LocalDate.now().plusDays(1))) {
-//            bindingResult.rejectValue("endDate", "fecha_invalida", "La fecha de fin debe ser al menos el día de mañana.");
-//        }
-//
-//        // 3. Comprobar si hay algún error (del validador o de nuestras reglas exclusivas)
-//        if (bindingResult.hasErrors()) {
-//            return "pap_pati/add";
-//        }
-//
-//        BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
-//        String contrasenaEncriptada = passwordEncryptor.encryptPassword(papPati.getPassword());
-//        papPati.setPassword(contrasenaEncriptada);
-//
-//        try {
-//            pap_patiDao.addPap_Pati(papPati);
-//        } catch (DuplicateKeyException e) {
-//            bindingResult.rejectValue("dni", "duplicat", "Ya existe un Pap/Pati con este DNI");
-//            return "pap_pati/add";
-//        }
-//
-//        return "redirect:success";
-//    }
-
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
                                    BindingResult bindingResult,
-                                   RedirectAttributes redirectAttributes) { // <-- 1. AÑADIDO AQUÍ
+                                   RedirectAttributes redirectAttributes) {
 
         papPati.setStatus("in progress");
 
@@ -204,24 +113,12 @@ public class Pap_PatiController {
             return "pap_pati/add";
         }
 
-        // <-- 2. AÑADIDO AQUÍ: Guardamos los datos efímeros en el "Flash" antes de redirigir
         redirectAttributes.addFlashAttribute("tipoPerfil", "Asistente " + papPati.getAssistant_type());
         redirectAttributes.addFlashAttribute("nombreUsuario", papPati.getName() + " " + papPati.getSurname());
         redirectAttributes.addFlashAttribute("dniUsuario", papPati.getDni());
 
         return "redirect:success";
     }
-
-//    @RequestMapping("/success")
-//    public String registrationSuccess() {
-//        return "success";
-//    }
-
-//    @RequestMapping("/success")
-//    public String registrationSuccess(Model model) {
-//        model.addAttribute("tipoPerfil", "Asistente PAP/PATI");
-//        return "success";
-//    }
 
     @RequestMapping(value="/update/{id}", method = RequestMethod.GET)
     public String editPapPati(Model model, @PathVariable String id) {
@@ -230,20 +127,6 @@ public class Pap_PatiController {
         model.addAttribute("statusList", statusList);
         return "pap_pati/update";
     }
-
-//    @RequestMapping(value="/update", method=RequestMethod.POST)
-//    public String processUpdateSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
-//                                      BindingResult bindingResult, Model model) {
-//        Pap_PatiValidator pap_patiValidator = new Pap_PatiValidator();
-//        pap_patiValidator.validate(papPati, bindingResult);
-//
-//        if (bindingResult.hasErrors()) {
-//            return "pap_pati/update";
-//        }
-//        pap_patiDao.updatePap_Pati(papPati);
-//
-//        return "redirect:/pap_pati/accepted";
-//    }
 
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String processUpdateSubmit(@ModelAttribute("pap_pati") Pap_Pati papPati,
@@ -335,47 +218,10 @@ public class Pap_PatiController {
         );
     }
 
-//    @RequestMapping("/detallesasignacion/{id}")
-//    public String viewDetail(Model model, @PathVariable String id, HttpSession session) {
-//        UserDetails user = (UserDetails) session.getAttribute("user");
-//        if (user == null) return "redirect:/login";
-//
-//        AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
-//        model.addAttribute("request", request);
-//
-//        //Cargamos el solicitante dinámicamente (OviUser o Tutor)
-//        if (request.getOviuser_id() != null && !request.getOviuser_id().trim().isEmpty()) {
-//            OviUser oviUser = oviUserDao.getOviUser(request.getOviuser_id());
-//            model.addAttribute("solicitante", oviUser);
-//            model.addAttribute("tipoSolicitante", "oviuser");
-//
-//        } else if (request.getTutor_id() != null && !request.getTutor_id().trim().isEmpty()) {
-//            Tutor tutor = tutorDao.getTutor(request.getTutor_id());
-//            model.addAttribute("solicitante", tutor);
-//            model.addAttribute("tipoSolicitante", "tutor");
-//        }
-//        // Lógica para cargar el chat si está completada
-//        if ("completed".equals(request.getStatus()) && "pap_pati".equals(user.getRole())) {
-//            listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni())
-//                    .stream()
-//                    .filter(p -> p.getRequest_id().equals(id))
-//                    .findFirst()
-//                    .ifPresent(p -> {
-//                        model.addAttribute("listId", p.getList_id());
-//                        // Buscamos la negociación asociada
-//                        Negotiation neg = negotiationDao.getNegotiationByListId(p.getList_id());
-//                        if (neg != null) {
-//                            model.addAttribute("negotiationId", neg.getNegotiation_Id());
-//                        }
-//                    });
-//        }
-//        return "pap_pati/detallesasignacion";
-//    }
-
     @RequestMapping("/detallesasignacion/{id}")
     public String viewDetail(Model model,
                              @PathVariable String id,
-                             @RequestParam(value = "from", required = false) String from, // <-- AÑADIDO: Recibir el parámetro
+                             @RequestParam(value = "from", required = false) String from,
                              HttpSession session) {
         UserDetails user = (UserDetails) session.getAttribute("user");
         if (user == null) return "redirect:/login";
@@ -530,150 +376,74 @@ public class Pap_PatiController {
     }
 
     @RequestMapping("/listpappati")
-    public String listMyProposals(Model model, HttpSession session) {
+    public String listMyProposals(Model model, HttpSession session, @RequestParam(defaultValue = "1") int page) {
         UserDetails user = (UserDetails) session.getAttribute("user");
 
-        // Seguridad: Solo permitimos acceso si es pappati
         if (user == null || !"pap_pati".equals(user.getRole())) {
             return "redirect:/login";
         }
 
-        // 1. Obtenemos las solicitudes vinculadas a este Asistente
-        List<AssignmentRequest> myRequests = assignmentRequestDao.getRequestsByPappati(user.getDni());
+        int pageSize = 6;
+        int offset = (page - 1) * pageSize;
 
-        // 2. Necesitamos pasar las propuestas para tener los list_id de las negociaciones
-        // Si prefieres, puedes crear un método en el DAO de ListOfProposedCandidates
+        List<AssignmentRequest> allRequests = assignmentRequestDao.getRequestsByPappati(user.getDni());
+        int totalItems = allRequests.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+
+        int toIndex = Math.min(offset + pageSize, totalItems);
+        List<AssignmentRequest> myRequests = allRequests.subList(offset, toIndex);
+
         List<ListOfProposedCandidates> proposals = listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni());
 
         model.addAttribute("assignmentRequests", myRequests);
-        model.addAttribute("proposals", proposals); //
+        model.addAttribute("proposals", proposals);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
 
         return "pap_pati/listpappati";
     }
 
-//    @RequestMapping(value="/masdetalle/{id}", method = RequestMethod.GET)
-//    public String verMasDetalle(Model model,
-//                                @PathVariable String id,
-//                                @RequestParam(required = false) String requestId,
-//                                @RequestParam(value = "from", required = false) String from,
-//                                HttpSession session) {
-//
-//        UserDetails user = (UserDetails) session.getAttribute("user");
-//        if (user == null) {
-//            return "redirect:/login";
-//        }
-//
-//        Pap_Pati candidato = pap_patiDao.getPap_Pati(id);
-//
-//        if (candidato == null) {
-//            return "redirect:/pap_pati/list";
-//        }
-//
-//        // 1. Inicializamos la variable vacía para procesarla con seguridad
-//        String volverUrl = "/dashboard";
-//
-//        // 2. Control estricto de la ruta de retorno limpiando posibles espacios (.trim())
-//        if (from != null) {
-//            String origen = from.trim();
-//
-//            if ("proposals".equals(origen)) {
-//                if (requestId != null && !requestId.isEmpty()) {
-//                    volverUrl = "/assignmentRequest/proposals/" + requestId.trim();
-//                }
-//            } else if ("accepted".equals(origen)) {
-//                // Forzamos explícitamente que si viene de 'accepted', regrese a la lista de registrados
-//                volverUrl = "/pap_pati/accepted";
-//            }
-//        }
-//
-//        // Pasamos los atributos necesarios a la vista masdetalle.html
-//        model.addAttribute("pap_pati", candidato);
-//        model.addAttribute("requestId", requestId);
-//        model.addAttribute("volverUrl", volverUrl);
-//
-//        return "pap_pati/masdetalle";
-//    }
+    @RequestMapping(value="/masdetalle/{id}", method = RequestMethod.GET)
+    public String verMasDetalle(Model model,
+                                @PathVariable String id,
+                                @RequestParam(required = false) String requestId,
+                                @RequestParam(value = "from", required = false) String from,
+                                HttpSession session) {
 
-//    // Busca este método en tu Pap_PatiController.java y añade el bloque "else if"
-//    @RequestMapping(value="/masdetalle/{id}", method = RequestMethod.GET)
-//    public String verMasDetalle(Model model,
-//                                @PathVariable String id,
-//                                @RequestParam(required = false) String requestId,
-//                                @RequestParam(value = "from", required = false) String from,
-//                                HttpSession session) {
-//
-//        UserDetails user = (UserDetails) session.getAttribute("user");
-//        if (user == null) {
-//            return "redirect:/login";
-//        }
-//
-//        Pap_Pati candidato = pap_patiDao.getPap_Pati(id);
-//
-//        if (candidato == null) {
-//            return "redirect:/pap_pati/list";
-//        }
-//        String volverUrl = "/dashboard";
-//
-//        if (from != null) {
-//            String origen = from.trim();
-//
-//            if ("proposals".equals(origen)) {
-//                if (requestId != null && !requestId.isEmpty()) {
-//                    volverUrl = "/assignmentRequest/proposals/" + requestId.trim();
-//                }
-//            } else if ("accepted".equals(origen)) {
-//                volverUrl = "/pap_pati/accepted";
-//            } else if ("refused".equals(origen)) { // <--- AÑADE ESTA CONDICIÓN
-//                volverUrl = "/pap_pati/refused";
-//            }
-//        }
-//
-//        model.addAttribute("pap_pati", candidato);
-//        model.addAttribute("requestId", requestId);
-//        model.addAttribute("volverUrl", volverUrl);
-//
-//        return "pap_pati/masdetalle";
-//    }
-@RequestMapping(value="/masdetalle/{id}", method = RequestMethod.GET)
-public String verMasDetalle(Model model,
-                            @PathVariable String id,
-                            @RequestParam(required = false) String requestId,
-                            @RequestParam(value = "from", required = false) String from,
-                            HttpSession session) {
-
-    UserDetails user = (UserDetails) session.getAttribute("user");
-    if (user == null) {
-        return "redirect:/login";
-    }
-
-    Pap_Pati candidato = pap_patiDao.getPap_Pati(id);
-
-    if (candidato == null) {
-        return "redirect:/pap_pati/list";
-    }
-
-    String volverUrl = "/dashboard";
-
-    if (from != null) {
-        String origen = from.trim();
-
-        if ("proposals".equals(origen)) {
-            if (requestId != null && !requestId.isEmpty()) {
-                volverUrl = "/assignmentRequest/proposals/" + requestId.trim();
-            }
-        } else if ("accepted".equals(origen)) {
-            volverUrl = "/pap_pati/accepted";
-        } else if ("refused".equals(origen)) {
-            volverUrl = "/pap_pati/refused";
-        } else if ("pending".equals(origen)) { // <--- AÑADIDA ESTA NUEVA CONDICIÓN
-            volverUrl = "/pap_pati/pending";
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
         }
+
+        Pap_Pati candidato = pap_patiDao.getPap_Pati(id);
+
+        if (candidato == null) {
+            return "redirect:/pap_pati/list";
+        }
+
+        String volverUrl = "/dashboard";
+
+        if (from != null) {
+            String origen = from.trim();
+
+            if ("proposals".equals(origen)) {
+                if (requestId != null && !requestId.isEmpty()) {
+                    volverUrl = "/assignmentRequest/proposals/" + requestId.trim();
+                }
+            } else if ("accepted".equals(origen)) {
+                volverUrl = "/pap_pati/accepted";
+            } else if ("refused".equals(origen)) {
+                volverUrl = "/pap_pati/refused";
+            } else if ("pending".equals(origen)) {
+                volverUrl = "/pap_pati/pending";
+            }
+        }
+
+        model.addAttribute("pap_pati", candidato);
+        model.addAttribute("requestId", requestId);
+        model.addAttribute("volverUrl", volverUrl);
+
+        return "pap_pati/masdetalle";
     }
-
-    model.addAttribute("pap_pati", candidato);
-    model.addAttribute("requestId", requestId);
-    model.addAttribute("volverUrl", volverUrl);
-
-    return "pap_pati/masdetalle";
-}
 }

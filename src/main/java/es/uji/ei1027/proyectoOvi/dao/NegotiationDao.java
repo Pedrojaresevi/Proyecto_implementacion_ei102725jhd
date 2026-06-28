@@ -21,17 +21,16 @@ public class NegotiationDao {
     }
 
     public void addNegotiation(Negotiation negotiation) {
-        // AÑADIDO: emisor_dni al INSERT y el octavo parámetro (?)
         String sql = "INSERT INTO Negotiation (negotiation_id, status, recordofcommunications, message_date, enddate, list_id, hora, emisor_dni) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 negotiation.getNegotiation_Id(),
                 negotiation.getStatus(),
                 negotiation.getRecordOfComunications(),
-                negotiation.getStartDate(), // Seguimos usando el getter original en Java
+                negotiation.getStartDate(),
                 negotiation.getEndDate(),
                 negotiation.getListId(),
                 negotiation.getHora(),
-                negotiation.getEmisorDni() // AÑADIDO: Pasamos el DNI del emisor a la BBDD
+                negotiation.getEmisorDni()
         );
     }
 
@@ -112,7 +111,7 @@ public class NegotiationDao {
         try {
             String sql = "SELECT * FROM Negotiation n " +
                     "WHERE n.hora = (SELECT MAX(hora) FROM Negotiation n2 WHERE n2.negotiation_Id = n.negotiation_Id) " +
-                    "AND n.status != 'accepted' " + // <-- AÑADIDO
+                    "AND n.status != 'accepted' " +
                     "ORDER BY n.hora DESC";
             return jdbcTemplate.query(sql, new NegotiationRowMapper());
         } catch (EmptyResultDataAccessException e)  {

@@ -14,10 +14,20 @@
 <div th:replace="~{fragments/base :: navbar}"></div>
 
 <main class="container pb-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-end mb-4">
         <h1 class="mb-0 align-middle">
             <i class="bi bi-file-earmark-text" style="font-size: 2rem; color: #0d9488; vertical-align: middle;"></i> Mis contratos
         </h1>
+
+        <form th:action="@{/contract/list}" method="GET" class="d-flex align-items-center gap-2">
+            <label for="statusFilter" class="form-label mb-0 fw-bold text-muted small">Filtrar estado:</label>
+            <select name="statusFilter" id="statusFilter" class="form-select form-select-sm w-auto shadow-sm">
+                <option value="">Todos</option>
+                <option value="accepted" th:selected="${statusFilter == 'accepted'}">Aceptado (accepted)</option>
+                <option value="finalized" th:selected="${statusFilter == 'finalized'}">Finalizado (finalized)</option>
+            </select>
+            <button type="submit" class="btn btn-sm btn-dark shadow-sm">Filtrar</button>
+        </form>
     </div>
 
     <hr class="mb-4 text-muted">
@@ -74,17 +84,17 @@
         <ul class="pagination justify-content-center">
 
             <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/contract/list(page=${currentPage - 1})}" aria-label="Anterior">
+                <a class="page-link" th:href="@{/contract/list(page=${currentPage - 1}, statusFilter=${statusFilter})}" aria-label="Anterior">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
 
             <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item" th:classappend="${currentPage == i} ? 'active'">
-                <a class="page-link" th:href="@{/contract/list(page=${i})}" th:text="${i}">1</a>
+                <a class="page-link" th:href="@{/contract/list(page=${i}, statusFilter=${statusFilter})}" th:text="${i}">1</a>
             </li>
 
             <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/contract/list(page=${currentPage + 1})}" aria-label="Siguiente">
+                <a class="page-link" th:href="@{/contract/list(page=${currentPage + 1}, statusFilter=${statusFilter})}" aria-label="Siguiente">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

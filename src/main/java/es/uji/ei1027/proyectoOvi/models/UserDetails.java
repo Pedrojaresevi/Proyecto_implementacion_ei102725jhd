@@ -1,9 +1,9 @@
 package es.uji.ei1027.proyectoOvi.models;
 
 public class UserDetails {
-    private String dni;      // Identificador único (DNI)
-    private String username; // Nombre para mostrar
-    private String role;     // "technician", "oviuser", "tutor", o "pap_pati"
+    private String dni;
+    private String username;
+    private String role;
 
     public UserDetails() {}
 

@@ -18,15 +18,15 @@ public class TutorValidator implements Validator {
     public void validate(Object obj, Errors errors) {
         Tutor tutor = (Tutor) obj;
         if (tutor.getDni() == null || tutor.getDni().trim().isEmpty())
-            errors.rejectValue("dni", "obligatori", "Este campo es obligatorio.");
+            errors.rejectValue("dni", "obligatorio", "Este campo es obligatorio.");
 
         if (tutor.getName() == null || tutor.getName().trim().isEmpty())
-            errors.rejectValue("name", "obligatori", "Este campo es obligatorio.");
+            errors.rejectValue("name", "obligatorio", "Este campo es obligatorio.");
 
         if (tutor.getEmail() == null || tutor.getEmail().trim().isEmpty())
-            errors.rejectValue("email", "obligatori", "Este campo es obligatorio.");
+            errors.rejectValue("email", "obligatorio", "Este campo es obligatorio.");
 
         if (tutor.getPassword() == null || tutor.getPassword().trim().isEmpty())
-            errors.rejectValue("password", "obligatori", "Este campo es obligatorio.");
+            errors.rejectValue("password", "obligatorio", "Este campo es obligatorio.");
     }
 }

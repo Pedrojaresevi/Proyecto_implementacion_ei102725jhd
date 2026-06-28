@@ -18,7 +18,7 @@ public class NegotiationValidator implements Validator {
     public void validate(Object obj, Errors errors) {
         Negotiation negotiation = (Negotiation) obj;
         if (negotiation.getNegotiation_Id() == null || negotiation.getNegotiation_Id().trim().equals(""))
-            errors.rejectValue("negotiation_Id", "obligatori", "Cal introduir un valor");
+            errors.rejectValue("negotiation_Id", "obligatorio", "Cal introduir un valor");
         //
         List<String> valors = Arrays.asList("accepted", "refused", "in progress");
         if (!valors.contains(negotiation.getStatus()))
@@ -30,13 +30,13 @@ public class NegotiationValidator implements Validator {
                     "Hay que introducir un valor");
 
         if (negotiation.getStartDate() == null)
-            errors.rejectValue("startDate", "obligatori", "Hay que introducir una fecha de inicio");
+            errors.rejectValue("startDate", "obligatorio", "Hay que introducir una fecha de inicio");
 
         if (negotiation.getEndDate() == null)
-            errors.rejectValue("endDate", "obligatori", "Hay que introducir una fecha de fin");
+            errors.rejectValue("endDate", "obligatorio", "Hay que introducir una fecha de fin");
 
         if (negotiation.getRecordOfComunications() == null || negotiation.getRecordOfComunications().trim().equals(""))
-            errors.rejectValue("recordOfComunications","obligatori",
+            errors.rejectValue("recordOfComunications","obligatorio",
                     "Hay que introducir el registro de comunicaciones");
 
     }

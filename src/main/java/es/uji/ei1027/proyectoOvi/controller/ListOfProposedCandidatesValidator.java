@@ -18,7 +18,7 @@ public class ListOfProposedCandidatesValidator implements Validator {
     public void validate(Object obj, Errors errors) {
         ListOfProposedCandidates listOfProposedCandidates = (ListOfProposedCandidates) obj;
         if (listOfProposedCandidates.getList_id() == null || listOfProposedCandidates.getList_id().trim().equals(""))
-            errors.rejectValue("list_id", "obligatori",
+            errors.rejectValue("list_id", "obligatorio",
                     "Hay que introducir un valor");
         //
         if (listOfProposedCandidates.getSuitabilityScore() < 0 || listOfProposedCandidates.getSuitabilityScore() > 100)
@@ -26,14 +26,14 @@ public class ListOfProposedCandidatesValidator implements Validator {
                     "La puntuación tiene que estar entre 0 y 100");
         //
         if (listOfProposedCandidates.getPappati_id() == null || listOfProposedCandidates.getPappati_id().trim().equals(""))
-            errors.rejectValue("pappati_id","obligatori",
+            errors.rejectValue("pappati_id","obligatorio",
                     "Hay que introducir un valor");
         if (listOfProposedCandidates.getRequest_id() == null || listOfProposedCandidates.getRequest_id().trim().equals(""))
-            errors.rejectValue("request_id","obligatori",
+            errors.rejectValue("request_id","obligatorio",
                     "Hay que introducir un valor");
 
         if (listOfProposedCandidates.getProposalDate() == null)
-            errors.rejectValue("proposalDate", "obligatori", "Hay que introducir una fecha de propuesta");
+            errors.rejectValue("proposalDate", "obligatorio", "Hay que introducir una fecha de propuesta");
 
 
     }

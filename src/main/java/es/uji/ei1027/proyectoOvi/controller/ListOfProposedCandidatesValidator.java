@@ -16,6 +16,7 @@ public class ListOfProposedCandidatesValidator implements Validator {
     @Override
     public void validate(Object obj, Errors errors) {
         ListOfProposedCandidates listOfProposedCandidates = (ListOfProposedCandidates) obj;
+
         if (listOfProposedCandidates.getList_id() == null || listOfProposedCandidates.getList_id().trim().equals(""))
             errors.rejectValue("list_id", "obligatorio",
                     "Hay que introducir un valor");
@@ -27,6 +28,7 @@ public class ListOfProposedCandidatesValidator implements Validator {
         if (listOfProposedCandidates.getPappati_id() == null || listOfProposedCandidates.getPappati_id().trim().equals(""))
             errors.rejectValue("pappati_id","obligatorio",
                     "Hay que introducir un valor");
+
         if (listOfProposedCandidates.getRequest_id() == null || listOfProposedCandidates.getRequest_id().trim().equals(""))
             errors.rejectValue("request_id","obligatorio",
                     "Hay que introducir un valor");

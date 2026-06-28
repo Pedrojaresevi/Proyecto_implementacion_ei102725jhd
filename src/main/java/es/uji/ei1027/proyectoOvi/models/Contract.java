@@ -11,7 +11,7 @@ public class Contract {
     private Date startDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
-    private String status ;
+    private String status = "in progress";
     private String placeWhereThePDFIsGonnaBeSaved;
     private String pappati_id;
 

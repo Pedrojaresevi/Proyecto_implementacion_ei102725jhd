@@ -289,13 +289,36 @@ public class AssignmentRequestController {
         return "redirect:list";
     }
 
-    @RequestMapping(value="/delete/{id}")
+//    @RequestMapping(value="/delete/{id}")
+//    public String processDelete(@PathVariable String id) {
+//        listOfProposedCandidatesDao.deleteCandidatesByRequestId(id);
+//        assignmentRequestDao.deleteAssignmentRequest(id);
+//        return "redirect:../list";
+//    }
+
+
+    // 1. PETICIÓN GET: Muestra la pantalla de confirmación compartiendo el ID
+    @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
+    public String confirmDelete(@PathVariable String id, Model model, HttpSession session) {
+        UserDetails user = (UserDetails) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        // Pasamos el ID de la solicitud a la vista de confirmación
+        model.addAttribute("requestId", id);
+
+        // IMPORTANTE: Asegúrate de guardar el HTML en esta ruta de carpetas (templates/assignmentRequest/...)
+        return "assignmentRequest/confirmarborrado";
+    }
+
+    // 2. PETICIÓN POST: Ejecuta el borrado definitivo cuando se confirma en el formulario
+    @RequestMapping(value="/delete/{id}", method = RequestMethod.POST)
     public String processDelete(@PathVariable String id) {
         listOfProposedCandidatesDao.deleteCandidatesByRequestId(id);
         assignmentRequestDao.deleteAssignmentRequest(id);
         return "redirect:../list";
     }
-
 
     private int experienciaANumero(String exp) {
         if (exp == null) return 0;

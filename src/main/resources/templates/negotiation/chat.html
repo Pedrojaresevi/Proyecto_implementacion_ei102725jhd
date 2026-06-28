@@ -101,7 +101,7 @@
             <div th:if="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' or #strings.toLowerCase(#strings.trim(negotiationStatus)) == 'refused'}"
                  th:unless="${readOnly != null and readOnly}"
                  class="alert text-center m-0 fw-bold shadow-sm"
-                 th:classappend="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' ? 'alert-success text-success' : 'alert-danger text-danger'}">
+                 th:classappend="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' ? 'alert-success' : 'alert-danger'}">
                 <i th:class="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' ? 'bi bi-check-circle-fill me-2' : 'bi bi-x-circle-fill me-2'}"></i>
                 <span>Esta negociación ha sido <span th:text="${#strings.toLowerCase(#strings.trim(negotiationStatus)) == 'accepted' ? 'ACEPTADA' : 'RECHAZADA'}"></span>. El chat está en modo solo lectura.</span>
             </div>

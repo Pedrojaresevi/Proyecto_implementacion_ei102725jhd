@@ -25,7 +25,6 @@
                 <strong class="text-danger" th:text="${contractId}">ID_CONTRATO</strong>.
             </p>
 
-            <!-- Envía un POST seguro al controlador para efectuar el borrado en BBDD -->
             <form th:action="@{/contract/delete/{contract_Id}(contract_Id=${contractId})}" method="post">
 
                 <div class="alert alert-warning my-4">
@@ -39,7 +38,6 @@
                     <button type="submit" class="btn btn-danger px-4 fw-bold rounded-pill shadow-sm">
                         Confirmar Eliminación
                     </button>
-                    <!-- Vuelve de manera directa al listado general de contratos -->
                     <a th:href="@{/contract/list}" class="btn btn-secondary px-4 rounded-pill">
                         Volver al Listado
                     </a>

@@ -10,6 +10,12 @@ import java.util.List;
 
 public class AssignmentRequestValidator implements Validator {
 
+    private boolean updateMode;
+
+    public void setUpdateMode(boolean updateMode) {
+        this.updateMode = updateMode;
+    }
+
     @Override
     public boolean supports(Class<?> cls) {
         return AssignmentRequest.class.equals(cls);
@@ -47,15 +53,17 @@ public class AssignmentRequestValidator implements Validator {
             errors.rejectValue("requiredEndAvailability", "obligatorio", "Este campo es obligatorio.");
         }
 
-        if (assignmentRequest.getRequiredStartAvailability() != null) {
-            if (assignmentRequest.getRequiredStartAvailability().isBefore(LocalDate.now())) {
-                errors.rejectValue("requiredStartAvailability", "dataPasada", "La fecha de inicio no puede ser anterior a hoy.");
+        if (!updateMode) {
+            if (assignmentRequest.getRequiredStartAvailability() != null) {
+                if (assignmentRequest.getRequiredStartAvailability().isBefore(LocalDate.now())) {
+                    errors.rejectValue("requiredStartAvailability", "dataPasada", "La fecha de inicio no puede ser anterior a hoy.");
+                }
             }
-        }
 
-        if (assignmentRequest.getRequiredEndAvailability() != null) {
-            if (assignmentRequest.getRequiredEndAvailability().isBefore(LocalDate.now().plusDays(1))) {
-                errors.rejectValue("requiredEndAvailability", "dataPasada", "La fecha de fin debe de ser como mínimo mañana.");
+            if (assignmentRequest.getRequiredEndAvailability() != null) {
+                if (assignmentRequest.getRequiredEndAvailability().isBefore(LocalDate.now().plusDays(1))) {
+                    errors.rejectValue("requiredEndAvailability", "dataPasada", "La fecha de fin debe de ser como mínimo mañana.");
+                }
             }
         }
 

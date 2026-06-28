@@ -277,11 +277,17 @@ public class AssignmentRequestController {
         assignmentRequest.setRequestDate(original.getRequestDate());
 
         AssignmentRequestValidator assignmentRequestValidator = new AssignmentRequestValidator();
+        assignmentRequestValidator.setUpdateMode(true);
         assignmentRequestValidator.validate(assignmentRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("todayMin", LocalDate.now());
-            model.addAttribute("tomorrowMin", LocalDate.now().plusDays(1));
+            List<String> habilidadesSeleccionadas = new ArrayList<>();
+            if (assignmentRequest.getRequiredSkills() != null && !assignmentRequest.getRequiredSkills().trim().isEmpty()) {
+                habilidadesSeleccionadas = Arrays.stream(assignmentRequest.getRequiredSkills().split(","))
+                        .map(String::trim)
+                        .collect(java.util.stream.Collectors.toList());
+            }
+            model.addAttribute("habilidadesSeleccionadas", habilidadesSeleccionadas);
             return "assignmentRequest/update";
         }
         assignmentRequestDao.updateAssignmentRequest(assignmentRequest);

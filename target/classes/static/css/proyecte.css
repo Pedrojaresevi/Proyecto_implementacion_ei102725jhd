@@ -1,48 +1,42 @@
-/* ==========================================================================
-   1. ESTILOS BASE Y EXISTENTES (Tu archivo original)
-   ========================================================================== */
 
-/* Estil aplicat al cos de la pàgina */
+
 body {
     font-family: Helvetica, Arial, sans-serif;
     background-color: white;
     margin: 0;
     padding: 0;
 }
-/* Capçalera de nivell 1 */
+
 h1 {
     font-size: 2rem;
     color: #0d9488;
     font-weight: 700;
 }
-/* Capçalera de nivell 2 */
+
 h2 {
     font-size: large;
     color: blue;
 }
-/* Classe CSS error */
+
 .error {
     color: #dc3545;
     font-size:90%
 }
-/* Classe CSS per atributs erronis */
+
 .needcorrection {
     color: red;
     background-color:yellow;
 }
-/* Poner las etiquetas en negrita */
+
 label {
     font-weight: bold;
 }
-/* Ajuste para que la tabla ocupe bien el espacio */
+
 .container-fluid {
     padding-left: 20px;
     padding-right: 20px;
 }
 
-/* =========================================
-   Estilos simulando WhatsApp para el Chat
-   ========================================= */
 .chat-bg {
     background-color: #e5ddd5;
     background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
@@ -96,16 +90,11 @@ label {
     color: #ffffff;
 }
 
-
-/* ==========================================================================
-   2. ESTILOS PROCEDENTES DE index.html (Con correcciones de accesibilidad)
-   ========================================================================== */
-
 .hero-bg {
     background-color: #f4f6f9;
     padding-top: 5rem;
     padding-bottom: 5rem;
-    margin-top: -1px; /* Evita espacios en blanco con el navbar */
+    margin-top: -1px; 
 }
 
 .card-profile {
@@ -130,13 +119,11 @@ label {
     font-size: 1.5rem;
 }
 
-/* SOLUCIÓN AL ERROR CONTRASTE (Imagen 1): Cambiado de #495057 a #212529 (Más oscuro y accesible sobre fondo claro) */
 .text-accessible-tag {
     color: #212529;
     font-weight: 700;
 }
 
-/* SOLUCIÓN AL ERROR CONTRASTE (Imagen 3): Forzamos a que los textos descriptivos tengan un gris de alto contraste riguroso */
 .hero-bg p, main p, .card-profile p {
     color: #212529 ;
 }
@@ -145,12 +132,6 @@ label {
     color: #dee2e6;
 }
 
-
-/* ==========================================================================
-   3. ESTILOS PROCEDENTES DE login.html (Protegidos y aislados)
-   ========================================================================== */
-
-/* Aseguramos la estructura base solo cuando estemos en el Login */
 html {
     height: 100%;
 }
@@ -222,8 +203,6 @@ body.login-page {
     transform: translateY(-2px);
     box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.2);
 }
-
-
 
 nav.navbar {
     margin-bottom: 0;

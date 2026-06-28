@@ -8,7 +8,7 @@
 <nav th:fragment="navbar" class="navbar navbar-expand-lg bg-white shadow-sm py-2 w-100 mb-4" style="border-bottom: 2px solid #e9ecef;">
     <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
 
-        <!-- Logo -->
+        
         <a th:if="${session.user != null}" th:href="@{/dashboard}" class="text-decoration-none d-flex align-items-center gap-2">
             <img th:src="@{/images/logo.png}" alt="Logo" style="height: 40px; object-fit: contain;">
             <span class="fw-bold text-primary fs-5">OVI - Castellón</span>
@@ -19,7 +19,7 @@
             <span class="fw-bold text-primary fs-5">OVI - Castellón</span>
         </a>
 
-        <!-- Derecha: usuario + cerrar sesión -->
+        
         <div class="d-flex align-items-center gap-4" th:if="${session.user != null}">
 
             <a th:href="@{/dashboard}" class="btn btn-outline-primary btn-sm">

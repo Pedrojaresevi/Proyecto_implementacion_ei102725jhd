@@ -19,12 +19,12 @@ public class NegotiationValidator implements Validator {
         Negotiation negotiation = (Negotiation) obj;
         if (negotiation.getNegotiation_Id() == null || negotiation.getNegotiation_Id().trim().equals(""))
             errors.rejectValue("negotiation_Id", "obligatorio", "Cal introduir un valor");
-        //
+        
         List<String> valors = Arrays.asList("accepted", "refused", "in progress");
         if (!valors.contains(negotiation.getStatus()))
             errors.rejectValue("status", "valor incorrecte",
                     "Debe ser: accepted, refused o in progress");
-        //
+        
         if (negotiation.getListId() == null || negotiation.getListId().trim().equals(""))
             errors.rejectValue("list_id","obligatori",
                     "Hay que introducir un valor");

@@ -8,11 +8,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="/css/proyecte.css" th:href="@{/css/proyecte.css}"/>
 </head>
-<body> <!-- Se elimina bg-light para que coincida exactamente con modificar usuario -->
+<body> 
 
 <div th:replace="~{fragments/base :: navbar}"></div>
 
-<!-- Se ajusta la cabecera exactamente al estilo de modificar usuario -->
 <main class="container pb-5">
     <h1 class="mb-2 text-primary fw-bold">Nuevo contrato</h1>
     <p class="text-muted mb-4">Por favor, introduzca las fechas correspondientes para formalizar el nuevo contrato. El resto de datos se vincularán de forma automática.</p>
@@ -21,13 +20,13 @@
 
     <form class="form-horizontal" th:action="@{/contract/add}" th:object="${contract}" method="post">
 
-        <!-- ID Oculto para redirección posterior en el controlador -->
+        
         <input type="hidden" name="negotiationId" th:value="${negotiationId}" />
 
-        <!-- Se elimina el icono del h5 para calcar el estilo solicitado -->
+        
         <h5 class="text-primary text-opacity-75 mb-3 fw-bold">1. Fechas del Contrato</h5>
 
-        <!-- Estructura horizontal: label en col-sm-2 e inputs en col-sm-4 (estilo fecha de nacimiento) -->
+        
         <div class="form-group row mb-3">
             <label for="startDate" class="control-label col-sm-2">Fecha de inicio:</label>
             <div class="col-sm-4">
@@ -48,7 +47,7 @@
 
         <h5 class="text-primary text-opacity-75 mb-3 fw-bold">2. Datos de Vinculación</h5>
 
-        <!-- Estructura horizontal para los campos readonly (estilo DNI/Estado) -->
+        
         <div class="form-group row mb-3">
             <label for="request_Id" class="control-label col-sm-2">ID de la solicitud vinculada:</label>
             <div class="col-sm-4">
@@ -65,7 +64,7 @@
             </div>
         </div>
 
-        <!-- Botonera adaptada con los márgenes y clases exactas de modificar usuario -->
+        
         <button type="submit" class="btn btn-primary mt-3">Añadir contrato</button>
         <a th:href="@{/negotiation/chat/{id}(id=${negotiationId})}" class="btn btn-secondary mt-3 ms-2">Volver</a>
 

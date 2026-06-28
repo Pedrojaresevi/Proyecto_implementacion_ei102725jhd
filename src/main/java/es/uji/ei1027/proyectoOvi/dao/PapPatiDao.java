@@ -20,7 +20,6 @@ public class PapPatiDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-
     public void addPap_Pati(Pap_Pati pap_pati) {
         jdbcTemplate.update("INSERT INTO PapPati VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 pap_pati.getDni(),pap_pati.getName(), pap_pati.getSurname(), pap_pati.getDateOfBirth(), pap_pati.getAddress(), pap_pati.getPhone(), pap_pati.getEmail(),
@@ -65,7 +64,7 @@ public class PapPatiDao {
                     "JOIN AssignmentRequest r ON r.request_Id = ? " +
                     "WHERE p.status = 'accepted' " +
                     "AND p.assistant_type = r.typeOfService " +
-                    // 1. CONDICIÓN OBLIGATORIA: Que las fechas se solapen (no hace falta que cubra todo)
+                    
                     "AND p.startDate <= r.requiredEndAvailability " +
                     "AND p.endDate >= r.requiredStartAvailability " +
                     "AND (" +
@@ -81,7 +80,7 @@ public class PapPatiDao {
             return new java.util.ArrayList<>();
         }
     }
-    //
+    
     public List<Pap_Pati> getPapPatiByStatus(String status) {
         try {
             return jdbcTemplate.query("SELECT * FROM PapPati WHERE status=?",
@@ -91,7 +90,7 @@ public class PapPatiDao {
         }
     }
 
-    // Para la lista general de asistentes
+    
     public List<Pap_Pati> getAllPap_PatiPaginated(int limit, int offset) {
         String sql = "SELECT * FROM PapPati LIMIT ? OFFSET ?";
         try {
@@ -110,7 +109,7 @@ public class PapPatiDao {
         }
     }
 
-    // Para las listas filtradas por estado (pending/accepted)
+    
     public List<Pap_Pati> getPapPatiByStatusPaginated(String status, int limit, int offset) {
         String sql = "SELECT * FROM PapPati WHERE status=? ORDER BY dni LIMIT ? OFFSET ?";
         try {

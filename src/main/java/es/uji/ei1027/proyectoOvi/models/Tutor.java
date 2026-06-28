@@ -8,7 +8,6 @@ public class Tutor {
     private String password;
     private String rejectReason;
 
-
     public String getDni() {
         return dni;
     }

@@ -54,7 +54,7 @@ public class TutorDao {
             return null;
         }
     }
-    //
+    
     public List<Tutor> getTutorsByStatus(String status) {
         try {
             return jdbcTemplate.query("SELECT * FROM Tutor WHERE status=?",
@@ -64,7 +64,7 @@ public class TutorDao {
         }
     }
 
-    // Para la lista general de tutores (/list)
+    
     public List<Tutor> getTutorsPaginated(int limit, int offset) {
         String sql = "SELECT * FROM Tutor LIMIT ? OFFSET ?";
         try {
@@ -83,7 +83,7 @@ public class TutorDao {
         }
     }
 
-    // Para la lista de tutores pendientes (/pending)
+    
     public List<Tutor> getTutorsByStatusPaginated(String status, int limit, int offset) {
         String sql = "SELECT * FROM Tutor WHERE status=? ORDER BY dni LIMIT ? OFFSET ?";
         try {

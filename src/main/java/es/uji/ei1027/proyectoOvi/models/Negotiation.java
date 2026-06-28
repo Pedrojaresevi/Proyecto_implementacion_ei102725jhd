@@ -15,10 +15,10 @@ public class Negotiation {
     private Date endDate;
     private String list_id;
     private LocalTime hora;
-    // Campo que va a la Base de Datos
+    
     private String emisorDni;
 
-    // Campo que NO va a la Base de datos, solo para enseñar el nombre en HTML
+    
     private String emisorNombre;
 
     private String interlocutorName;

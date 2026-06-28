@@ -3,11 +3,11 @@ package es.uji.ei1027.proyectoOvi.controller;
 import es.uji.ei1027.proyectoOvi.models.UserDetails;
 import es.uji.ei1027.proyectoOvi.models.OviUser;
 import es.uji.ei1027.proyectoOvi.models.Tutor;
-import es.uji.ei1027.proyectoOvi.models.Pap_Pati; // Ajusta el import si tu modelo se llama distinto
+import es.uji.ei1027.proyectoOvi.models.Pap_Pati; 
 
 import es.uji.ei1027.proyectoOvi.dao.OviUserDao;
 import es.uji.ei1027.proyectoOvi.dao.TutorDao;
-import es.uji.ei1027.proyectoOvi.dao.PapPatiDao; // Ajusta el import según tu DAO
+import es.uji.ei1027.proyectoOvi.dao.PapPatiDao; 
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,42 +50,42 @@ public class LoginController {
                              @RequestParam("password") String password,
                              HttpSession session, Model model) {
 
-        // Creamos la instancia del encriptador de Jasypt
+        
         BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
 
-        // 1. COMPROBAR TÉCNICO OVI (Se queda igual porque está estático en texto plano)
+        
         if (username.equals("admin") && password.equals("admin")) {
             UserDetails user = new UserDetails("00000000T", "Administrador Técnico", "technician");
             session.setAttribute("user", user);
             return "redirect:/dashboard";
         }
 
-        // 2. COMPROBAR OVI USER EN BASE DE DATOS
+        
         OviUser oviUser = oviUserDao.getOviUser(username);
         if (oviUser != null && passwordEncryptor.checkPassword(password, oviUser.getPassword())) {
 
-            // Verificamos el estado antes de dejarle entrar
+            
             if ("in progress".equals(oviUser.getStatus())) {
                 model.addAttribute("error", "Tu solicitud de registro aún está en proceso de evaluación. No puedes acceder todavía.");
                 return "login";
             } else if ("refused".equals(oviUser.getStatus())) {
                 model.addAttribute("error", "Tu solicitud de acceso ha sido denegada. Por favor, contacta con la administración.");
-                // Pasamos la razón del rechazo guardada en el modelo OviUser
+                
                 model.addAttribute("rejectReason", oviUser.getRejectReason() != null ? oviUser.getRejectReason() : "No especificado");
                 return "login";
             }
 
-            // Si el estado es 'accepted', creamos la sesión
+            
             UserDetails user = new UserDetails(oviUser.getDni(), oviUser.getName(), "oviuser");
             session.setAttribute("user", user);
             return "redirect:/dashboard";
         }
 
-        // 3. COMPROBAR TUTOR EN BASE DE DATOS
+        
         Tutor tutor = tutorDao.getTutor(username);
         if (tutor != null && passwordEncryptor.checkPassword(password, tutor.getPassword())) {
 
-            // Descomentado y adaptado para incluir la razón del rechazo
+            
             if ("in progress".equals(tutor.getStatus())) {
                 model.addAttribute("error", "Tu perfil de tutor aún está en proceso de validación.");
                 return "login";
@@ -100,11 +100,11 @@ public class LoginController {
             return "redirect:/dashboard";
         }
 
-        // 4. COMPROBAR PAP/PATI EN BASE DE DATOS
+        
         Pap_Pati papPati = papPatiDao.getPap_Pati(username);
         if (papPati != null && passwordEncryptor.checkPassword(password, papPati.getPassword())) {
 
-            // Descomentado y adaptado para incluir la razón del rechazo
+            
             if ("in progress".equals(papPati.getStatus())) {
                 model.addAttribute("error", "Tu perfil de asistente aún está en proceso de validación.");
                 return "login";
@@ -119,7 +119,7 @@ public class LoginController {
             return "redirect:/dashboard";
         }
 
-        // Si el código llega hasta aquí, significa que ningún usuario coincidió o la contraseña es incorrecta
+        
         model.addAttribute("error", "DNI o contraseña incorrectos.");
         return "login";
     }
@@ -128,40 +128,39 @@ public class LoginController {
     public String migrarContrasenas() {
         BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
 
-        // 1. Encriptar todos los OviUsers
-        // (Asegúrate de tener el método getOviUsers() en tu OviUserDao)
+        
+        
         for (OviUser u : oviUserDao.getOviUsers()) {
-            // Las contraseñas encriptadas de Jasypt miden unos 28 caracteres.
-            // Si mide menos de 20, asumimos que está en texto plano.
+            
+            
             if (u.getPassword() != null && u.getPassword().length() < 20) {
                 u.setPassword(passwordEncryptor.encryptPassword(u.getPassword()));
                 oviUserDao.updateOviUser(u);
             }
         }
 
-        // 2. Encriptar todos los Tutores
-        for (Tutor t : tutorDao.getTutors()) { // Necesitas que exista getTutors() en TutorDao
+        
+        for (Tutor t : tutorDao.getTutors()) { 
             if (t.getPassword() != null && t.getPassword().length() < 20) {
                 t.setPassword(passwordEncryptor.encryptPassword(t.getPassword()));
                 tutorDao.updateTutor(t);
             }
         }
 
-        // 3. Encriptar todos los Pap_Pati
-        for (Pap_Pati p : papPatiDao.getAllPap_Pati()) { // Según tu DAO se llama getAllPap_Pati()
+        
+        for (Pap_Pati p : papPatiDao.getAllPap_Pati()) { 
             if (p.getPassword() != null && p.getPassword().length() < 20) {
                 p.setPassword(passwordEncryptor.encryptPassword(p.getPassword()));
                 papPatiDao.updatePap_Pati(p);
             }
         }
 
-        return "redirect:/login"; // Te devuelve al login cuando acabe
+        return "redirect:/login"; 
     }
-
 
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // Limpiamos la sesión al salir
+        session.invalidate(); 
         return "redirect:/login";
     }
 }

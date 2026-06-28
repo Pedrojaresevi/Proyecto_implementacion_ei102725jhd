@@ -41,12 +41,11 @@ public class TutorController {
         return "tutor/add";
     }
 
-
     @GetMapping("/success")
     public String registrationSuccess() {
         return "success";
     }
-    //
+    
     @RequestMapping(value="/add", method= RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("tutor") Tutor tutor,
                                    BindingResult bindingResult,
@@ -86,24 +85,24 @@ public class TutorController {
         model.addAttribute("statusList", statusList);
         return "tutor/update";
     }
-    //
+    
     @RequestMapping(value="/update", method=RequestMethod.POST)
     public String processUpdateSubmit(@ModelAttribute("tutor") Tutor tutor,
                                       BindingResult bindingResult,
                                       Model model,
                                       HttpSession session) {
-        // 1. Control de sesión: verificar si el usuario está autenticado
+        
         UserDetails user = (UserDetails) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
         }
 
-        // 2. Control de seguridad: el tutor solo edita su propio DNI, el técnico edita cualquiera
+        
         if (!"technician".equals(user.getRole()) && !user.getDni().equals(tutor.getDni())) {
             return "redirect:/dashboard";
         }
 
-        // 3. Validación de los campos del formulario
+        
         TutorValidator tutorValidator = new TutorValidator();
         tutorValidator.validate(tutor, bindingResult);
 
@@ -113,30 +112,30 @@ public class TutorController {
             return "tutor/update";
         }
 
-        // 4. Actualización en la base de datos
+        
         tutorDao.updateTutor(tutor);
 
-        // 5. Redirección dinámica según el rol
+        
         if ("technician".equals(user.getRole())) {
-            return "redirect:/tutor/accepted"; // Si es técnico, vuelve al listado de tutores aceptados
+            return "redirect:/tutor/accepted"; 
         } else {
-            return "redirect:/dashboard";      // Si es el propio Tutor, vuelve a su pantalla de inicio
+            return "redirect:/dashboard";      
         }
     }
 
-    // 1. Muestra la pantalla roja de confirmación (GET)
+    
     @RequestMapping(value="/delete/{dni}", method = RequestMethod.GET)
     public String showDeleteConfirmation(Model model, @PathVariable String dni) {
         model.addAttribute("dni", dni);
-        // Importante: ruta apuntando a technician/tutor
+        
         return "technician/tutor/confirmarborrado";
     }
 
-    // 2. Ejecuta el borrado real al confirmar en el formulario (POST)
+    
     @RequestMapping(value="/delete/{dni}", method = RequestMethod.POST)
     public String processDelete(@PathVariable String dni) {
         tutorDao.deleteTutor(dni);
-        // Redirige a la lista de tutores aceptados tras borrar
+        
         return "redirect:/tutor/accepted";
     }
 
@@ -157,14 +156,14 @@ public class TutorController {
         model.addAttribute("totalPages", totalPages);
         return "tutor/list_minors";
     }
-    // MÉTODOS PARA AÑADIR MENORES DESDE EL TUTOR
+    
 
     @RequestMapping(value="/add-minor", method = RequestMethod.GET)
     public String addMinor(Model model, HttpSession session) {
-        // Recuperamos el usuario conectado de la sesión
+        
         UserDetails user = (UserDetails) session.getAttribute("user");
 
-        // Si no hay usuario o no tiene permisos, lo mandamos al login
+        
         if (user == null) {
             return "redirect:/login";
         }
@@ -173,7 +172,7 @@ public class TutorController {
 
         model.addAttribute("oviUser", oviUser);
 
-        // Cargar listas para los select
+        
         cargarListasDesplegables(model);
 
         return "technician/add_minor";
@@ -183,30 +182,30 @@ public class TutorController {
     public String processAddMinorSubmit(@ModelAttribute("oviUser") OviUser oviUser,
                                         BindingResult bindingResult, Model model) {
 
-        // 1. Usar el validador específico para menores
+        
         OviUserMinorValidator minorValidator = new OviUserMinorValidator();
         minorValidator.validate(oviUser, bindingResult);
 
-        // 2. Comprobar errores y devolver la vista correcta
+        
         if (bindingResult.hasErrors()) {
-            // Recargamos las listas antes de volver a la vista para que no falle el HTML
+            
             cargarListasDesplegables(model);
             return "technician/add_minor";
         }
 
-        // 3. Encriptar la contraseña antes de guardarla
+        
         BasicPasswordEncryptor passwordEncryptor = new BasicPasswordEncryptor();
         String contrasenaEncriptada = passwordEncryptor.encryptPassword(oviUser.getPassword());
         oviUser.setPassword(contrasenaEncriptada);
 
-        // 4. Asignar estado y guardar
+        
         oviUser.setStatus("accepted");
 
         try {
             oviUserDao.addOviUser(oviUser);
         } catch (DuplicateKeyException e) {
             bindingResult.rejectValue("dni", "duplicat", "Ya existe un usuario con este DNI");
-            // Recargamos las listas también aquí si hay error de duplicado
+            
             cargarListasDesplegables(model);
             return "technician/add_minor";
         }
@@ -214,7 +213,7 @@ public class TutorController {
         return "redirect:/dashboard";
     }
 
-    // MÉTODO AUXILIAR PARA LAS LISTAS DESPLEGABLES
+    
     private void cargarListasDesplegables(Model model) {
         List<String> entidades = Arrays.asList(
                 "Ayuntamiento de Castellón",
@@ -237,7 +236,7 @@ public class TutorController {
         model.addAttribute("diversidadesDisponibles", diversidades);
     }
 
-    //
+    
     @RequestMapping("/pending")
     public String listPendingTutors(Model model, @RequestParam(defaultValue = "1") int page) {
         int pageSize = 6;
@@ -258,11 +257,11 @@ public class TutorController {
         int pageSize = 6;
         int offset = (page - 1) * pageSize;
 
-        // Recuperamos solo los tutores que ya han sido aceptados
+        
         List<Tutor> acceptedTutors = tutorDao.getTutorsByStatusPaginated("accepted", pageSize, offset);
         model.addAttribute("tutors", acceptedTutors);
 
-        // Lógica para calcular las páginas totales
+        
         int totalItems = tutorDao.countTutorsByStatus("accepted");
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
         if (totalPages == 0) totalPages = 1;
@@ -270,7 +269,7 @@ public class TutorController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
 
-        // Retorna el nuevo HTML que crearemos en el Paso 2
+        
         return "technician/tutor/accepted";
     }
 

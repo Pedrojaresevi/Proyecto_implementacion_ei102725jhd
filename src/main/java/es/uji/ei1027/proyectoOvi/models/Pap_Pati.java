@@ -28,7 +28,6 @@ public class Pap_Pati {
     private String assistant_type;
     private String rejectReason;
 
-
     public Pap_Pati() {
     }
 

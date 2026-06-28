@@ -7,7 +7,6 @@ import org.springframework.validation.Validator;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class ListOfProposedCandidatesValidator implements Validator {
     @Override
     public boolean supports(Class<?> cls) {
@@ -20,11 +19,11 @@ public class ListOfProposedCandidatesValidator implements Validator {
         if (listOfProposedCandidates.getList_id() == null || listOfProposedCandidates.getList_id().trim().equals(""))
             errors.rejectValue("list_id", "obligatorio",
                     "Hay que introducir un valor");
-        //
+        
         if (listOfProposedCandidates.getSuitabilityScore() < 0 || listOfProposedCandidates.getSuitabilityScore() > 100)
             errors.rejectValue("suitabilityScore", "valor incorrecto",
                     "La puntuación tiene que estar entre 0 y 100");
-        //
+        
         if (listOfProposedCandidates.getPappati_id() == null || listOfProposedCandidates.getPappati_id().trim().equals(""))
             errors.rejectValue("pappati_id","obligatorio",
                     "Hay que introducir un valor");
@@ -34,7 +33,6 @@ public class ListOfProposedCandidatesValidator implements Validator {
 
         if (listOfProposedCandidates.getProposalDate() == null)
             errors.rejectValue("proposalDate", "obligatorio", "Hay que introducir una fecha de propuesta");
-
 
     }
 }

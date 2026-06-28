@@ -62,7 +62,7 @@ public class AssignmentRequestDao  {
         }
     }
 
-    // Nuevo metodo para filtrar solicitudes por el DNI del OviUser
+    
     public List<AssignmentRequest> getRequestsByOviUser(String oviuserId) {
         try {
             return jdbcTemplate.query(
@@ -74,7 +74,7 @@ public class AssignmentRequestDao  {
             return new java.util.ArrayList<AssignmentRequest>();
         }
     }
-    //
+    
     public List<AssignmentRequest> getRequestsByTutor(String tutorId) {
         try {
             return jdbcTemplate.query(
@@ -122,7 +122,7 @@ public class AssignmentRequestDao  {
             return null;
         }
     }
-    //
+    
     public List<AssignmentRequest> getAssignmentRequestsByStatus(String status) {
         try {
             return jdbcTemplate.query("SELECT * FROM AssignmentRequest WHERE status=?",
@@ -149,7 +149,7 @@ public class AssignmentRequestDao  {
             return 0;
         }
     }
-    // --- NUEVOS MÉTODOS PARA LA PAGINACIÓN Y FILTRADO POR USUARIO/TUTOR ---
+    
 
     public List<AssignmentRequest> getAssignmentRequestsByUserPaginated(String dni, int limit, int offset) {
         String sql = "SELECT * FROM AssignmentRequest WHERE oviuser_id=? OR tutor_id=? ORDER BY SUBSTRING(request_id FROM 4)::INTEGER DESC LIMIT ? OFFSET ?";

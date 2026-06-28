@@ -91,7 +91,7 @@ public class OviUserDao {
         }
     }
 
-    // Para la lista de tutorizados de un tutor (/users/{dni})
+    
     public List<OviUser> getOviUsersByTutorPaginated(String tutorDni, int limit, int offset) {
         String sql = "SELECT * FROM OviUser WHERE tutor_id = ? LIMIT ? OFFSET ?";
         try {
@@ -110,7 +110,7 @@ public class OviUserDao {
         }
     }
 
-    // Para la lista general (/list)
+    
     public List<OviUser> getOviUsersPaginated(int limit, int offset) {
         String sql = "SELECT * FROM OviUser LIMIT ? OFFSET ?";
         try {
@@ -129,7 +129,7 @@ public class OviUserDao {
         }
     }
 
-    // Para las listas por estado (/pending y /accepted)
+    
     public List<OviUser> getOviUsersByStatusPaginated(String status, int limit, int offset) {
         String sql = "SELECT * FROM OviUser WHERE status=? ORDER BY dni LIMIT ? OFFSET ?";
         try {

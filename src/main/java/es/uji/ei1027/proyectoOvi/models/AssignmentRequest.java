@@ -22,7 +22,6 @@ public class AssignmentRequest {
     private String status = "in progress";
     private String rejectReason;
 
-
     private String tutor_id;
 
     public AssignmentRequest() {

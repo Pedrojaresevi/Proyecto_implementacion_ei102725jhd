@@ -55,12 +55,12 @@ public class ListOfProposedCandidatesDao {
             return null;
         }
     }
-    // Metodo para borrar todos los candidatos propuestos asociados a una solicitud específica
+    
     public void deleteCandidatesByRequestId(String requestId) {
-        // La consulta SQL para borrar por request_id
+        
         String sql = "DELETE FROM listofproposedcandidates WHERE request_id = ?";
 
-        // Ejecutamos la consulta pasándole el ID que recibimos como parámetro
+        
         jdbcTemplate.update(sql, requestId);
     }
     public List<ListOfProposedCandidates> getProposalsByRequestId(String requestId) {
@@ -82,7 +82,7 @@ public class ListOfProposedCandidatesDao {
 
     public List<ListOfProposedCandidates> getProposalsByRequestIdPaginated(String requestId, int limit, int offset) {
         try {
-            // Aprovechamos y ordenamos directamente por list_id en SQL (como hacías en el controller)
+            
             String sql = "SELECT * FROM ListOfProposedCandidates WHERE request_id = ? ORDER BY list_id LIMIT ? OFFSET ?";
             return jdbcTemplate.query(sql, new ListOfProposedCandidatesRowMapper(), requestId, limit, offset);
         } catch (EmptyResultDataAccessException e) {

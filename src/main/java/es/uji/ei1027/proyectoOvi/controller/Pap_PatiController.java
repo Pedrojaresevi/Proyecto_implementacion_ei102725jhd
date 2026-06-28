@@ -84,11 +84,11 @@ public class Pap_PatiController {
 
         papPati.setStatus("in progress");
 
-        // 1. Pasa el validador universal (campos nulos, formatos, etc.)
+        
         Pap_PatiValidator pap_patiValidator = new Pap_PatiValidator();
         pap_patiValidator.validate(papPati, bindingResult);
 
-        // 2. Reglas EXCLUSIVAS para nuevos registros: Las fechas no pueden ser pasadas
+        
         if (papPati.getStartDate() != null && papPati.getStartDate().isBefore(LocalDate.now())) {
             bindingResult.rejectValue("startDate", "fecha_pasada", "La fecha de inicio no puede ser anterior a hoy.");
         }
@@ -97,7 +97,7 @@ public class Pap_PatiController {
             bindingResult.rejectValue("endDate", "fecha_invalida", "La fecha de fin debe ser al menos el día de mañana.");
         }
 
-        // 3. Comprobar si hay algún error (del validador o de nuestras reglas exclusivas)
+        
         if (bindingResult.hasErrors()) {
             return "pap_pati/add";
         }
@@ -133,53 +133,53 @@ public class Pap_PatiController {
                                       BindingResult bindingResult,
                                       Model model,
                                       HttpSession session) {
-        // 1. Control de sesión: verificar si el usuario está autenticado
+        
         UserDetails user = (UserDetails) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
         }
 
-        // 2. Control de seguridad: un usuario común solo puede editar su propio perfil.
-        // Solo el técnico ("technician") puede editar perfiles ajenos.
+        
+        
         if (!"technician".equals(user.getRole()) && !user.getDni().equals(papPati.getDni())) {
-            return "redirect:/dashboard"; // Redirigir si intenta saltarse la seguridad
+            return "redirect:/dashboard"; 
         }
 
-        // 3. Validación de los campos del formulario
+        
         Pap_PatiValidator pap_patiValidator = new Pap_PatiValidator();
         pap_patiValidator.validate(papPati, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            // Si hay errores, volvemos a cargar la lista de estados para el desplegable y recargamos la vista
+            
             List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
             model.addAttribute("statusList", statusList);
             return "pap_pati/update";
         }
 
-        // 4. Actualización en la base de datos
+        
         pap_patiDao.updatePap_Pati(papPati);
 
-        // 5. Redirección dinámica según el rol de quien edita
+        
         if ("technician".equals(user.getRole())) {
-            return "redirect:/pap_pati/accepted"; // Si es el técnico, vuelve a la gestión de aprobados
+            return "redirect:/pap_pati/accepted"; 
         } else {
-            return "redirect:/dashboard";         // Si es el propio PAP/PATI, vuelve a su panel principal
+            return "redirect:/dashboard";         
         }
     }
 
-    // 1. Muestra la pantalla roja de confirmación (GET)
+    
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
     public String showDeleteConfirmation(Model model, @PathVariable String id) {
         model.addAttribute("id", id);
-        // Importante: ruta apuntando a technician/pap_pati
+        
         return "technician/pap_pati/confirmarborrado";
     }
 
-    // 2. Ejecuta el borrado real al confirmar en el formulario (POST)
+    
     @RequestMapping(value="/delete/{id}", method = RequestMethod.POST)
     public String processDelete(@PathVariable String id) {
         pap_patiDao.deletePap_Pati(id);
-        // Redirige a la lista de asistentes aceptados tras borrar
+        
         return "redirect:/pap_pati/accepted";
     }
     @ModelAttribute("provincias")
@@ -229,22 +229,22 @@ public class Pap_PatiController {
         AssignmentRequest request = assignmentRequestDao.getAssignmentRequest(id);
         model.addAttribute("request", request);
 
-        // --- NUEVA LÓGICA DEL BOTÓN VOLVER DINÁMICO ---
-        String volverUrl = "/dashboard"; // Ruta por defecto si no viene parámetro
+        
+        String volverUrl = "/dashboard"; 
 
         if ("pending".equals(from)) {
-            volverUrl = "/assignmentRequest/pending"; // Vuelve a la tabla del Técnico
+            volverUrl = "/assignmentRequest/pending"; 
         } else if ("list".equals(from)) {
-            volverUrl = "/assignmentRequest/list";    // Vuelve a la lista normal del usuario
+            volverUrl = "/assignmentRequest/list";    
         } else if ("history".equals(from)) {
-            volverUrl = "/assignmentRequest/history"; // Por si acceden desde el historial
+            volverUrl = "/assignmentRequest/history"; 
         }
 
-        // Pasamos la variable al modelo para que la recoja el HTML
+        
         model.addAttribute("volverUrl", volverUrl);
-        // ----------------------------------------------
+        
 
-        // Cargamos el solicitante dinámicamente (OviUser o Tutor)
+        
         if (request.getOviuser_id() != null && !request.getOviuser_id().trim().isEmpty()) {
             OviUser oviUser = oviUserDao.getOviUser(request.getOviuser_id());
             model.addAttribute("solicitante", oviUser);
@@ -256,7 +256,7 @@ public class Pap_PatiController {
             model.addAttribute("tipoSolicitante", "tutor");
         }
 
-        // Lógica para cargar el chat si está completada o en negociación
+        
         if (("completed".equals(request.getStatus()) || "in negotiation".equals(request.getStatus())) && "pap_pati".equals(user.getRole())) {
             listOfProposedCandidatesDao.getProposalsByPapPati(user.getDni())
                     .stream()
@@ -264,7 +264,7 @@ public class Pap_PatiController {
                     .findFirst()
                     .ifPresent(p -> {
                         model.addAttribute("listId", p.getList_id());
-                        // Buscamos la negociación asociada
+                        
                         Negotiation neg = negotiationDao.getNegotiationByListId(p.getList_id());
                         if (neg != null) {
                             model.addAttribute("negotiationId", neg.getNegotiation_Id());
@@ -336,7 +336,6 @@ public class Pap_PatiController {
         model.addAttribute("pap_pati", pap_patiDao.getPap_Pati(dni));
         return "technician/pap_pati/reject";
     }
-
 
     @RequestMapping(value="/reject/execute/{dni}", method = RequestMethod.POST)
     public String executeRejectPapPati(@PathVariable String dni, @RequestParam("rejectReason") String rejectReason,Model model) {

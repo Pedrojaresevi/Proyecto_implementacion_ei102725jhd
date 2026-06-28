@@ -39,7 +39,7 @@ public class Pap_PatiValidator implements Validator {
             "PAP", "PATI"
     );
 
-    // ─────────────────────────────────────────────────────────────────────────
+    
 
     @Override
     public boolean supports(Class<?> cls) {
@@ -102,7 +102,6 @@ public class Pap_PatiValidator implements Validator {
         } else if (!TIPOS_ASISTENTES.contains(papPati.getAssistant_type())) {
             errors.rejectValue("assistant_type", "valorIncorrecto", "Este campo es obligatorio.");
         }
-
 
         if (papPati.getStartDate() == null) {
             errors.rejectValue("startDate", "obligatorio", "Este campo es obligatorio.");

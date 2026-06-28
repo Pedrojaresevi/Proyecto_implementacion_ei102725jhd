@@ -30,16 +30,15 @@ public class OviUserController {
     @RequestMapping(value="/add")
     public String addOviUser(Model model) {
         model.addAttribute("oviUser", new OviUser());
-        cargarListasDesplegables(model); // Cargamos las listas para el registro
+        cargarListasDesplegables(model); 
         return "oviUser/add";
     }
 
     @GetMapping("/success")
     public String registrationSuccess() {
-        // Spring pasa automáticamente los atributos flash al modelo aquí
+        
         return "success";
     }
-
 
     @RequestMapping(value="/add", method=RequestMethod.POST)
     public String processAddSubmit(@ModelAttribute("oviUser") OviUser oviUser,
@@ -89,9 +88,9 @@ public class OviUserController {
         return "redirect:success";
     }
 
-    // --- MÉTODO AUXILIAR PARA CARGAR LOS DESPLEGABLES ---
+    
     private void cargarListasDesplegables(Model model) {
-        // Pon aquí EXACTAMENTE las mismas opciones que quieres en tu sistema
+        
         List<String> entidades = Arrays.asList(
                 "Ayuntamiento de Castellón",
                 "Cocemfe",
@@ -119,7 +118,7 @@ public class OviUserController {
         List<String> statusList = Arrays.asList("accepted", "refused", "in progress");
         model.addAttribute("statusList", statusList);
 
-        cargarListasDesplegables(model); // Cargamos las mismas listas para edición
+        cargarListasDesplegables(model); 
 
         return "oviUser/update";
     }
@@ -162,20 +161,20 @@ public class OviUserController {
         return "redirect:/dashboard";
     }
 
-    // 1. Muestra la pantalla de confirmación (GET)
+    
     @RequestMapping(value="/delete/{dni}", method = RequestMethod.GET)
     public String showDeleteConfirmation(Model model, @PathVariable String dni) {
-        // Le pasamos el DNI al HTML para que lo muestre en el mensaje
+        
         model.addAttribute("dni", dni);
-        return "technician/oviUser/confirmarborrado"; // Asegúrate de guardar el HTML anterior con este nombre
+        return "technician/oviUser/confirmarborrado"; 
     }
-    // 2. Ejecuta el borrado real al enviar el formulario (POST)
+    
     @RequestMapping(value="/delete/{dni}", method = RequestMethod.POST)
     public String processDelete(@PathVariable String dni) {
         oviUserDao.deleteOviUser(dni);
-        return "redirect:/oviUser/accepted"; // Vuelve a la lista tras borrar
+        return "redirect:/oviUser/accepted"; 
     }
-    //
+    
     @RequestMapping("/pending")
     public String listPendingOviUsers(Model model, @RequestParam(defaultValue = "1") int page) {
         int pageSize = 6;
@@ -287,8 +286,8 @@ public class OviUserController {
             return "redirect:/oviUser/accepted";
         }
 
-        // LÓGICA DEL BOTÓN VOLVER DINÁMICO
-        String volverUrl = "/dashboard"; // Ruta por defecto (fallback)
+        
+        String volverUrl = "/dashboard"; 
 
         if ("accepted".equals(from)) {
             volverUrl = "/oviUser/accepted";
@@ -300,7 +299,7 @@ public class OviUserController {
             volverUrl = "/tutor/users/" + tutorDni;
         }
 
-        // Pasamos los atributos al modelo
+        
         model.addAttribute("oviUser", oviUser);
         model.addAttribute("volverUrl", volverUrl);
 

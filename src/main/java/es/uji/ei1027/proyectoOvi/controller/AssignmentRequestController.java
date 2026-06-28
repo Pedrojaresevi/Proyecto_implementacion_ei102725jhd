@@ -3,7 +3,6 @@ package es.uji.ei1027.proyectoOvi.controller;
 import es.uji.ei1027.proyectoOvi.dao.*;
 import es.uji.ei1027.proyectoOvi.models.*;
 
-
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,7 +28,7 @@ public class AssignmentRequestController {
     private AssignmentRequestDao assignmentRequestDao;
     private PapPatiDao papPatiDao;
     private ListOfProposedCandidatesDao listOfProposedCandidatesDao;
-    private NegotiationDao negotiationDao; // Inyectamos el DAO de Negociaciones
+    private NegotiationDao negotiationDao; 
     private OviUserDao oviUserDao;
     private TutorDao tutorDao;
 
@@ -289,7 +288,7 @@ public class AssignmentRequestController {
         return "redirect:list";
     }
 
-    // 1. PETICIÓN GET: Muestra la pantalla de confirmación compartiendo el ID
+    
     @RequestMapping(value="/delete/{id}", method = RequestMethod.GET)
     public String confirmDelete(@PathVariable String id, Model model, HttpSession session) {
         UserDetails user = (UserDetails) session.getAttribute("user");
@@ -297,14 +296,14 @@ public class AssignmentRequestController {
             return "redirect:/login";
         }
 
-        // Pasamos el ID de la solicitud a la vista de confirmación
+        
         model.addAttribute("requestId", id);
 
-        // IMPORTANTE: Asegúrate de guardar el HTML en esta ruta de carpetas (templates/assignmentRequest/...)
+        
         return "assignmentRequest/confirmarborrado";
     }
 
-    // 2. PETICIÓN POST: Ejecuta el borrado definitivo cuando se confirma en el formulario
+    
     @RequestMapping(value="/delete/{id}", method = RequestMethod.POST)
     public String processDelete(@PathVariable String id) {
         listOfProposedCandidatesDao.deleteCandidatesByRequestId(id);

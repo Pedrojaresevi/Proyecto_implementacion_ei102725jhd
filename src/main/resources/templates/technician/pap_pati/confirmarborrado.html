@@ -24,7 +24,7 @@
                 <strong class="text-danger" th:text="${id}">00000000X</strong>.
             </p>
 
-            <!-- Envía un POST al controlador para efectuar el borrado -->
+            
             <form th:action="@{/pap_pati/delete/{id}(id=${id})}" method="post">
 
                 <div class="alert alert-warning my-4">
@@ -38,7 +38,7 @@
                     <button type="submit" class="btn btn-danger px-4 fw-bold rounded-pill shadow-sm">
                         Confirmar Eliminación
                     </button>
-                    <!-- Vuelve al listado de pap_pati aceptados -->
+                    
                     <a th:href="@{/pap_pati/accepted}" class="btn btn-secondary px-4 rounded-pill">
                         Cancelar y Volver
                     </a>

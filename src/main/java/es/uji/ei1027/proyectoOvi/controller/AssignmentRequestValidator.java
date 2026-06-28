@@ -19,7 +19,6 @@ public class AssignmentRequestValidator implements Validator {
     public void validate(Object obj, Errors errors) {
         AssignmentRequest assignmentRequest = (AssignmentRequest) obj;
 
-
         if (assignmentRequest.getRequest_Id() == null || assignmentRequest.getRequest_Id().trim().equals("")) {
             errors.rejectValue("request_Id", "obligatorio", "Este campo es obligatorio.");
         }

@@ -53,18 +53,18 @@ public class NegotiationController {
 
     @RequestMapping(value="/add")
     public String addNegotiation(Model model, jakarta.servlet.http.HttpSession session) {
-        // 1. Recuperamos el usuario de la sesión
+        
         UserDetails user = (UserDetails) session.getAttribute("user");
 
-        // 2. Si no hay usuario, lo mandamos al login
+        
         if (user == null) {
             return "redirect:/login";
         }
 
-        // 3. Le pasamos el usuario al modelo para que la vista pueda usar user.dni
+        
         model.addAttribute("user", user);
 
-        // 4. Pasamos el objeto Negotiation vacío para el formulario
+        
         model.addAttribute("negotiation", new Negotiation());
 
         return "negotiation/add";
@@ -140,7 +140,7 @@ public class NegotiationController {
             model.addAttribute("currentPage", 1);
             model.addAttribute("totalPages", 1);
         } else {
-            // Nota: Aquí pasamos statusFilter al DAO
+            
             model.addAttribute("negotiations", negotiationDao.getNegotiationsByUserPaginated(dni, pageSize, offset, statusFilter));
             int totalItems = negotiationDao.countNegotiationsByUser(dni, statusFilter);
             int totalPages = (int) Math.ceil((double) totalItems / pageSize);
@@ -152,7 +152,7 @@ public class NegotiationController {
 
         model.addAttribute("dniOwner", dni);
         model.addAttribute("rolePath", "user");
-        model.addAttribute("statusFilter", statusFilter); // Pasamos el filtro activo al HTML
+        model.addAttribute("statusFilter", statusFilter); 
 
         return "negotiation/list";
     }
@@ -164,7 +164,7 @@ public class NegotiationController {
         int pageSize = 4;
         int offset = (page - 1) * pageSize;
 
-        // Nota: Aquí pasamos statusFilter al DAO
+        
         model.addAttribute("negotiations", negotiationDao.getNegotiationsByTutorPaginated(dni, pageSize, offset, statusFilter));
 
         int totalItems = negotiationDao.countNegotiationsByTutor(dni, statusFilter);
@@ -190,11 +190,11 @@ public class NegotiationController {
             return "redirect:/login";
         }
 
-        // Nota: Aquí pasamos statusFilter al DAO
+        
         List<Negotiation> chats = negotiationDao.getNegotiationsByPapPati(dni, statusFilter);
         model.addAttribute("negotiations", chats);
 
-        // Es necesario pasar estos tres atributos para que funcione la URL de filtrado dinámica en el HTML
+        
         model.addAttribute("rolePath", "pappati");
         model.addAttribute("dniOwner", dni);
         model.addAttribute("statusFilter", statusFilter);
@@ -258,7 +258,7 @@ public class NegotiationController {
             model.addAttribute("backUrl", "/pap_pati/detallesasignacion/" + requestId);
         } else {
             String rolePath = userLogeado.getRole().toLowerCase();
-            // Normalización de rutas
+            
             if ("oviuser".equals(rolePath)) {
                 rolePath = "user";
             } else if ("pap_pati".equals(rolePath) || "pappati".equals(rolePath)) {
@@ -276,7 +276,7 @@ public class NegotiationController {
                               @RequestParam("messageText") String messageText,
                               HttpSession session) {
 
-        // 1. Recuperar el usuario de la sesión
+        
         UserDetails user = (UserDetails) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
@@ -290,13 +290,13 @@ public class NegotiationController {
         newMessage.setRecordOfComunications(messageText);
         newMessage.setStatus("in progress");
 
-        // Guardamos la fecha de HOY real
+        
         newMessage.setStartDate(new java.util.Date());
 
         newMessage.setEndDate(null);
         newMessage.setHora(java.time.LocalTime.now());
 
-        // Guardamos el DNI de quien lo envía
+        
         newMessage.setEmisorDni(user.getDni());
 
         negotiationDao.addNegotiation(newMessage);
@@ -334,7 +334,7 @@ public class NegotiationController {
         }
 
         String rolePath = user.getRole().toLowerCase();
-        // Normalización de rutas
+        
         if ("oviuser".equals(rolePath)) {
             rolePath = "user";
         } else if ("pap_pati".equals(rolePath) || "pappati".equals(rolePath)) {

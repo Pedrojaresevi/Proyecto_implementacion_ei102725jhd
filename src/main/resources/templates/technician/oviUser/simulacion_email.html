@@ -26,10 +26,10 @@
                         El sistema ha procesado la acción y ha enviado automáticamente el siguiente correo al usuario:
                     </p>
 
-                    <!-- PLANTILLA DEL CORREO SIMULADO -->
+                    
                     <div class="border rounded p-4 bg-white shadow-sm mb-4" style="border-left: 5px solid #0d9488 !important;">
 
-                        <!-- Cabecera del Email -->
+                        
                         <div class="row border-bottom pb-2 mb-3">
                             <div class="col-sm-3 fw-bold text-muted">Para:</div>
                             <div class="col-sm-9">
@@ -47,17 +47,17 @@
                             </div>
                         </div>
 
-                        <!-- Cuerpo del Email -->
+                        
                         <div class="text-dark">
                             <p>Hola <strong th:text="${oviUser.name}"></strong>,</p>
 
-                            <!-- Mensaje si es ACEPTADO -->
+                            
                             <div th:if="${actionType == 'accepted'}">
                                 <p>Nos complace informarte que tu registro como Usuario OVI ha sido <strong>revisado y aprobado</strong> satisfactoriamente por nuestro equipo técnico.</p>
                                 <p>A partir de este momento, ya tienes habilitadas todas las funciones para entrar a la plataforma y gestionar tus solicitudes de asignación de asistentes.</p>
                             </div>
 
-                            <!-- Mensaje si es RECHAZADO -->
+                            
                             <div th:if="${actionType == 'refused'}">
                                 <p>Lamentamos informarte que tu registro como Usuario OVI ha sido <strong>rechazado</strong> tras la revisión técnica.</p>
                                 <p>El equipo ha indicado el siguiente motivo en la resolución:</p>
@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <!-- Botón para continuar -->
+                    
                     <div class="text-center mt-4">
                         <a href="/oviUser/pending" class="btn btn-secondary px-4">
                             <i class="bi bi-list-task me-2"></i>Volver a Usuarios Pendientes

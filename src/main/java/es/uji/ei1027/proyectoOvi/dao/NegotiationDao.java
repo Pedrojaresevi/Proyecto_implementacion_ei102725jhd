@@ -66,7 +66,7 @@ public class NegotiationDao {
 
     public List<Negotiation> getMessagesByNegotiationId(String negotiation_Id) {
         try {
-            // CORREGIDO: Cambiado a message_date ASC antes de hora ASC
+            
             String sql = "SELECT * FROM Negotiation WHERE negotiation_Id=? ORDER BY message_date ASC, hora ASC";
             return jdbcTemplate.query(sql, new NegotiationRowMapper(), negotiation_Id);
         } catch (EmptyResultDataAccessException e)  {
@@ -104,9 +104,9 @@ public class NegotiationDao {
         }
     }
 
-    // ---------------------------------------------------------
-    // MÉTODOS GENERALES (Afecta al listado global)
-    // ---------------------------------------------------------
+    
+    
+    
     public List<Negotiation> getNegotiations() {
         try {
             String sql = "SELECT * FROM Negotiation n " +
@@ -118,7 +118,6 @@ public class NegotiationDao {
             return null;
         }
     }
-
 
     public List<Negotiation> getNegotiationsByUserPaginated(String oviuserId, int limit, int offset, String statusFilter) {
         try {
@@ -173,7 +172,6 @@ public class NegotiationDao {
             return 0;
         }
     }
-
 
     public List<Negotiation> getNegotiationsByUser(String oviuserId, String statusFilter) {
         try {

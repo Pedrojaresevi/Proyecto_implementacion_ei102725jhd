@@ -125,6 +125,14 @@
               <div class="label-text text-muted">Entidad Implicada</div>
               <div class="data-text" th:text="${oviUser.entityThatIsInvolved}"></div>
             </div>
+            <div class="col-12" th:if="${tutor != null}">
+              <div class="label-text text-muted">Tutor Asignado</div>
+              <div class="data-text">
+                <i class="bi bi-person-check me-2 text-muted"></i>
+                <span th:text="${tutor.name}"></span>
+                <span class="text-muted small">(DNI: <span th:text="${tutor.dni}"></span>)</span>
+              </div>
+            </div>
             <div class="col-12">
               <div class="label-text text-muted">Plan de Vida</div>
               <div class="data-text p-3 bg-light rounded-3 mt-1 text-break" style="font-size: 0.95rem; line-height: 1.5;" th:text="${oviUser.lifePlan}"></div>

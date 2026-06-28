@@ -68,9 +68,7 @@ public class OviUserValidator implements Validator {
             }
         } else {
             if (oviUser.getTutor_id() != null && !oviUser.getTutor_id().trim().isEmpty()) {
-                if (!oviUser.getTutor_id().trim().matches(ID_PATTERN)) {
-                    errors.rejectValue("tutor_id", "formato_incorrecto", "Debe ser un DNI, NIE o Pasaporte válido.");
-                }
+                errors.rejectValue("tutor_id", "no_procede", "El campo tutor no debe estar relleno para usuarios mayores de edad.");
             }
         }
 

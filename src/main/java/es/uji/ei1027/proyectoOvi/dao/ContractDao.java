@@ -146,6 +146,34 @@ public class ContractDao {
             return 0;
         }
     }
+
+    public List<Contract> getContractsByUserAndStatusPaginated(String dni, String status, int limit, int offset) {
+        String sql = "SELECT c.* " +
+                "FROM Contract c " +
+                "JOIN AssignmentRequest ar ON c.request_id = ar.request_id " +
+                "WHERE (c.pappati_id = ? OR ar.oviuser_id = ? OR ar.tutor_id = ?) " +
+                "AND c.status = ? " +
+                "ORDER BY SUBSTRING(c.contract_id FROM 4)::INTEGER DESC " +
+                "LIMIT ? OFFSET ?";
+        try {
+            return jdbcTemplate.query(sql, new ContractRowMapper(), dni, dni, dni, status, limit, offset);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public int countContractsByUserAndStatus(String dni, String status) {
+        String sql = "SELECT COUNT(c.contract_id) " +
+                "FROM Contract c " +
+                "JOIN AssignmentRequest ar ON c.request_id = ar.request_id " +
+                "WHERE (c.pappati_id = ? OR ar.oviuser_id = ? OR ar.tutor_id = ?) " +
+                "AND c.status = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, dni, dni, dni, status);
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
+        }
+    }
     
     public List<Contract> getContractsByRequestId(String requestId) {
         String sql = "SELECT * FROM Contract WHERE request_id = ? ORDER BY SUBSTRING(contract_id FROM 4)::INTEGER DESC";

@@ -159,13 +159,14 @@ public class ContractController {
     }
 
     @RequestMapping("/list")
-    public String listContracts(Model model, HttpSession session, @RequestParam(defaultValue = "1") int page) {
+    public String listContracts(Model model, HttpSession session,
+                                @RequestParam(defaultValue = "1") int page,
+                                @RequestParam(value = "statusFilter", required = false) String statusFilter) {
         UserDetails user = (UserDetails) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
         }
 
-        
         contractDao.finalizeExpiredContracts();
 
         String dniToQuery = user.getDni();
@@ -174,16 +175,21 @@ public class ContractController {
         OviUser oviUser = oviUserDao.getOviUser(user.getDni());
         if (oviUser != null && oviUser.getTutor_id() != null && !oviUser.getTutor_id().isEmpty()) {
             isMinor = true;
-            
-            
         }
 
         int pageSize = 6;
         int offset = (page - 1) * pageSize;
 
-        
-        List<Contract> contracts = contractDao.getContractsByUserPaginated(dniToQuery, pageSize, offset);
-        int totalItems = contractDao.countContractsByUser(dniToQuery);
+        List<Contract> contracts;
+        int totalItems;
+
+        if (statusFilter != null && !statusFilter.isEmpty()) {
+            contracts = contractDao.getContractsByUserAndStatusPaginated(dniToQuery, statusFilter, pageSize, offset);
+            totalItems = contractDao.countContractsByUserAndStatus(dniToQuery, statusFilter);
+        } else {
+            contracts = contractDao.getContractsByUserPaginated(dniToQuery, pageSize, offset);
+            totalItems = contractDao.countContractsByUser(dniToQuery);
+        }
 
         int totalPages = (int) Math.ceil((double) totalItems / pageSize);
         if (totalPages == 0) totalPages = 1;
@@ -191,7 +197,8 @@ public class ContractController {
         model.addAttribute("contracts", contracts);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("isMinor", isMinor); 
+        model.addAttribute("isMinor", isMinor);
+        model.addAttribute("statusFilter", statusFilter);
 
         return "contract/list";
     }

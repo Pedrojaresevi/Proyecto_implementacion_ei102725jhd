@@ -471,6 +471,7 @@ public class AssignmentRequestController {
 
         if (assignmentRequest != null) {
             assignmentRequest.setStatus("refused");
+            assignmentRequest.setRejectReason(rejectReason);
             assignmentRequestDao.updateAssignmentRequest(assignmentRequest);
 
             if (assignmentRequest.getOviuser_id() != null) {

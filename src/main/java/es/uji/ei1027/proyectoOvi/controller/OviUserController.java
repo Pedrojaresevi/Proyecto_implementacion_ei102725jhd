@@ -1,7 +1,9 @@
 package es.uji.ei1027.proyectoOvi.controller;
 
 import es.uji.ei1027.proyectoOvi.dao.OviUserDao;
+import es.uji.ei1027.proyectoOvi.dao.TutorDao;
 import es.uji.ei1027.proyectoOvi.models.OviUser;
+import es.uji.ei1027.proyectoOvi.models.Tutor;
 import es.uji.ei1027.proyectoOvi.models.UserDetails;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,16 @@ import java.util.List;
 @RequestMapping("/oviUser")
 public class OviUserController {
     private OviUserDao oviUserDao;
+    private TutorDao tutorDao;
 
     @Autowired
     public void setOviUserDao(OviUserDao oviUserDao){
         this.oviUserDao = oviUserDao;
+    }
+
+    @Autowired
+    public void setTutorDao(TutorDao tutorDao){
+        this.tutorDao = tutorDao;
     }
 
     @RequestMapping(value="/add")
@@ -302,6 +310,12 @@ public class OviUserController {
         
         model.addAttribute("oviUser", oviUser);
         model.addAttribute("volverUrl", volverUrl);
+
+        Tutor tutor = null;
+        if (oviUser.getTutor_id() != null && !oviUser.getTutor_id().trim().isEmpty()) {
+            tutor = tutorDao.getTutor(oviUser.getTutor_id());
+        }
+        model.addAttribute("tutor", tutor);
 
         return "oviUser/masdetalle";
     }
